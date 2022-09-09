@@ -1,5 +1,6 @@
 package com.example.rememberapp.data
 
+import android.graphics.Color
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
@@ -20,4 +21,12 @@ data class Task(
  */
 enum class PriorityLevel {
     LOW, MEDIUM, HIGH
+}
+
+fun Task.getColorByPriority(): Int {
+    return when (taskPriority) {
+        PriorityLevel.LOW -> Color.GREEN
+        PriorityLevel.MEDIUM -> Color.YELLOW
+        PriorityLevel.HIGH -> Color.RED
+    }
 }
