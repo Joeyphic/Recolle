@@ -12,7 +12,10 @@ buildscript {
         lifecycle_version = '2.5.1'
         navigation_version = '2.5.1'
         room_version = '2.4.3'
+    }
 
+    dependencies {
+        classpath "androidx.navigation:navigation-safe-args-gradle-plugin:$navigation_version"
     }
 }
 
