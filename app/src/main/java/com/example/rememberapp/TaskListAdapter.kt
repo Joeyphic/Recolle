@@ -48,4 +48,17 @@ class TaskListAdapter() : ListAdapter<Task, TaskListAdapter.TaskViewHolder>(Diff
             }
         }
     }
+
+    sealed class DataItem {
+
+        abstract val id: Int
+
+        data class TaskListItem(val task: Task): DataItem() {
+            override val id = task.id
+        }
+
+        object Header: DataItem() {
+            override val id = Int.MIN_VALUE
+        }
+    }
 }
