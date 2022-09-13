@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">RememberApp</string>
+    <string name="task_fab_content_desc">Add a new task</string>
 </resources>
