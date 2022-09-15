@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.asLiveData
+import com.example.rememberapp.data.PriorityLevel
 import com.example.rememberapp.data.Task
 import com.example.rememberapp.data.TaskDao
 
@@ -11,6 +12,12 @@ class TaskListViewModel(private val taskDao: TaskDao) : ViewModel() {
 
     val allTasks: LiveData<List<Task>> = taskDao.getAllTasks().asLiveData()
 
+    fun isEntryValid(taskName: String, taskPriority: PriorityLevel) : Boolean {
+        if(taskName.isBlank() || taskPriority !in PriorityLevel.values()) {
+            return false
+        }
+        return true
+    }
 }
 
 class TaskListViewModelFactory(private val taskDao: TaskDao) : ViewModelProvider.Factory {
