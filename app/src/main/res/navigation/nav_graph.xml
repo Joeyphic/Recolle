@@ -15,5 +15,11 @@
     <fragment
         android:id="@+id/taskListAddModifyItem"
         android:name="com.example.rememberapp.TaskListAddModifyItem"
-        android:label="TaskListAddModifyItem" />
+        android:label="TaskListAddModifyItem" >
+        <action
+            android:id="@+id/action_taskListAddModifyItem_to_taskListFragment"
+            app:destination="@id/taskListFragment"
+            app:popUpTo="@id/taskListFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
 </navigation>

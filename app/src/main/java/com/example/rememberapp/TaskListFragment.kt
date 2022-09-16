@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
 import com.example.rememberapp.databinding.TaskListFragmentBinding
 import com.example.rememberapp.viewmodel.TaskListViewModel
 import com.example.rememberapp.viewmodel.TaskListViewModelFactory
@@ -44,6 +45,11 @@ class TaskListFragment : Fragment() {
             tasks.let {
                adapter.submitList(it)
             }
+        }
+
+        binding.floatingActionButton.setOnClickListener {
+            val action = TaskListFragmentDirections.actionTaskListFragmentToTaskListAddModifyItem()
+            this.findNavController().navigate(action)
         }
     }
 

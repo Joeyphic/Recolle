@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
 import com.example.rememberapp.data.PriorityLevel
 import com.example.rememberapp.databinding.TaskListAddItemBinding
 import com.example.rememberapp.databinding.TaskListFragmentBinding
@@ -36,6 +37,31 @@ class TaskListAddModifyItem : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        binding.buttonSave.setOnClickListener {
+            addNewItem()
+        }
+    }
+
+
+
+    private fun isEntryValid(): Boolean {
+        val currentPriority = getPriorityFromRadioId() ?: return false
+        return viewModel.isEntryValid(binding.taskName.text.toString(), currentPriority)
+    }
+
+    private fun addNewItem() {
+
+        if(isEntryValid()) {
+            // Should always be non-null since entry is validated, but the check is done anyways
+            val currentPriority = getPriorityFromRadioId() ?: return
+
+            viewModel.addNewItem(binding.taskName.text.toString(), currentPriority)
+
+            val action = TaskListAddModifyItemDirections
+                         .actionTaskListAddModifyItemToTaskListFragment()
+            findNavController().navigate(action)
+        }
     }
 
     private fun getPriorityFromRadioId() : PriorityLevel? {
@@ -45,12 +71,5 @@ class TaskListAddModifyItem : Fragment() {
             binding.radioPriorityLow.id -> PriorityLevel.LOW
             else -> null
         }
-    }
-
-    private fun isEntryValid(): Boolean {
-
-        val currentPriority = getPriorityFromRadioId() ?: return false
-
-        return viewModel.isEntryValid(binding.taskName.text.toString(), currentPriority)
     }
 }

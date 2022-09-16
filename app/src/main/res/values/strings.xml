@@ -4,4 +4,6 @@
     <string name="task_priority_high">High</string>
     <string name="task_priority_medium">Medium</string>
     <string name="task_priority_low">Low</string>
+    <string name="task_save_button">Save</string>
+    <string name="task_name">Task Name</string>
 </resources>
