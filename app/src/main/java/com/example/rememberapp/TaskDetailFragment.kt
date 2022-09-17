@@ -1,20 +1,19 @@
 package com.example.rememberapp
 
-import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.navigation.fragment.findNavController
-import com.example.rememberapp.data.PriorityLevel
+import androidx.navigation.fragment.navArgs
 import com.example.rememberapp.data.Task
+import com.example.rememberapp.databinding.TaskDetailFragmentBinding
 import com.example.rememberapp.databinding.TaskListFragmentBinding
 import com.example.rememberapp.viewmodel.TaskListViewModel
 import com.example.rememberapp.viewmodel.TaskListViewModelFactory
 
-class TaskListFragment : Fragment() {
+class TaskDetailFragment : Fragment() {
 
     private val viewModel: TaskListViewModel by activityViewModels {
         TaskListViewModelFactory(
@@ -22,40 +21,42 @@ class TaskListFragment : Fragment() {
         )
     }
 
-    private var _binding: TaskListFragmentBinding? = null
+    private val navigationArgs: TaskDetailFragmentArgs by navArgs()
+
+    private var _binding: TaskDetailFragmentBinding? = null
 
     // TODO: Find a way to remove this non-null asserted call
     private val binding get() = _binding!!
 
+    lateinit var task: Task
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
 
-        val fragmentBinding = TaskListFragmentBinding.inflate(inflater, container, false)
+        val fragmentBinding = TaskDetailFragmentBinding.inflate(inflater, container, false)
         _binding = fragmentBinding
         return fragmentBinding.root
+    }
+
+    private fun bind(task: Task) {
+        binding.apply {
+            taskName.text = task.taskName
+
+            // TODO: Capitalize the first letter cleanly. Do after enum names are finalized.
+            taskPriority.text = task.taskPriority.name.lowercase()
+        }
+
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val adapter = TaskListAdapter {
-            val action = TaskListFragmentDirections.actionTaskListFragmentToTaskDetailFragment(it.id)
-            this.findNavController().navigate(action)
-        }
-
-        binding.recyclerView.adapter = adapter
-
-        viewModel.allTasks.observe(this.viewLifecycleOwner) { tasks ->
-            tasks.let {
-               adapter.submitList(it)
-            }
-        }
-
-        binding.floatingActionButton.setOnClickListener {
-            val action = TaskListFragmentDirections.actionTaskListFragmentToTaskListAddModifyItem()
-            this.findNavController().navigate(action)
+        // Navigation argument
+        val id = navigationArgs.taskId
+        viewModel.retrieveTask(id).observe(this.viewLifecycleOwner) { selectedTask ->
+            task = selectedTask
+            bind(task)
         }
     }
 

@@ -34,6 +34,10 @@ class TaskListViewModel(private val taskDao: TaskDao) : ViewModel() {
         val newTask = getNewTaskEntry(taskName, taskPriority)
         insertTask(newTask)
     }
+
+    fun retrieveTask(id: Int): LiveData<Task> {
+        return taskDao.getTaskById(id).asLiveData()
+    }
 }
 
 class TaskListViewModelFactory(private val taskDao: TaskDao) : ViewModelProvider.Factory {

@@ -15,6 +15,9 @@ interface TaskDao {
     @Delete
     suspend fun delete(task: Task)
 
+    @Query("SELECT * FROM task WHERE id=:id")
+    fun getTaskById(id: Int): Flow<Task>
+
     /**
      * Gets all tasks from database, with the highest priority ones on the top.
      *
