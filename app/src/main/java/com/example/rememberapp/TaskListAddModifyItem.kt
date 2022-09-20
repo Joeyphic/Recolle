@@ -4,10 +4,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.example.rememberapp.data.PriorityLevel
+import com.example.rememberapp.data.Task
 import com.example.rememberapp.databinding.TaskListAddItemBinding
 import com.example.rememberapp.databinding.TaskListFragmentBinding
 import com.example.rememberapp.viewmodel.TaskListViewModel
@@ -25,6 +28,9 @@ class TaskListAddModifyItem : Fragment() {
     // TODO: Find a way to remove this non-null asserted call
     private val binding get() = _binding!!
 
+    lateinit var task: Task
+    private val navigationArgs: TaskDetailFragmentArgs by navArgs()
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -38,12 +44,21 @@ class TaskListAddModifyItem : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.buttonSave.setOnClickListener {
-            addNewItem()
+        val id = navigationArgs.taskId
+
+        // If there's an ID, link selected task to fragment.
+        if(id > 0) {
+            viewModel.retrieveTask(id).observe(this.viewLifecycleOwner) { selectedTask ->
+                task = selectedTask
+                bind(task)
+            }
+        }
+        else {
+            binding.buttonSave.setOnClickListener {
+                addNewItem()
+            }
         }
     }
-
-
 
     private fun isEntryValid(): Boolean {
         val currentPriority = getPriorityFromRadioId() ?: return false
@@ -70,6 +85,19 @@ class TaskListAddModifyItem : Fragment() {
             binding.radioPriorityMedium.id -> PriorityLevel.MEDIUM
             binding.radioPriorityLow.id -> PriorityLevel.LOW
             else -> null
+        }
+    }
+
+    private fun bind(task: Task) {
+        binding.apply {
+            taskName.setText(task.taskName, TextView.BufferType.SPANNABLE)
+
+            // TODO: Fix animation going from default Checked to this new one.
+            when (task.taskPriority) {
+                PriorityLevel.LOW -> radioGroupTaskPriority.check(radioPriorityLow.id)
+                PriorityLevel.MEDIUM -> radioGroupTaskPriority.check(radioPriorityMedium.id)
+                PriorityLevel.HIGH -> radioGroupTaskPriority.check(radioPriorityHigh.id)
+            }
         }
     }
 }

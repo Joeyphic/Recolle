@@ -54,7 +54,9 @@ class TaskListFragment : Fragment() {
         }
 
         binding.floatingActionButton.setOnClickListener {
-            val action = TaskListFragmentDirections.actionTaskListFragmentToTaskListAddModifyItem()
+            val action = TaskListFragmentDirections.actionTaskListFragmentToTaskListAddModifyItem(
+                "Add Task"
+            )
             this.findNavController().navigate(action)
         }
     }
