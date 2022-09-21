@@ -57,6 +57,9 @@ class TaskListAddModifyItem : Fragment() {
             binding.buttonSave.setOnClickListener {
                 addNewItem()
             }
+
+            binding.radioGroupTaskPriority.check(binding.radioPriorityHigh.id)
+            binding.radioGroupTaskPriority.jumpDrawablesToCurrentState()
         }
     }
 
@@ -92,12 +95,30 @@ class TaskListAddModifyItem : Fragment() {
         binding.apply {
             taskName.setText(task.taskName, TextView.BufferType.SPANNABLE)
 
-            // TODO: Fix animation going from default Checked to this new one.
             when (task.taskPriority) {
                 PriorityLevel.LOW -> radioGroupTaskPriority.check(radioPriorityLow.id)
                 PriorityLevel.MEDIUM -> radioGroupTaskPriority.check(radioPriorityMedium.id)
                 PriorityLevel.HIGH -> radioGroupTaskPriority.check(radioPriorityHigh.id)
             }
+            radioGroupTaskPriority.jumpDrawablesToCurrentState()
+
+            buttonSave.setOnClickListener { updateTask() }
         }
     }
+
+    private fun updateTask() {
+        if(isEntryValid()) {
+            viewModel.updateTask(
+                this.navigationArgs.taskId,
+                binding.taskName.text.toString(),
+                getPriorityFromRadioId() ?: return // Since valid, should be non-null
+            )
+
+            val action = TaskListAddModifyItemDirections
+                .actionTaskListAddModifyItemToTaskListFragment()
+            findNavController().navigate(action)
+        }
+    }
+
+
 }

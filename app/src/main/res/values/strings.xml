@@ -8,6 +8,8 @@
     <string name="task_name">Task Name</string>
     <string name="edit">Edit</string>
     <string name="delete">Delete</string>
-    <string name="content_desc_task_edit">Edit this task</string>
-    <string name="content_desc_task_delete">Delete this task</string>
+    <string name="content_desc_task_edit">Edit task</string>
+    <string name="content_desc_task_delete">Delete task</string>
+    <string name="delete_confirmation_message">Delete this task?</string>
+    <string name="cancel">Cancel</string>
 </resources>

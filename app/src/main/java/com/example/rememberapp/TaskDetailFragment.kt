@@ -15,6 +15,7 @@ import com.example.rememberapp.databinding.TaskDetailFragmentBinding
 import com.example.rememberapp.databinding.TaskListFragmentBinding
 import com.example.rememberapp.viewmodel.TaskListViewModel
 import com.example.rememberapp.viewmodel.TaskListViewModelFactory
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 class TaskDetailFragment : Fragment() {
 
@@ -79,8 +80,15 @@ class TaskDetailFragment : Fragment() {
                         true
                     }
                     R.id.delete -> {
+                        showDeleteConfirmationDialog()
                         true
                     }
+                    // The back button
+                    android.R.id.home -> {
+                        findNavController().navigateUp()
+                        true
+                    }
+
                     else -> false
                 }
                 return true
@@ -93,6 +101,16 @@ class TaskDetailFragment : Fragment() {
         _binding = null
     }
 
+    private fun showDeleteConfirmationDialog() {
+        MaterialAlertDialogBuilder(requireContext())
+            .setMessage(getString(R.string.delete_confirmation_message))
+            .setNegativeButton(getString(R.string.cancel)) { _, _ -> }
+            .setPositiveButton(getString(R.string.delete)) { _, _ ->
+                deleteTask(task)
+            }
+            .show()
+    }
+
     private fun editTask(task: Task) {
         val action = TaskDetailFragmentDirections.actionTaskDetailFragmentToTaskListAddModifyItem(
             "Edit Task",
@@ -100,5 +118,10 @@ class TaskDetailFragment : Fragment() {
         )
 
         this.findNavController().navigate(action)
+    }
+
+    private fun deleteTask(task: Task) {
+        viewModel.deleteTask(task)
+        findNavController().navigateUp()
     }
 }
