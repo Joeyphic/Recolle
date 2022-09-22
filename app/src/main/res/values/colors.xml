@@ -7,4 +7,11 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <!-- Using Brown_400 from Material Color Picker-->
+    <color name="primaryColor">#FF8D6E63</color>
+    <color name="primaryLightColor">#FFBE9C91</color>
+    <color name="primaryDarkColor">#FF5F4339</color>
+    <color name="primaryTextColor">#FFFFFFFF</color>
+
 </resources>

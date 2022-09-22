@@ -74,7 +74,7 @@ class TaskDetailFragment : Fragment() {
 
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
 
-                when (menuItem.itemId) {
+                return when (menuItem.itemId) {
                     R.id.edit -> {
                         editTask(task)
                         true
@@ -91,7 +91,6 @@ class TaskDetailFragment : Fragment() {
 
                     else -> false
                 }
-                return true
             }
         }, viewLifecycleOwner, Lifecycle.State.RESUMED)
     }

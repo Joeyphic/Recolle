@@ -36,7 +36,7 @@ class TaskListAdapter(private val onTaskClicked: (Task) -> Unit) :
         fun bind(task: Task) {
             binding.apply {
                 taskName.text = task.taskName
-                constraintLayout.setBackgroundColor(task.getColorByPriority())
+                relativeLayout.setBackgroundColor(task.getColorByPriority())
             }
         }
     }
