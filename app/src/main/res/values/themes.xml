@@ -11,6 +11,19 @@
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">@color/primaryDarkColor</item>
+
         <!-- Customize your theme here. -->
+        <item name="actionBarTheme">@style/Theme.RememberApp.ActionBar</item>
+    </style>
+
+    <!-- Implemented for Top App Bar -->
+    <style name="Theme.RememberApp.ActionBar" parent="Theme.Material3.Light">
+
+        <!-- Text Color -->
+        <item name="colorSurface">@color/primaryColor</item>
+        <item name="colorOnSurface">@color/primaryTextColor</item>
+
+        <!-- Up button & Navigation Drawer color -->
+        <item name="colorControlNormal">@color/primaryTextColor</item>
     </style>
 </resources>

@@ -2,11 +2,13 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <!-- TODO: Finalize Menu IconTint Color -->
     <item
         android:id="@+id/edit"
         android:icon="@drawable/ic_baseline_edit_24"
         android:title="@string/edit"
         android:contentDescription="@string/content_desc_task_edit"
+        app:iconTint="@color/primaryLightColor"
         app:showAsAction="ifRoom" />
 
     <item
@@ -14,5 +16,6 @@
         android:icon="@drawable/ic_baseline_delete_24"
         android:title="@string/delete"
         android:contentDescription="@string/content_desc_task_delete"
+        app:iconTint="@color/primaryLightColor"
         app:showAsAction="ifRoom" />
 </menu>

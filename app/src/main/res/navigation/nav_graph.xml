@@ -7,7 +7,7 @@
     <fragment
         android:id="@+id/taskListFragment"
         android:name="com.example.rememberapp.TaskListFragment"
-        android:label="TaskListFragment" >
+        android:label="Your Tasks" >
         <action
             android:id="@+id/action_taskListFragment_to_taskListAddModifyItem"
             app:destination="@id/taskListAddModifyItem" />
@@ -35,7 +35,7 @@
     <fragment
         android:id="@+id/taskDetailFragment"
         android:name="com.example.rememberapp.TaskDetailFragment"
-        android:label="TaskDetailFragment">
+        android:label="Task Details">
         <argument
             android:name="task_id"
             app:argType="integer" />
