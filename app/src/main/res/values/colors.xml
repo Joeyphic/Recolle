@@ -8,6 +8,10 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
+    <color name="priorityHigh">#FFFFCCCB</color>
+    <color name="priorityMedium">#FFFFFFCF</color>
+    <color name="priorityLow">#FFD7FFD9</color>
+
     <!-- Using Brown_400 from Material Color Picker-->
     <color name="primaryColor">#FF8D6E63</color>
     <color name="primaryLightColor">#FFBE9C91</color>

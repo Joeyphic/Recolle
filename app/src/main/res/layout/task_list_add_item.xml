@@ -7,11 +7,13 @@
     android:layout_margin="@dimen/margin">
 
     <com.google.android.material.textfield.TextInputLayout
+        style="?attr/textInputFilledStyle"
         android:id="@+id/layout_task_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin"
         android:hint="@string/task_name"
+        app:boxBackgroundColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -30,21 +32,27 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/layout_task_name">
+
         <RadioButton
             android:id="@+id/radio_priority_high"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="@string/task_priority_high"/>
+            android:text="@string/task_priority_high"
+            app:buttonTint="@color/priorityHigh" />
+
         <RadioButton
             android:id="@+id/radio_priority_medium"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="@string/task_priority_medium"/>
+            android:text="@string/task_priority_medium"
+            app:buttonTint="@color/priorityMedium" />
+
         <RadioButton
             android:id="@+id/radio_priority_low"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="@string/task_priority_low"/>
+            android:text="@string/task_priority_low"
+            app:buttonTint="@color/priorityLow" />
     </RadioGroup>
 
     <Button

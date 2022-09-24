@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="?attr/selectableItemBackground"
-    android:minHeight="64dp">
+    android:minHeight="60dp">
 
     <ImageView
         android:id="@+id/task_icon"
@@ -37,6 +37,11 @@
         android:paddingEnd="16dp"
         android:textAppearance="?attr/textAppearanceBody2"
         android:textColor="@color/black"
-        tools:text="Requires Double A Batteries"/>
+        tools:text="Requires Double A Batteries" />
+
+    <com.google.android.material.divider.MaterialDivider
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"/>
 
 </RelativeLayout>

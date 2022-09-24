@@ -11,6 +11,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.rememberapp.data.Task
+import com.example.rememberapp.data.getColorByPriority
 import com.example.rememberapp.databinding.TaskDetailFragmentBinding
 import com.example.rememberapp.databinding.TaskListFragmentBinding
 import com.example.rememberapp.viewmodel.TaskListViewModel
@@ -49,6 +50,9 @@ class TaskDetailFragment : Fragment() {
 
             // TODO: Capitalize the first letter cleanly. Do after enum names are finalized.
             taskPriority.text = task.taskPriority.name.lowercase()
+
+            // Adding Color depending on Task priority
+            binding.linearLayout.setBackgroundColor(task.getColorByPriority())
         }
 
     }
