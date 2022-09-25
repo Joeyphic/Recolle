@@ -63,6 +63,10 @@ class TaskListViewModel(private val taskDao: TaskDao) : ViewModel() {
             taskPriority = taskPriority
         )
     }
+
+    fun completeTask(task: Task) {
+        deleteTask(task)
+    }
 }
 
 class TaskListViewModelFactory(private val taskDao: TaskDao) : ViewModelProvider.Factory {

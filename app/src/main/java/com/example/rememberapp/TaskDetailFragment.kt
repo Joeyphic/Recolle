@@ -67,6 +67,11 @@ class TaskDetailFragment : Fragment() {
             bind(task)
         }
 
+        // Complete Task Button
+        binding.imageView.setOnClickListener {
+            completeTask()
+        }
+
         // Using MenuProvider to add Edit and Delete options to the top app bar.
         val menuHost: MenuHost = requireActivity()
 
@@ -125,6 +130,11 @@ class TaskDetailFragment : Fragment() {
 
     private fun deleteTask(task: Task) {
         viewModel.deleteTask(task)
+        findNavController().navigateUp()
+    }
+
+    private fun completeTask() {
+        viewModel.completeTask(task)
         findNavController().navigateUp()
     }
 }
