@@ -88,27 +88,27 @@ class TaskListAdapter(private val onTaskClicked: (Task) -> Unit) :
             ): Boolean {
                 Log.i("TaskListAdapter", "vh pos " + viewHolder.adapterPosition)
                 Log.i("TaskListAdapter", "target pos " + target.adapterPosition)
-
+                Log.i("TaskListAdapter", "vh pos two " + viewHolder.layoutPosition)
+                Log.i("TaskListAdapter", "target pos two " + target.layoutPosition)
                 // Although adapter is passed parameter, we can still use getItem since we are in
                 // TaskListAdapter.kt. That's why this class is in the adapter!
                 val currentTask = viewHolder.adapterPosition
                 val affectedTask = target.adapterPosition
 
-                // Perhaps use DragDirs for better readability?
                 if(currentTask < affectedTask) {
                     for (i in currentTask until affectedTask) {
                         onItemMove(i, i + 1)
-                        adapter.notifyItemMoved(i, i + 1)
                     }
                 }
                 else {
                     if(affectedTask > -1) {
                         for (i in currentTask downTo affectedTask+1) {
                             onItemMove(i, i - 1)
-                            adapter.notifyItemMoved(i, i - 1)
                         }
                     }
                 }
+
+                adapter.notifyItemMoved(currentTask, affectedTask)
                 return true
             }
 
