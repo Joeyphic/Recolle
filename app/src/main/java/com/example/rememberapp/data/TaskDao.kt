@@ -23,6 +23,6 @@ interface TaskDao {
      *
      * Orders tasks of the same priority by task name.
      */
-    @Query("SELECT * FROM task ORDER BY priority DESC, name ASC")
+    @Query("SELECT * FROM task ORDER BY priority DESC, id ASC")
     fun getAllTasks(): Flow<List<Task>>
 }

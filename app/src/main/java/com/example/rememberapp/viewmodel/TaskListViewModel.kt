@@ -5,6 +5,7 @@ import com.example.rememberapp.data.PriorityLevel
 import com.example.rememberapp.data.Task
 import com.example.rememberapp.data.TaskDao
 import kotlinx.coroutines.launch
+import java.util.*
 
 class TaskListViewModel(private val taskDao: TaskDao) : ViewModel() {
 
@@ -66,6 +67,14 @@ class TaskListViewModel(private val taskDao: TaskDao) : ViewModel() {
 
     fun completeTask(task: Task) {
         deleteTask(task)
+    }
+
+    // TODO: Finish implementing ItemTouchHelper
+    fun swapTasks(currentTask: Int, affectedTask: Int) {
+
+        allTasks.value?.let {
+            Collections.swap(allTasks.value, currentTask, affectedTask)
+        }
     }
 }
 

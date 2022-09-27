@@ -1,6 +1,5 @@
 package com.example.rememberapp
 
-import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,8 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
-import com.example.rememberapp.data.PriorityLevel
-import com.example.rememberapp.data.Task
+import androidx.recyclerview.widget.ItemTouchHelper
 import com.example.rememberapp.databinding.TaskListFragmentBinding
 import com.example.rememberapp.viewmodel.TaskListViewModel
 import com.example.rememberapp.viewmodel.TaskListViewModelFactory
@@ -53,6 +51,12 @@ class TaskListFragment : Fragment() {
             }
         }
 
+        // TODO: Finish implementing ItemTouchHelper
+        val itemTouchHelper = ItemTouchHelper(TaskListAdapter.SimpleCallback(adapter) { from, to ->
+            viewModel.swapTasks(from, to)
+        })
+        itemTouchHelper.attachToRecyclerView(binding.recyclerView)
+
         binding.floatingActionButton.setOnClickListener {
             val action = TaskListFragmentDirections.actionTaskListFragmentToTaskListAddModifyItem(
                 "Add Task"
@@ -65,5 +69,4 @@ class TaskListFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
-
 }
