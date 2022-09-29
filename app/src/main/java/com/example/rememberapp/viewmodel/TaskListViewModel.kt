@@ -70,10 +70,10 @@ class TaskListViewModel(private val taskDao: TaskDao) : ViewModel() {
     }
 
     // TODO: Finish implementing ItemTouchHelper
-    fun swapTasks(currentTask: Int, affectedTask: Int) {
+    fun swapTasks(taskPositionFrom: Int, taskPositionTo: Int) {
 
         allTasks.value?.let {
-            Collections.swap(allTasks.value, currentTask, affectedTask)
+            Collections.swap(allTasks.value, taskPositionFrom, taskPositionTo)
         }
     }
 }

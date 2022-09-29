@@ -7,7 +7,6 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.example.rememberapp.data.PriorityLevel
 import com.example.rememberapp.data.Task
 import com.example.rememberapp.data.getColorByPriority
 import com.example.rememberapp.databinding.TaskListItemFragmentBinding
@@ -92,23 +91,23 @@ class TaskListAdapter(private val onTaskClicked: (Task) -> Unit) :
                 Log.i("TaskListAdapter", "target pos two " + target.layoutPosition)
                 // Although adapter is passed parameter, we can still use getItem since we are in
                 // TaskListAdapter.kt. That's why this class is in the adapter!
-                val currentTask = viewHolder.adapterPosition
-                val affectedTask = target.adapterPosition
+                val taskPositionFrom = viewHolder.adapterPosition
+                val taskPositionTo = target.adapterPosition
 
-                if(currentTask < affectedTask) {
-                    for (i in currentTask until affectedTask) {
+                if(taskPositionFrom < taskPositionTo) {
+                    for (i in taskPositionFrom until taskPositionTo) {
                         onItemMove(i, i + 1)
                     }
                 }
                 else {
-                    if(affectedTask > -1) {
-                        for (i in currentTask downTo affectedTask+1) {
+                    if(taskPositionTo > -1) {
+                        for (i in taskPositionFrom downTo taskPositionTo+1) {
                             onItemMove(i, i - 1)
                         }
                     }
                 }
 
-                adapter.notifyItemMoved(currentTask, affectedTask)
+                adapter.notifyItemMoved(taskPositionFrom, taskPositionTo)
                 return true
             }
 
