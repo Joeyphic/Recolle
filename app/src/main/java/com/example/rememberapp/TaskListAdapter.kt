@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.rememberapp.data.Task
 import com.example.rememberapp.data.getColorByPriority
 import com.example.rememberapp.databinding.TaskListItemFragmentBinding
+import java.util.*
 
 class TaskListAdapter(private val onTaskClicked: (Task) -> Unit) :
     ListAdapter<Task, TaskListAdapter.TaskViewHolder>(DiffCallback) {
@@ -80,36 +81,38 @@ class TaskListAdapter(private val onTaskClicked: (Task) -> Unit) :
         private val onItemMove: (from: Int, to: Int) -> Unit
     ) : ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP or ItemTouchHelper.DOWN, 0) {
 
-            override fun onMove(
-                recyclerView: RecyclerView,
-                viewHolder: RecyclerView.ViewHolder,
-                target: RecyclerView.ViewHolder
-            ): Boolean {
-                Log.i("TaskListAdapter", "vh pos " + viewHolder.adapterPosition)
-                Log.i("TaskListAdapter", "target pos " + target.adapterPosition)
-                Log.i("TaskListAdapter", "vh pos two " + viewHolder.layoutPosition)
-                Log.i("TaskListAdapter", "target pos two " + target.layoutPosition)
-                // Although adapter is passed parameter, we can still use getItem since we are in
-                // TaskListAdapter.kt. That's why this class is in the adapter!
-                val taskPositionFrom = viewHolder.adapterPosition
-                val taskPositionTo = target.adapterPosition
+        // lateinit var temporaryList : MutableList<Task>
 
-                if(taskPositionFrom < taskPositionTo) {
-                    for (i in taskPositionFrom until taskPositionTo) {
-                        onItemMove(i, i + 1)
-                    }
-                }
-                else {
-                    if(taskPositionTo > -1) {
-                        for (i in taskPositionFrom downTo taskPositionTo+1) {
-                            onItemMove(i, i - 1)
-                        }
-                    }
-                }
+        override fun onMove(
+            recyclerView: RecyclerView,
+            viewHolder: RecyclerView.ViewHolder,
+            target: RecyclerView.ViewHolder
+        ): Boolean {
+            Log.i("TaskListAdapter", "vh pos " + viewHolder.adapterPosition)
+            Log.i("TaskListAdapter", "target pos " + target.adapterPosition)
+            Log.i("TaskListAdapter", "list: " + adapter.currentList)
+            // Although adapter is passed parameter, we can still use getItem since we are in
+            // TaskListAdapter.kt. That's why this class is in the adapter!
+            val taskPositionFrom = viewHolder.adapterPosition
+            val taskPositionTo = target.adapterPosition
+            var temporaryListForDrag = adapter.currentList.toMutableList()
 
-                adapter.notifyItemMoved(taskPositionFrom, taskPositionTo)
-                return true
+            if(taskPositionFrom < taskPositionTo) {
+                for (i in taskPositionFrom until taskPositionTo) {
+                    Collections.swap(temporaryListForDrag, i, i+1)
+                }
             }
+            else {
+                if(taskPositionTo > -1) {
+                    for (i in taskPositionFrom downTo taskPositionTo+1) {
+                        Collections.swap(temporaryListForDrag, i, i-1)
+                    }
+                }
+            }
+
+            adapter.submitList(temporaryListForDrag)
+            return true
+        }
 
         override fun clearView(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder) {
 
