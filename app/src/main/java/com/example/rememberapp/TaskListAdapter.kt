@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.ItemTouchHelper.ACTION_STATE_DRAG
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.rememberapp.data.Task
@@ -81,7 +82,21 @@ class TaskListAdapter(private val onTaskClicked: (Task) -> Unit) :
         private val onItemMove: (from: Int, to: Int) -> Unit
     ) : ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP or ItemTouchHelper.DOWN, 0) {
 
-        // lateinit var temporaryList : MutableList<Task>
+        lateinit var temporaryList : MutableList<Task>
+
+        override fun onSelectedChanged(viewHolder: RecyclerView.ViewHolder?, actionState: Int) {
+            super.onSelectedChanged(viewHolder, actionState)
+
+            if(actionState == ACTION_STATE_DRAG) {
+                temporaryList = adapter.currentList.toMutableList()
+                adapter.submitList(temporaryList)
+            }
+        }
+
+        // Idea is use onMove to check Priority between Tasks and move if same.
+        // Can set position at beginning (selChanged) and end (clrView), then pass that value
+        // to database with orderPosition value in ViewModel.
+        // notifyItemMoved seems to be the key BC theres no previous rev. (In dev diary)
 
         override fun onMove(
             recyclerView: RecyclerView,
@@ -91,26 +106,27 @@ class TaskListAdapter(private val onTaskClicked: (Task) -> Unit) :
             Log.i("TaskListAdapter", "vh pos " + viewHolder.adapterPosition)
             Log.i("TaskListAdapter", "target pos " + target.adapterPosition)
             Log.i("TaskListAdapter", "list: " + adapter.currentList)
-            // Although adapter is passed parameter, we can still use getItem since we are in
-            // TaskListAdapter.kt. That's why this class is in the adapter!
+            // Although adapter is passed parameter, we can still use adapterPosition since we
+            // are in TaskListAdapter.kt. That's why this class is in the adapter!
+
             val taskPositionFrom = viewHolder.adapterPosition
             val taskPositionTo = target.adapterPosition
-            var temporaryListForDrag = adapter.currentList.toMutableList()
 
             if(taskPositionFrom < taskPositionTo) {
                 for (i in taskPositionFrom until taskPositionTo) {
-                    Collections.swap(temporaryListForDrag, i, i+1)
+                    Collections.swap(temporaryList, i, i+1)
                 }
             }
             else {
                 if(taskPositionTo > -1) {
                     for (i in taskPositionFrom downTo taskPositionTo+1) {
-                        Collections.swap(temporaryListForDrag, i, i-1)
+                        Collections.swap(temporaryList, i, i-1)
                     }
                 }
             }
 
-            adapter.submitList(temporaryListForDrag)
+            adapter.notifyItemMoved(taskPositionFrom, taskPositionTo)
+            Log.i("TaskListAdapter", "list2: " + adapter.currentList)
             return true
         }
 
