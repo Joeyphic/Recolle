@@ -93,6 +93,10 @@ class TaskListAdapter(private val onTaskClicked: (Task) -> Unit) :
             }
         }
 
+        override fun clearView(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder) {
+
+        }
+
         // Idea is use onMove to check Priority between Tasks and move if same.
         // Can set position at beginning (selChanged) and end (clrView), then pass that value
         // to database with orderPosition value in ViewModel.
@@ -130,13 +134,8 @@ class TaskListAdapter(private val onTaskClicked: (Task) -> Unit) :
             return true
         }
 
-        override fun clearView(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder) {
-
+        override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+            return // Swiping is not supported in this list
         }
-
-            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                TODO("Not yet implemented")
-            }
-
-        }
+    }
 }
