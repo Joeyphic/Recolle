@@ -116,20 +116,23 @@ class TaskListAdapter(private val onTaskClicked: (Task) -> Unit) :
             val taskPositionFrom = viewHolder.adapterPosition
             val taskPositionTo = target.adapterPosition
 
-            if(taskPositionFrom < taskPositionTo) {
-                for (i in taskPositionFrom until taskPositionTo) {
-                    Collections.swap(temporaryList, i, i+1)
-                }
-            }
-            else {
-                if(taskPositionTo > -1) {
-                    for (i in taskPositionFrom downTo taskPositionTo+1) {
-                        Collections.swap(temporaryList, i, i-1)
+            if(temporaryList[taskPositionFrom].taskPriority == temporaryList[taskPositionTo].taskPriority)
+            {
+                if(taskPositionFrom < taskPositionTo) {
+                    for (i in taskPositionFrom until taskPositionTo) {
+                        Collections.swap(temporaryList, i, i+1)
                     }
                 }
-            }
+                else {
+                    if(taskPositionTo > -1) {
+                        for (i in taskPositionFrom downTo taskPositionTo+1) {
+                            Collections.swap(temporaryList, i, i-1)
+                        }
+                    }
+                }
 
-            adapter.notifyItemMoved(taskPositionFrom, taskPositionTo)
+                adapter.notifyItemMoved(taskPositionFrom, taskPositionTo)
+            }
             Log.i("TaskListAdapter", "list2: " + adapter.currentList)
             return true
         }
