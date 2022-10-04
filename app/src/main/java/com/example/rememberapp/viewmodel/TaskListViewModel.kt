@@ -76,6 +76,10 @@ class TaskListViewModel(private val taskDao: TaskDao) : ViewModel() {
             Collections.swap(allTasks.value, taskPositionFrom, taskPositionTo)
         }
     }
+
+    fun updateOrder(taskPositionFrom: Int, taskPositionTo: Int) {
+
+    }
 }
 
 class TaskListViewModelFactory(private val taskDao: TaskDao) : ViewModelProvider.Factory {
