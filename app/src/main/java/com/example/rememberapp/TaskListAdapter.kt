@@ -77,7 +77,7 @@ class TaskListAdapter(private val onTaskClicked: (Task) -> Unit) :
     }
 
     // TODO: Finish implementing ItemTouchHelper
-    class SimpleCallback(
+    class TaskTouchHelper(
         private val adapter: TaskListAdapter,
         private val onItemMove: (from: Int, to: Int) -> Unit
     ) : ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP or ItemTouchHelper.DOWN, 0) {
@@ -118,18 +118,9 @@ class TaskListAdapter(private val onTaskClicked: (Task) -> Unit) :
 
             if(temporaryList[taskPositionFrom].taskPriority == temporaryList[taskPositionTo].taskPriority)
             {
-                if(taskPositionFrom < taskPositionTo) {
-                    for (i in taskPositionFrom until taskPositionTo) {
-                        Collections.swap(temporaryList, i, i+1)
-                    }
-                }
-                else {
-                    if(taskPositionTo > -1) {
-                        for (i in taskPositionFrom downTo taskPositionTo+1) {
-                            Collections.swap(temporaryList, i, i-1)
-                        }
-                    }
-                }
+                val currentTask = temporaryList[taskPositionFrom]
+                temporaryList.removeAt(taskPositionFrom)
+                temporaryList.add(taskPositionTo, currentTask)
 
                 adapter.notifyItemMoved(taskPositionFrom, taskPositionTo)
             }

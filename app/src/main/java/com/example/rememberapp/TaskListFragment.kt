@@ -52,7 +52,7 @@ class TaskListFragment : Fragment() {
         }
 
         // TODO: Finish implementing ItemTouchHelper
-        val itemTouchHelper = ItemTouchHelper(TaskListAdapter.SimpleCallback(adapter) { from, to ->
+        val itemTouchHelper = ItemTouchHelper(TaskListAdapter.TaskTouchHelper(adapter) { from, to ->
             viewModel.updateOrder(from, to)
         })
         itemTouchHelper.attachToRecyclerView(binding.recyclerView)
