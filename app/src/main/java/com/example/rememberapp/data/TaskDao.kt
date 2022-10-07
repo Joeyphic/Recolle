@@ -18,6 +18,12 @@ interface TaskDao {
     @Query("SELECT * FROM task WHERE id=:id")
     fun getTaskById(id: Int): Flow<Task>
 
+    @Query("SELECT MIN(orderIndex) FROM task WHERE priority=:taskPriority")
+    fun getNewOrderNumber(taskPriority: String): Flow<Task>
+
+    @Query("UPDATE task SET orderIndex = orderIndex + 1 WHERE orderIndex>=:taskSortOrder")
+    fun updateOrderNumbers(taskSortOrder: Int): Flow<Task>
+
     /**
      * Gets all tasks from database, with the highest priority ones on the top.
      *

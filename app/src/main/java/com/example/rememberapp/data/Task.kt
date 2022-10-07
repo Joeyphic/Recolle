@@ -13,7 +13,7 @@ data class Task(
     val taskName: String,
     @ColumnInfo(name = "priority")
     val taskPriority: PriorityLevel,
-    @ColumnInfo(name = "order")
+    @ColumnInfo(name = "orderIndex")
     val taskSortOrder: Int
 )
 

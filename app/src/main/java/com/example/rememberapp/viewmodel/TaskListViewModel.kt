@@ -30,6 +30,7 @@ class TaskListViewModel(private val taskDao: TaskDao) : ViewModel() {
     }
 
     private fun getNewTaskEntry(taskName: String, taskPriority: PriorityLevel): Task {
+
         return Task(
             taskName = taskName,
             taskPriority = taskPriority
