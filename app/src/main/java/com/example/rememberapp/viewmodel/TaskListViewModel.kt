@@ -13,7 +13,7 @@ class TaskListViewModel(private val taskDao: TaskDao) : ViewModel() {
 
     private fun insertTask(task: Task) {
         viewModelScope.launch {
-            taskDao.insert(task)
+            taskDao.insertTask(task)
         }
     }
 
@@ -33,7 +33,8 @@ class TaskListViewModel(private val taskDao: TaskDao) : ViewModel() {
 
         return Task(
             taskName = taskName,
-            taskPriority = taskPriority
+            taskPriority = taskPriority,
+            taskSortOrder = -1
         )
     }
 
@@ -62,20 +63,13 @@ class TaskListViewModel(private val taskDao: TaskDao) : ViewModel() {
         return Task(
             id = taskId,
             taskName = taskName,
-            taskPriority = taskPriority
+            taskPriority = taskPriority,
+            taskSortOrder = -1
         )
     }
 
     fun completeTask(task: Task) {
         deleteTask(task)
-    }
-
-    // TODO: Finish implementing ItemTouchHelper
-    fun swapTasks(taskPositionFrom: Int, taskPositionTo: Int) {
-
-        allTasks.value?.let {
-            Collections.swap(allTasks.value, taskPositionFrom, taskPositionTo)
-        }
     }
 
     fun updateOrder(taskPositionFrom: Int, taskPositionTo: Int) {

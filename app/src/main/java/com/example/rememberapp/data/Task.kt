@@ -14,7 +14,7 @@ data class Task(
     @ColumnInfo(name = "priority")
     val taskPriority: PriorityLevel,
     @ColumnInfo(name = "orderIndex")
-    val taskSortOrder: Int
+    var taskSortOrder: Int
 )
 
 /**
