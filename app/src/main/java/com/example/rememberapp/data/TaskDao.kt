@@ -21,8 +21,8 @@ interface TaskDao {
     @Query("SELECT MIN(orderIndex) FROM task WHERE priority=:taskPriority")
     fun getNewOrderNumber(taskPriority: String): Int
 
-    @Query("SELECT COUNT(*) FROM task WHERE priority=:taskPriorityStr")
-    fun getNumberOfTasksByPriority(taskPriorityStr: String): Int
+    @Query("SELECT COUNT(*) FROM task WHERE priority=:taskPriorityStr OR priority=:taskPriorityStr2")
+    fun getNumberOfTasksByPriorities(taskPriorityStr: String, taskPriorityStr2: String = ""): Int
 
     @Query("UPDATE task SET orderIndex = orderIndex + 1 WHERE orderIndex>=:taskSortOrder")
     suspend fun updateOrderNumbers(taskSortOrder: Int)
@@ -31,9 +31,9 @@ interface TaskDao {
     suspend fun insertTask(task: Task) {
         task.taskSortOrder = when (task.taskPriority) {
             PriorityLevel.HIGH -> 0
-            PriorityLevel.MEDIUM -> getNumberOfTasksByPriority("HIGH")
+            PriorityLevel.MEDIUM -> getNumberOfTasksByPriorities("HIGH")
             PriorityLevel.LOW ->
-                getNumberOfTasksByPriority("HIGH") + getNumberOfTasksByPriority("MEDIUM")
+                getNumberOfTasksByPriorities("HIGH", "MEDIUM")
         }
         updateOrderNumbers(task.taskSortOrder)
         insert(task)
