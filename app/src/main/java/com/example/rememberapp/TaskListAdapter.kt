@@ -124,6 +124,8 @@ class TaskListAdapter(private val onTaskClicked: (Task) -> Unit) :
 
                 adapter.notifyItemMoved(taskPositionFrom, taskPositionTo)
             }
+            else return false // solves unintentional behaviour of dragged item showing under target
+
             Log.i("TaskListAdapter", "list2: " + adapter.currentList)
             return true
         }

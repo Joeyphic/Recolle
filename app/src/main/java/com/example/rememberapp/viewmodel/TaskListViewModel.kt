@@ -19,7 +19,7 @@ class TaskListViewModel(private val taskDao: TaskDao) : ViewModel() {
 
     fun deleteTask(task: Task) {
         viewModelScope.launch {
-            taskDao.delete(task)
+            taskDao.deleteTask(task)
         }
     }
 
