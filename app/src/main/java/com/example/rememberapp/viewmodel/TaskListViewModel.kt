@@ -29,6 +29,11 @@ class TaskListViewModel(private val taskDao: TaskDao) : ViewModel() {
         }
     }
 
+    fun moveTaskPosition(fromPosition: Int, toPosition: Int) {
+        viewModelScope.launch {
+            taskDao.moveTask(fromPosition, toPosition)
+        }
+    }
     private fun getNewTaskEntry(taskName: String, taskPriority: PriorityLevel): Task {
 
         return Task(
@@ -70,10 +75,6 @@ class TaskListViewModel(private val taskDao: TaskDao) : ViewModel() {
 
     fun completeTask(task: Task) {
         deleteTask(task)
-    }
-
-    fun updateOrder(taskPositionFrom: Int, taskPositionTo: Int) {
-
     }
 }
 

@@ -83,18 +83,23 @@ class TaskListAdapter(private val onTaskClicked: (Task) -> Unit) :
     ) : ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP or ItemTouchHelper.DOWN, 0) {
 
         lateinit var temporaryList : MutableList<Task>
+        var from = -1
+        var to = -1
 
         override fun onSelectedChanged(viewHolder: RecyclerView.ViewHolder?, actionState: Int) {
             super.onSelectedChanged(viewHolder, actionState)
 
-            if(actionState == ACTION_STATE_DRAG) {
+            if(actionState == ACTION_STATE_DRAG && viewHolder != null) {
+                from = viewHolder.adapterPosition
+
                 temporaryList = adapter.currentList.toMutableList()
                 adapter.submitList(temporaryList)
             }
         }
 
         override fun clearView(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder) {
-
+            to = viewHolder.adapterPosition
+            onItemMove(from, to)
         }
 
         // Idea is use onMove to check Priority between Tasks and move if same.
