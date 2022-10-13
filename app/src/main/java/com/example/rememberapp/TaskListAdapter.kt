@@ -83,14 +83,16 @@ class TaskListAdapter(private val onTaskClicked: (Task) -> Unit) :
     ) : ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP or ItemTouchHelper.DOWN, 0) {
 
         lateinit var temporaryList : MutableList<Task>
-        var from = -1
-        var to = -1
+        private var from = -1
+        private var to = -1
 
         override fun onSelectedChanged(viewHolder: RecyclerView.ViewHolder?, actionState: Int) {
             super.onSelectedChanged(viewHolder, actionState)
 
             if(actionState == ACTION_STATE_DRAG && viewHolder != null) {
                 from = viewHolder.adapterPosition
+
+                viewHolder.itemView.background.alpha = 200
 
                 temporaryList = adapter.currentList.toMutableList()
                 adapter.submitList(temporaryList)
@@ -99,6 +101,21 @@ class TaskListAdapter(private val onTaskClicked: (Task) -> Unit) :
 
         override fun clearView(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder) {
             to = viewHolder.adapterPosition
+            viewHolder.itemView.background.alpha = 255
+            /*
+            for(i in from..to) {
+                temporaryList[i].taskSortOrder = i
+            }
+
+            for(i in from downTo to) {
+                temporaryList[i].taskSortOrder = i
+            }
+            */
+
+            for(i in temporaryList.indices) {
+                temporaryList[i].taskSortOrder = i
+            }
+
             onItemMove(from, to)
         }
 
