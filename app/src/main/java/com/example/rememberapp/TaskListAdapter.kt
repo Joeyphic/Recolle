@@ -94,6 +94,10 @@ class TaskListAdapter(private val onTaskClicked: (Task) -> Unit) :
 
                 viewHolder.itemView.background.alpha = 200
 
+                // TODO: Discover why we need to change elevation to stop dragged view going
+                //  underneath other views.
+
+                viewHolder.itemView.elevation = 0.01F
                 temporaryList = adapter.currentList.toMutableList()
                 adapter.submitList(temporaryList)
             }
@@ -102,6 +106,7 @@ class TaskListAdapter(private val onTaskClicked: (Task) -> Unit) :
         override fun clearView(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder) {
             to = viewHolder.adapterPosition
             viewHolder.itemView.background.alpha = 255
+            viewHolder.itemView.elevation = 0.0F
             /*
             for(i in from..to) {
                 temporaryList[i].taskSortOrder = i
