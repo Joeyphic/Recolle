@@ -18,37 +18,37 @@ interface TaskDao {
     @Query("SELECT * FROM task WHERE id=:id")
     fun getTaskById(id: Int): Flow<Task>
 
-    @Query("SELECT * FROM task WHERE orderIndex=:position")
+    @Query("SELECT * FROM task WHERE position=:position")
     fun getTaskByPosition(position: Int): Task
 
     @Query("SELECT COUNT(*) FROM task WHERE priority=:taskPriorityStr OR priority=:taskPriorityStr2")
     fun getNumberOfTasksByPriorities(taskPriorityStr: String, taskPriorityStr2: String = ""): Int
 
-    @Query("UPDATE task SET orderIndex = orderIndex + 1 WHERE orderIndex>=:taskSortOrder")
-    suspend fun updateOrderNumbersBeforeInsertion(taskSortOrder: Int)
+    @Query("UPDATE task SET position = position + 1 WHERE position>=:taskSortOrder")
+    suspend fun updatePositionsBeforeInsertion(taskSortOrder: Int)
 
-    @Query("UPDATE task SET orderIndex = orderIndex - 1 WHERE orderIndex>=:taskSortOrder")
-    suspend fun updateOrderNumbersAfterDeletion(taskSortOrder: Int)
+    @Query("UPDATE task SET position = position - 1 WHERE position>=:taskSortOrder")
+    suspend fun updatePositionsAfterDeletion(taskSortOrder: Int)
 
-    @Query("UPDATE task SET orderIndex = (orderIndex + :shiftAmount) WHERE orderIndex BETWEEN :taskFromPosition AND :taskToPosition")
+    @Query("UPDATE task SET position = (position + :shiftAmount) WHERE position BETWEEN :taskFromPosition AND :taskToPosition")
     suspend fun shiftTaskPositions(shiftAmount: Int, taskFromPosition: Int, taskToPosition: Int)
 
     @Transaction
     suspend fun insertTask(task: Task) {
-        task.taskSortOrder = when (task.taskPriority) {
+        task.taskListPosition = when (task.taskPriority) {
             PriorityLevel.HIGH -> 0
             PriorityLevel.MEDIUM -> getNumberOfTasksByPriorities("HIGH")
             PriorityLevel.LOW ->
                 getNumberOfTasksByPriorities("HIGH", "MEDIUM")
         }
-        updateOrderNumbersBeforeInsertion(task.taskSortOrder)
+        updatePositionsBeforeInsertion(task.taskListPosition)
         insert(task)
     }
 
     @Transaction
     suspend fun deleteTask(task: Task) {
         delete(task)
-        updateOrderNumbersAfterDeletion(task.taskSortOrder)
+        updatePositionsAfterDeletion(task.taskListPosition)
     }
 
     @Transaction
@@ -65,7 +65,7 @@ interface TaskDao {
             shiftTaskPositions(+1, taskToPosition, taskFromPosition - 1)
         }
 
-        currentTask.taskSortOrder = taskToPosition
+        currentTask.taskListPosition = taskToPosition
         update(currentTask)
     }
 
@@ -74,6 +74,6 @@ interface TaskDao {
      *
      * Orders tasks of the same priority by task name.
      */
-    @Query("SELECT * FROM task ORDER BY orderIndex ASC")
+    @Query("SELECT * FROM task ORDER BY position ASC")
     fun getAllTasks(): Flow<List<Task>>
 }

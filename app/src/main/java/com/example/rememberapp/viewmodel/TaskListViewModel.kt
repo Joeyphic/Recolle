@@ -5,7 +5,6 @@ import com.example.rememberapp.data.PriorityLevel
 import com.example.rememberapp.data.Task
 import com.example.rememberapp.data.TaskDao
 import kotlinx.coroutines.launch
-import java.util.*
 
 class TaskListViewModel(private val taskDao: TaskDao) : ViewModel() {
 
@@ -39,7 +38,7 @@ class TaskListViewModel(private val taskDao: TaskDao) : ViewModel() {
         return Task(
             taskName = taskName,
             taskPriority = taskPriority,
-            taskSortOrder = -1
+            taskListPosition = -1
         )
     }
 
@@ -69,7 +68,7 @@ class TaskListViewModel(private val taskDao: TaskDao) : ViewModel() {
             id = taskId,
             taskName = taskName,
             taskPriority = taskPriority,
-            taskSortOrder = -1
+            taskListPosition = -1
         )
     }
 

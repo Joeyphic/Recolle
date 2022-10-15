@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.rememberapp.data.Task
 import com.example.rememberapp.data.getColorByPriority
 import com.example.rememberapp.databinding.TaskListItemFragmentBinding
-import java.util.*
 
 class TaskListAdapter(private val onTaskClicked: (Task) -> Unit) :
     ListAdapter<Task, TaskListAdapter.TaskViewHolder>(DiffCallback) {
@@ -118,7 +117,7 @@ class TaskListAdapter(private val onTaskClicked: (Task) -> Unit) :
             */
 
             for(i in temporaryList.indices) {
-                temporaryList[i].taskSortOrder = i
+                temporaryList[i].taskListPosition = i
             }
 
             onItemMove(from, to)
