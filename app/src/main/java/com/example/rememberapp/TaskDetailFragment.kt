@@ -52,7 +52,7 @@ class TaskDetailFragment : Fragment() {
             taskPriority.text = task.taskPriority.name.lowercase()
 
             // Adding Color depending on Task priority
-            binding.linearLayout.setBackgroundColor(task.getColorByPriority())
+            binding.taskDetailBanner.setColorFilter(task.getColorByPriority())
         }
 
     }

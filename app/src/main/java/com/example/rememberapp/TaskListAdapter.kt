@@ -102,17 +102,10 @@ class TaskListAdapter(private val onTaskClicked: (Task) -> Unit) :
             super.clearView(recyclerView, viewHolder)
             to = viewHolder.adapterPosition
             viewHolder.itemView.background.alpha = 255
-            /*
-            for(i in from..to) {
-                temporaryList[i].taskSortOrder = i
-            }
 
-            for(i in from downTo to) {
-                temporaryList[i].taskSortOrder = i
-            }
-            */
-
-            for(i in temporaryList.indices) {
+            val maxIndex = maxOf(from, to)
+            val minIndex = minOf(from, to)
+            for(i in minIndex..maxIndex) {
                 temporaryList[i].taskListPosition = i
             }
 
