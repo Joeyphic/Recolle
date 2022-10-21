@@ -67,6 +67,6 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:padding="@dimen/margin"
-        app:tint="@color/primaryDarkColor"
-        app:srcCompat="@drawable/ic_baseline_check_circle_outline_170" />
+        app:srcCompat="@drawable/complete_task_animation"
+        app:tint="@color/primaryDarkColor" />
 </RelativeLayout>
