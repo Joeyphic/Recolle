@@ -67,6 +67,5 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:padding="@dimen/margin"
-        app:srcCompat="@drawable/complete_task_animation"
-        app:tint="@color/primaryDarkColor" />
+        app:srcCompat="@drawable/complete_task_animation" />
 </RelativeLayout>

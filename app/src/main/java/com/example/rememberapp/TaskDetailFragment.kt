@@ -1,5 +1,9 @@
 package com.example.rememberapp
 
+import android.graphics.drawable.Animatable
+import android.graphics.drawable.Animatable2
+import android.graphics.drawable.AnimatedVectorDrawable
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.util.Log
 import android.view.*
@@ -10,6 +14,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.vectordrawable.graphics.drawable.Animatable2Compat
 import com.example.rememberapp.data.Task
 import com.example.rememberapp.data.getColorByPriority
 import com.example.rememberapp.databinding.TaskDetailFragmentBinding
@@ -69,8 +74,17 @@ class TaskDetailFragment : Fragment() {
         }
 
         // Complete Task Button
+        // TODO: Fix bug of animation staying completed between fragments
+        // TODO: Change to Touch Listener
         binding.imageView.setOnClickListener {
-            completeTask()
+            val imageViewDrawable = binding.imageView.drawable as AnimatedVectorDrawable
+            imageViewDrawable.registerAnimationCallback(object : Animatable2.AnimationCallback() {
+
+                override fun onAnimationEnd(drawable: Drawable?) {
+                    this@TaskDetailFragment.completeTask()
+                }
+            })
+            imageViewDrawable.start()
         }
 
         // Using MenuProvider to add Edit and Delete options to the top app bar.
@@ -135,6 +149,7 @@ class TaskDetailFragment : Fragment() {
     }
 
     private fun completeTask() {
+        Log.i("TaskDetailFragment", "Running.")
         viewModel.completeTask(task)
         findNavController().navigateUp()
     }
