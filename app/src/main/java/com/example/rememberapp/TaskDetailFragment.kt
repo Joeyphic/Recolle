@@ -48,8 +48,9 @@ class TaskDetailFragment : Fragment() {
         binding.apply {
             taskName.text = task.taskName
 
-            // TODO: Capitalize the first letter cleanly. Do after enum names are finalized.
+            // Capitalize first letter
             taskPriority.text = task.taskPriority.name.lowercase()
+                .replaceFirstChar { it.uppercase() }
 
             // Adding Color depending on Task priority
             binding.taskDetailBanner.setColorFilter(task.getColorByPriority())
