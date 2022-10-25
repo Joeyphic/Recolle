@@ -4,6 +4,7 @@ import androidx.lifecycle.*
 import com.example.rememberapp.data.PriorityLevel
 import com.example.rememberapp.data.Task
 import com.example.rememberapp.data.TaskDao
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class TaskListViewModel(private val taskDao: TaskDao) : ViewModel() {
@@ -18,6 +19,7 @@ class TaskListViewModel(private val taskDao: TaskDao) : ViewModel() {
 
     fun deleteTask(task: Task) {
         viewModelScope.launch {
+            // TODO: Delay(millis:100) fixes issue of animation in TaskList. Cleaner way to fix?
             taskDao.deleteTask(task)
         }
     }
@@ -54,7 +56,7 @@ class TaskListViewModel(private val taskDao: TaskDao) : ViewModel() {
         insertTask(newTask)
     }
 
-    fun retrieveTask(id: Int): LiveData<Task> {
+    fun retrieveTask(id: Int): LiveData<Task?> {
         return taskDao.getTaskById(id).asLiveData()
     }
 

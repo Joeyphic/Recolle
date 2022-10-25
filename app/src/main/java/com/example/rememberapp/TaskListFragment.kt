@@ -1,6 +1,7 @@
 package com.example.rememberapp
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -46,9 +47,7 @@ class TaskListFragment : Fragment() {
         binding.recyclerView.adapter = adapter
 
         viewModel.allTasks.observe(this.viewLifecycleOwner) { tasks ->
-            tasks.let {
-               adapter.submitList(it)
-            }
+            adapter.submitList(tasks)
         }
 
         // TODO: Finish implementing ItemTouchHelper

@@ -49,8 +49,10 @@ class TaskListAddModifyItem : Fragment() {
         // If there's an ID, link selected task to fragment.
         if(id > 0) {
             viewModel.retrieveTask(id).observe(this.viewLifecycleOwner) { selectedTask ->
-                task = selectedTask
-                bind(task)
+                selectedTask?.let {
+                    task = selectedTask
+                    bind(task)
+                }
             }
         }
         else {

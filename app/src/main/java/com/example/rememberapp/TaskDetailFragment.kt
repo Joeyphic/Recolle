@@ -1,5 +1,6 @@
 package com.example.rememberapp
 
+import android.annotation.SuppressLint
 import android.graphics.drawable.Animatable
 import android.graphics.drawable.Animatable2
 import android.graphics.drawable.AnimatedVectorDrawable
@@ -39,6 +40,7 @@ class TaskDetailFragment : Fragment() {
     private val binding get() = _binding!!
 
     lateinit var task: Task
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -63,29 +65,45 @@ class TaskDetailFragment : Fragment() {
 
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         // Navigation argument
         val id = navigationArgs.taskId
         viewModel.retrieveTask(id).observe(this.viewLifecycleOwner) { selectedTask ->
-            task = selectedTask
-            bind(task)
+            selectedTask?.let {
+                task = selectedTask
+                bind(task)
+            }
         }
 
         // Complete Task Button
         // TODO: Fix bug of animation staying completed between fragments
         // TODO: Change to Touch Listener
-        binding.imageView.setOnClickListener {
+        binding.imageView.setOnTouchListener(View.OnTouchListener { v, event ->
             val imageViewDrawable = binding.imageView.drawable as AnimatedVectorDrawable
-            imageViewDrawable.registerAnimationCallback(object : Animatable2.AnimationCallback() {
 
-                override fun onAnimationEnd(drawable: Drawable?) {
-                    this@TaskDetailFragment.completeTask()
+            when (event.action) {
+
+                MotionEvent.ACTION_DOWN -> {
+
+                    //Selected task is null before navigating back bc theres an observer.
+                    imageViewDrawable.registerAnimationCallback(object : Animatable2.AnimationCallback() {
+                        override fun onAnimationEnd(drawable: Drawable?) {
+                            this@TaskDetailFragment.completeTask(task)
+                        }
+                    })
+                    imageViewDrawable.start()
                 }
-            })
-            imageViewDrawable.start()
-        }
+
+                MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
+                    imageViewDrawable.clearAnimationCallbacks()
+                    imageViewDrawable.reset()
+                }
+            }
+            return@OnTouchListener true
+        })
 
         // Using MenuProvider to add Edit and Delete options to the top app bar.
         val menuHost: MenuHost = requireActivity()
@@ -148,9 +166,10 @@ class TaskDetailFragment : Fragment() {
         findNavController().navigateUp()
     }
 
-    private fun completeTask() {
-        Log.i("TaskDetailFragment", "Running.")
-        viewModel.completeTask(task)
+    private fun completeTask(task: Task) {
+        viewModel.deleteTask(task)
+
+        val action = TaskDetailFragmentDirections.actionTaskDetailFragmentToTaskListFragment()
         findNavController().navigateUp()
     }
 }
