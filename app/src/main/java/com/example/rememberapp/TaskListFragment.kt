@@ -46,8 +46,12 @@ class TaskListFragment : Fragment() {
 
         binding.recyclerView.adapter = adapter
 
+        viewModel.recordedTaskList?.let {
+            adapter.submitList(viewModel.recordedTaskList)
+        }
         viewModel.allTasks.observe(this.viewLifecycleOwner) { tasks ->
             adapter.submitList(tasks)
+            viewModel.recordedTaskList = tasks
         }
 
         // TODO: Finish implementing ItemTouchHelper

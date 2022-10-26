@@ -11,6 +11,8 @@ class TaskListViewModel(private val taskDao: TaskDao) : ViewModel() {
 
     val allTasks: LiveData<List<Task>> = taskDao.getAllTasks().asLiveData()
 
+    var recordedTaskList: List<Task>? = null
+
     private fun insertTask(task: Task) {
         viewModelScope.launch {
             taskDao.insertTask(task)
@@ -19,7 +21,6 @@ class TaskListViewModel(private val taskDao: TaskDao) : ViewModel() {
 
     fun deleteTask(task: Task) {
         viewModelScope.launch {
-            // TODO: Delay(millis:100) fixes issue of animation in TaskList. Cleaner way to fix?
             taskDao.deleteTask(task)
         }
     }
