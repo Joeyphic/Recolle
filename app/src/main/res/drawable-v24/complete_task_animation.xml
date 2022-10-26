@@ -11,17 +11,19 @@
             <path
                 android:name="star"
                 android:pathData="M 12.061 15.01 L 15.669 17.187 L 14.711 13.084 L 17.898 10.323 L 13.702 9.967 L 12.061 6.097 L 10.421 9.967 L 6.225 10.323 L 9.411 13.084 L 8.454 17.187 Z"
-                android:fillColor="#8d6e63"
+                android:fillColor="@color/primaryColor"
                 android:fillAlpha="0"
-                android:strokeColor="#8d6e63"
+                android:strokeColor="@color/primaryColor"
                 android:strokeWidth="1"
                 android:strokeLineJoin="round"/>
             <path
                 android:name="circle"
                 android:pathData="M 12 10.994 C 11.733 10.994 11.477 11.1 11.288 11.289 C 11.099 11.478 10.993 11.734 10.993 12.001 C 10.993 12.268 11.099 12.524 11.288 12.713 C 11.477 12.902 11.733 13.008 12 13.008 C 12.213 13.008 12.42 12.941 12.592 12.816 C 12.764 12.691 12.892 12.514 12.958 12.312 C 13.024 12.11 13.024 11.892 12.958 11.69 C 12.892 11.488 12.764 11.311 12.592 11.186 C 12.42 11.061 12.213 10.994 12 10.994 Z"
-                android:fillColor="#be9c91"
-                android:strokeColor="#8d6e63"
-                android:strokeWidth="1"/>
+                android:fillColor="@color/primaryLightColor"
+                android:fillAlpha="0"
+                android:strokeColor="@color/primaryColor"
+                android:strokeAlpha="0"
+                android:strokeWidth="0.5"/>
         </vector>
     </aapt:attr>
     <target android:name="circle">
@@ -29,7 +31,8 @@
             <set>
                 <objectAnimator
                     android:propertyName="pathData"
-                    android:duration="1400"
+                    android:startOffset="14"
+                    android:duration="1486"
                     android:valueFrom="M 12 10.994 C 11.733 10.994 11.477 11.1 11.288 11.289 C 11.099 11.478 10.993 11.734 10.993 12.001 C 10.993 12.268 11.099 12.524 11.288 12.713 C 11.477 12.902 11.733 13.008 12 13.008 C 12.213 13.008 12.42 12.941 12.592 12.816 C 12.764 12.691 12.892 12.514 12.958 12.312 C 13.024 12.11 13.024 11.892 12.958 11.69 C 12.892 11.488 12.764 11.311 12.592 11.186 C 12.42 11.061 12.213 10.994 12 10.994 Z"
                     android:valueTo="M 12 3.817 C 9.83 3.817 7.747 4.68 6.213 6.214 C 4.679 7.748 3.816 9.831 3.816 12.001 C 3.816 14.171 4.679 16.254 6.213 17.788 C 7.747 19.322 9.83 20.185 12 20.185 C 14.17 20.185 16.253 19.322 17.787 17.788 C 18.554 17.021 19.153 16.117 19.561 15.133 C 19.968 14.149 20.184 13.086 20.184 12.001 C 20.184 9.831 19.321 7.748 17.787 6.214 C 16.253 4.68 14.17 3.817 12 3.817 Z"
                     android:valueType="pathType"
@@ -50,19 +53,51 @@
                     android:valueTo="0"
                     android:valueType="floatType"
                     android:interpolator="@android:interpolator/fast_out_slow_in"/>
+                <objectAnimator
+                    android:propertyName="fillAlpha"
+                    android:duration="14"
+                    android:valueFrom="0"
+                    android:valueTo="1"
+                    android:valueType="floatType"
+                    android:interpolator="@android:interpolator/fast_out_slow_in"/>
+                <objectAnimator
+                    android:propertyName="strokeAlpha"
+                    android:duration="14"
+                    android:valueFrom="0"
+                    android:valueTo="1"
+                    android:valueType="floatType"
+                    android:interpolator="@android:interpolator/fast_out_slow_in"/>
             </set>
         </aapt:attr>
     </target>
     <target android:name="star">
         <aapt:attr name="android:animation">
-            <objectAnimator
-                android:propertyName="fillAlpha"
-                android:startOffset="1390"
-                android:duration="10"
-                android:valueFrom="0"
-                android:valueTo="1"
-                android:valueType="floatType"
-                android:interpolator="@android:anim/linear_interpolator"/>
+            <set>
+                <objectAnimator
+                    android:propertyName="fillAlpha"
+                    android:startOffset="1390"
+                    android:duration="10"
+                    android:valueFrom="0"
+                    android:valueTo="1"
+                    android:valueType="floatType"
+                    android:interpolator="@android:anim/linear_interpolator"/>
+                <objectAnimator
+                    android:propertyName="pathData"
+                    android:startOffset="2101"
+                    android:duration="599"
+                    android:valueFrom="M 12.061 15.82 L 16.536 18.521 L 15.349 13.431 L 19.302 10.006 L 14.096 9.564 L 12.061 4.764 L 10.027 9.564 L 4.821 10.006 L 8.774 13.431 L 7.587 18.521 Z"
+                    android:valueTo="M 12.061 15.467 L 16.158 17.94 L 15.071 13.28 L 18.691 10.144 L 13.924 9.74 L 12.061 5.344 L 10.199 9.74 L 5.432 10.144 L 9.052 13.28 L 7.964 17.94 Z"
+                    android:valueType="pathType"
+                    android:interpolator="@android:interpolator/fast_out_slow_in"/>
+                <objectAnimator
+                    android:propertyName="pathData"
+                    android:startOffset="1500"
+                    android:duration="599"
+                    android:valueFrom="M 12.061 15.01 L 15.669 17.187 L 14.711 13.084 L 17.898 10.323 L 13.702 9.967 L 12.061 6.097 L 10.421 9.967 L 6.225 10.323 L 9.411 13.084 L 8.454 17.187 Z"
+                    android:valueTo="M 12.061 15.82 L 16.536 18.521 L 15.349 13.431 L 19.302 10.006 L 14.096 9.564 L 12.061 4.764 L 10.027 9.564 L 4.821 10.006 L 8.774 13.431 L 7.587 18.521 Z"
+                    android:valueType="pathType"
+                    android:interpolator="@android:interpolator/fast_out_slow_in"/>
+            </set>
         </aapt:attr>
     </target>
 </animated-vector>
