@@ -166,10 +166,22 @@ class TaskDetailFragment : Fragment() {
         findNavController().navigateUp()
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private fun completeTask(task: Task) {
-        viewModel.deleteTask(task)
 
-        val action = TaskDetailFragmentDirections.actionTaskDetailFragmentToTaskListFragment()
-        findNavController().navigateUp()
+        viewModel.deleteTask(task)
+        binding.imageView.setOnTouchListener(null);
+
+        // Play second half of animation
+        binding.imageView.setImageResource(R.drawable.complete_task_anim_2)
+        val imageViewDrawable = binding.imageView.drawable as AnimatedVectorDrawable
+
+        imageViewDrawable.registerAnimationCallback(object : Animatable2.AnimationCallback() {
+            override fun onAnimationEnd(drawable: Drawable?) {
+                val action = TaskDetailFragmentDirections.actionTaskDetailFragmentToTaskListFragment()
+                findNavController().navigate(action)
+            }
+        })
+        imageViewDrawable.start()
     }
 }
