@@ -110,11 +110,15 @@ class TaskListAddModifyItem : Fragment() {
 
     private fun updateTask() {
         if(isEntryValid()) {
+            val updatedPriority = getPriorityFromRadioId() ?: return // Since valid, is non-null
+            val isPriorityChanged = task.taskPriority != updatedPriority
+
             viewModel.updateTask(
                 this.navigationArgs.taskId,
                 binding.taskName.text.toString(),
-                getPriorityFromRadioId() ?: return, // Since valid, should be non-null
-                task.taskListPosition
+                updatedPriority,
+                task.taskListPosition,
+                isPriorityChanged
             )
 
             val action = TaskListAddModifyItemDirections

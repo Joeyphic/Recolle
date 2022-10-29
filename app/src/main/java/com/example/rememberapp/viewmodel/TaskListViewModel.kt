@@ -25,9 +25,9 @@ class TaskListViewModel(private val taskDao: TaskDao) : ViewModel() {
         }
     }
 
-    private fun updateTask(task: Task) {
+    private fun updateTask(task: Task, isPriorityChanged: Boolean) {
         viewModelScope.launch {
-            taskDao.update(task)
+            taskDao.updateTask(task, isPriorityChanged)
         }
     }
 
@@ -61,9 +61,9 @@ class TaskListViewModel(private val taskDao: TaskDao) : ViewModel() {
         return taskDao.getTaskById(id).asLiveData()
     }
 
-    fun updateTask(taskId: Int, taskName: String, taskPriority: PriorityLevel, taskListPosition: Int) {
+    fun updateTask(taskId: Int, taskName: String, taskPriority: PriorityLevel, taskListPosition: Int, isPriorityChanged: Boolean) {
         val updatedTask = getUpdatedTaskEntry(taskId, taskName, taskPriority, taskListPosition)
-        updateTask(updatedTask)
+        updateTask(updatedTask, isPriorityChanged)
     }
 
     private fun getUpdatedTaskEntry(taskId: Int, taskName: String, taskPriority: PriorityLevel, taskListPosition: Int): Task {

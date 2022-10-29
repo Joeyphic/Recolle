@@ -79,8 +79,6 @@ class TaskDetailFragment : Fragment() {
         }
 
         // Complete Task Button
-        // TODO: Fix bug of animation staying completed between fragments
-        // TODO: Change to Touch Listener
         binding.imageView.setOnTouchListener(View.OnTouchListener { v, event ->
             val imageViewDrawable = binding.imageView.drawable as AnimatedVectorDrawable
 

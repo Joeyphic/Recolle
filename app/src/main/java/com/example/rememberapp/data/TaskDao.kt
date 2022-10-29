@@ -52,6 +52,19 @@ interface TaskDao {
     }
 
     @Transaction
+    suspend fun updateTask(task: Task, isPriorityChanged: Boolean) {
+
+        if(isPriorityChanged) {
+            val oldTask = getTaskByPosition(task.taskListPosition)
+            deleteTask(oldTask)
+            insertTask(task)
+        }
+        else {
+            update(task)
+        }
+    }
+
+    @Transaction
     suspend fun moveTask(taskFromPosition: Int, taskToPosition: Int) {
 
         val currentTask = getTaskByPosition(taskFromPosition)
