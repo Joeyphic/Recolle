@@ -95,6 +95,7 @@ class TaskListAddModifyItem : Fragment() {
 
     private fun bind(task: Task) {
         binding.apply {
+            layoutTaskName.isHintAnimationEnabled = false
             taskName.setText(task.taskName, TextView.BufferType.SPANNABLE)
 
             when (task.taskPriority) {

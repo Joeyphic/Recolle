@@ -75,7 +75,6 @@ class TaskListAdapter(private val onTaskClicked: (Task) -> Unit) :
         }
     }
 
-    // TODO: Finish implementing ItemTouchHelper
     class TaskTouchHelper(
         private val adapter: TaskListAdapter,
         private val onItemMove: (from: Int, to: Int) -> Unit

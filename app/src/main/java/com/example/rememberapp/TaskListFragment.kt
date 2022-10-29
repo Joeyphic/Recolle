@@ -54,7 +54,6 @@ class TaskListFragment : Fragment() {
             viewModel.recordedTaskList = tasks
         }
 
-        // TODO: Finish implementing ItemTouchHelper
         val itemTouchHelper = ItemTouchHelper(TaskListAdapter.TaskTouchHelper(adapter) { from, to ->
             viewModel.moveTaskPosition(from, to)
         })

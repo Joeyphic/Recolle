@@ -86,7 +86,6 @@ class TaskDetailFragment : Fragment() {
 
                 MotionEvent.ACTION_DOWN -> {
 
-                    //Selected task is null before navigating back bc theres an observer.
                     imageViewDrawable.registerAnimationCallback(object : Animatable2.AnimationCallback() {
                         override fun onAnimationEnd(drawable: Drawable?) {
                             this@TaskDetailFragment.completeTask(task)
@@ -168,7 +167,7 @@ class TaskDetailFragment : Fragment() {
     private fun completeTask(task: Task) {
 
         viewModel.deleteTask(task)
-        binding.imageView.setOnTouchListener(null);
+        binding.imageView.setOnTouchListener(null)
 
         // Play second half of animation
         binding.imageView.setImageResource(R.drawable.complete_task_anim_2)
