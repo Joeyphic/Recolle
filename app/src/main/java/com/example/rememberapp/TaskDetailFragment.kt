@@ -8,6 +8,7 @@ import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.util.Log
 import android.view.*
+import androidx.activity.addCallback
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
@@ -180,5 +181,9 @@ class TaskDetailFragment : Fragment() {
             }
         })
         imageViewDrawable.start()
+
+        requireActivity().onBackPressedDispatcher.addCallback(this) {
+            imageViewDrawable.stop()
+        }
     }
 }
