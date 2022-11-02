@@ -26,6 +26,6 @@
         <item name="colorOnSurface">@color/primaryTextColor</item>
 
         <!-- Up button & Navigation Drawer color -->
-        <item name="colorControlNormal">@color/primaryTextColor</item>
+        <item name="colorControlNormal">@color/primaryLightColor</item>
     </style>
 </resources>
