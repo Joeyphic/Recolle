@@ -2,7 +2,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <!-- TODO: Finalize Menu IconTint Color -->
     <item
         android:id="@+id/edit"
         android:icon="@drawable/ic_baseline_edit_24"

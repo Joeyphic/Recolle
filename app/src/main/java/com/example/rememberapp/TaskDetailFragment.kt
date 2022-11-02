@@ -137,6 +137,9 @@ class TaskDetailFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+
+        // safe calls used just in case, but should always be AnimatedVectorDrawable
+        (binding.imageView.drawable as? AnimatedVectorDrawable)?.clearAnimationCallbacks()
         _binding = null
     }
 
@@ -181,9 +184,5 @@ class TaskDetailFragment : Fragment() {
             }
         })
         imageViewDrawable.start()
-
-        requireActivity().onBackPressedDispatcher.addCallback(this) {
-            imageViewDrawable.stop()
-        }
     }
 }
