@@ -42,6 +42,8 @@ class TaskDetailFragment : Fragment() {
 
     lateinit var task: Task
 
+    var completeState: Boolean = false
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
