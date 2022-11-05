@@ -33,12 +33,6 @@ class TaskListAdapter(private val onTaskClicked: (Task) -> Unit) :
         holder.bind(currentTask)
     }
 
-    // TODO: Determine if this is a necessary function
-    override fun getItemViewType(position: Int) : Int {
-        val currentTask = getItem(position)
-        return currentTask.taskPriority.ordinal
-    }
-
     class TaskViewHolder(private var binding: TaskListItemFragmentBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
@@ -59,19 +53,6 @@ class TaskListAdapter(private val onTaskClicked: (Task) -> Unit) :
             override fun areContentsTheSame(oldItem: Task, newItem: Task): Boolean {
                 return oldItem == newItem
             }
-        }
-    }
-
-    sealed class DataItem {
-
-        abstract val id: Int
-
-        data class TaskListItem(val task: Task): DataItem() {
-            override val id = task.id
-        }
-
-        object Header: DataItem() {
-            override val id = Int.MIN_VALUE
         }
     }
 
