@@ -114,6 +114,15 @@ class TaskDetailFragment : Fragment() {
                 menuInflater.inflate(R.menu.detail_fragment_menu, menu)
             }
 
+            override fun onPrepareMenu(menu: Menu) {
+                super.onPrepareMenu(menu)
+
+                if(completeState) {
+                    menu.getItem(0).isEnabled = false
+                    menu.getItem(1).isEnabled = false
+                }
+            }
+
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
 
                 return when (menuItem.itemId) {
@@ -174,6 +183,8 @@ class TaskDetailFragment : Fragment() {
 
         viewModel.deleteTask(task)
         binding.imageView.setOnTouchListener(null)
+        completeState = true
+        activity?.invalidateOptionsMenu()
 
         // Play second half of animation
         binding.imageView.setImageResource(R.drawable.complete_task_anim_2)
