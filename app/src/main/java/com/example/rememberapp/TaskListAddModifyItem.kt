@@ -15,13 +15,14 @@ import androidx.navigation.fragment.navArgs
 import com.example.rememberapp.data.PriorityLevel
 import com.example.rememberapp.data.Task
 import com.example.rememberapp.databinding.TaskListAddItemBinding
+import com.example.rememberapp.viewmodel.TaskAddModifyViewModel
 import com.example.rememberapp.viewmodel.TaskListViewModel
 import com.example.rememberapp.viewmodel.TaskListViewModelFactory
 
 
 class TaskListAddModifyItem : Fragment() {
 
-    private val viewModel: TaskListViewModel by activityViewModels {
+    private val viewModel: TaskAddModifyViewModel by activityViewModels {
         TaskListViewModelFactory(
             (activity?.application as RememberApplication).database.taskDao()
         )
