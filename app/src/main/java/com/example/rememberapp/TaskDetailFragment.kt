@@ -22,6 +22,7 @@ import com.example.rememberapp.data.getColorByPriority
 import com.example.rememberapp.databinding.TaskDetailFragmentBinding
 import com.example.rememberapp.databinding.TaskListFragmentBinding
 import com.example.rememberapp.viewmodel.TaskDetailViewModel
+import com.example.rememberapp.viewmodel.TaskDetailViewModelFactory
 import com.example.rememberapp.viewmodel.TaskListViewModel
 import com.example.rememberapp.viewmodel.TaskListViewModelFactory
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -29,7 +30,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 class TaskDetailFragment : Fragment() {
 
     private val viewModel: TaskDetailViewModel by activityViewModels {
-        TaskListViewModelFactory(
+        TaskDetailViewModelFactory(
             (activity?.application as RememberApplication).database.taskDao()
         )
     }

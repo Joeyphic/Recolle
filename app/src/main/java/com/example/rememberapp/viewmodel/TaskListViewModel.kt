@@ -10,73 +10,12 @@ import kotlinx.coroutines.launch
 class TaskListViewModel(private val taskDao: TaskDao) : ViewModel() {
 
     val allTasks: LiveData<List<Task>> = taskDao.getAllTasks().asLiveData()
-
     var recordedTaskList: List<Task>? = null
-
-    private fun insertTask(task: Task) {
-        viewModelScope.launch {
-            taskDao.insertTask(task)
-        }
-    }
-
-    fun deleteTask(task: Task) {
-        viewModelScope.launch {
-            taskDao.deleteTask(task)
-        }
-    }
-
-    private fun updateTask(task: Task, isPriorityChanged: Boolean) {
-        viewModelScope.launch {
-            taskDao.updateTask(task, isPriorityChanged)
-        }
-    }
 
     fun moveTaskPosition(fromPosition: Int, toPosition: Int) {
         viewModelScope.launch {
             taskDao.moveTask(fromPosition, toPosition)
         }
-    }
-    private fun getNewTaskEntry(taskName: String, taskPriority: PriorityLevel): Task {
-
-        return Task(
-            taskName = taskName,
-            taskPriority = taskPriority,
-            taskListPosition = -1
-        )
-    }
-
-    fun isEntryValid(taskName: String, taskPriority: PriorityLevel) : Boolean {
-        if(taskName.isBlank() || taskPriority !in PriorityLevel.values()) {
-            return false
-        }
-        return true
-    }
-
-    fun addNewItem(taskName: String, taskPriority: PriorityLevel) {
-        val newTask = getNewTaskEntry(taskName, taskPriority)
-        insertTask(newTask)
-    }
-
-    fun retrieveTask(id: Int): LiveData<Task?> {
-        return taskDao.getTaskById(id).asLiveData()
-    }
-
-    fun updateTask(taskId: Int, taskName: String, taskPriority: PriorityLevel, taskListPosition: Int, isPriorityChanged: Boolean) {
-        val updatedTask = getUpdatedTaskEntry(taskId, taskName, taskPriority, taskListPosition)
-        updateTask(updatedTask, isPriorityChanged)
-    }
-
-    private fun getUpdatedTaskEntry(taskId: Int, taskName: String, taskPriority: PriorityLevel, taskListPosition: Int): Task {
-        return Task(
-            id = taskId,
-            taskName = taskName,
-            taskPriority = taskPriority,
-            taskListPosition = taskListPosition
-        )
-    }
-
-    fun completeTask(task: Task) {
-        deleteTask(task)
     }
 }
 

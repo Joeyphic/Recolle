@@ -16,6 +16,7 @@ import com.example.rememberapp.data.PriorityLevel
 import com.example.rememberapp.data.Task
 import com.example.rememberapp.databinding.TaskListAddItemBinding
 import com.example.rememberapp.viewmodel.TaskAddModifyViewModel
+import com.example.rememberapp.viewmodel.TaskAddModifyViewModelFactory
 import com.example.rememberapp.viewmodel.TaskListViewModel
 import com.example.rememberapp.viewmodel.TaskListViewModelFactory
 
@@ -23,7 +24,7 @@ import com.example.rememberapp.viewmodel.TaskListViewModelFactory
 class TaskListAddModifyItem : Fragment() {
 
     private val viewModel: TaskAddModifyViewModel by activityViewModels {
-        TaskListViewModelFactory(
+        TaskAddModifyViewModelFactory(
             (activity?.application as RememberApplication).database.taskDao()
         )
     }
