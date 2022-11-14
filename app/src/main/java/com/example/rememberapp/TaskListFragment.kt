@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.RecyclerView
 import com.example.rememberapp.databinding.TaskListFragmentBinding
 import com.example.rememberapp.viewmodel.TaskListViewModel
 import com.example.rememberapp.viewmodel.TaskListViewModelFactory
@@ -44,14 +45,16 @@ class TaskListFragment : Fragment() {
             this.findNavController().navigate(action)
         }
 
+        adapter.registerAdapterDataObserver(object: RecyclerView.AdapterDataObserver() {
+            override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
+                if(positionStart == 0) { binding.recyclerView.scrollToPosition(0) }
+            }
+        })
+
         binding.recyclerView.adapter = adapter
 
-        viewModel.recordedTaskList?.let {
-            adapter.submitList(viewModel.recordedTaskList)
-        }
         viewModel.allTasks.observe(this.viewLifecycleOwner) { tasks ->
             adapter.submitList(tasks)
-            viewModel.recordedTaskList = tasks
         }
 
         val itemTouchHelper = ItemTouchHelper(TaskListAdapter.TaskTouchHelper(adapter) { from, to ->

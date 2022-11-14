@@ -10,7 +10,6 @@ import kotlinx.coroutines.launch
 class TaskListViewModel(private val taskDao: TaskDao) : ViewModel() {
 
     val allTasks: LiveData<List<Task>> = taskDao.getAllTasks().asLiveData()
-    var recordedTaskList: List<Task>? = null
 
     fun moveTaskPosition(fromPosition: Int, toPosition: Int) {
         viewModelScope.launch {
