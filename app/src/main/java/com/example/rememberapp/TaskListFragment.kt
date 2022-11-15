@@ -53,8 +53,12 @@ class TaskListFragment : Fragment() {
 
         binding.recyclerView.adapter = adapter
 
+        viewModel.recordedTaskList?.let {
+            adapter.submitList(viewModel.recordedTaskList)
+        }
         viewModel.allTasks.observe(this.viewLifecycleOwner) { tasks ->
             adapter.submitList(tasks)
+            viewModel.recordedTaskList = tasks
         }
 
         val itemTouchHelper = ItemTouchHelper(TaskListAdapter.TaskTouchHelper(adapter) { from, to ->

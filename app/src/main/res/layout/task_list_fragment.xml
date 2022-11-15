@@ -7,10 +7,12 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view"
-        android:background="@color/primaryLightColor"
-        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/primaryLightColor"
+        android:clipToPadding="false"
+        android:orientation="vertical"
+        android:paddingBottom="80dp"
         android:scrollbars="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
