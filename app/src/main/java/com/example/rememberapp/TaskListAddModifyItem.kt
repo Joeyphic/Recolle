@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
@@ -17,8 +16,6 @@ import com.example.rememberapp.data.Task
 import com.example.rememberapp.databinding.TaskListAddItemBinding
 import com.example.rememberapp.viewmodel.TaskAddModifyViewModel
 import com.example.rememberapp.viewmodel.TaskAddModifyViewModelFactory
-import com.example.rememberapp.viewmodel.TaskListViewModel
-import com.example.rememberapp.viewmodel.TaskListViewModelFactory
 
 
 class TaskListAddModifyItem : Fragment() {
@@ -89,7 +86,7 @@ class TaskListAddModifyItem : Fragment() {
             // Should always be non-null since entry is validated, but the check is done anyways
             val currentPriority = getPriorityFromRadioId() ?: return
 
-            viewModel.addNewItem(binding.taskName.text.toString(), currentPriority)
+            viewModel.insertTask(binding.taskName.text.toString(), currentPriority)
 
             val action = TaskListAddModifyItemDirections
                          .actionTaskListAddModifyItemToTaskListFragment()
