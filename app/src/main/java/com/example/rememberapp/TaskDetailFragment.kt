@@ -37,15 +37,25 @@ class TaskDetailFragment : Fragment() {
 
     private val navigationArgs: TaskDetailFragmentArgs by navArgs()
 
+    /*
+     We have variable 'binding' and backing property '_binding' for View Binding
+     because it is similar to using a lateinit property, but we can set a backing
+     property to null (done in onDestroyView() to avoid memory leaks).
+     */
     private var _binding: TaskDetailFragmentBinding? = null
-
-    // TODO: Find a way to remove this non-null asserted call
     private val binding get() = _binding!!
 
+    // TODO: Fix Bug - After rotating, completeState is reset.
     lateinit var task: Task
-
     var completeState: Boolean = false
 
+    /*
+    ----------------------------------------------------
+    Parameters:   inflater (LayoutInflater), container (ViewGroup?), savedInstanceState (Bundle?)
+    Returns:      View?
+    Description:  -Inflates the view, and initializes _binding.
+    ----------------------------------------------------
+    */
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -56,6 +66,13 @@ class TaskDetailFragment : Fragment() {
         return fragmentBinding.root
     }
 
+    /*
+    ----------------------------------------------------
+    Parameters:   task (Task)
+    Description:  -Displays the data from the current Task to
+                   the Fragment's corresponding Views.
+    ----------------------------------------------------
+    */
     private fun bind(task: Task) {
         binding.apply {
             taskName.text = task.taskName
@@ -70,6 +87,18 @@ class TaskDetailFragment : Fragment() {
 
     }
 
+    /*
+    ----------------------------------------------------
+    Parameters:   view (View), savedInstanceState (Bundle?)
+    Description:  -The navigation argument represents a Task's id. If one exists, then we
+                   retrieve the corresponding Task and display its details to the user.
+                  -A TouchListener is set for the completeTask imageView. When held for some
+                   time, then completeTask() is called.
+                  -Uses MenuProvider to add Edit and Delete options to the top app bar.
+                   These added options are disabled when the Task is completed, since the
+                   Task would already be removed from the database.
+    ----------------------------------------------------
+    */
     @SuppressLint("ClickableViewAccessibility")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -107,12 +136,11 @@ class TaskDetailFragment : Fragment() {
             return@OnTouchListener true
         })
 
-        // Using MenuProvider to add Edit and Delete options to the top app bar.
+        // Initializing MenuProvider
         val menuHost: MenuHost = requireActivity()
 
         menuHost.addMenuProvider(object : MenuProvider {
             override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
-                // Add menu items here
                 menuInflater.inflate(R.menu.detail_fragment_menu, menu)
             }
 
@@ -148,14 +176,30 @@ class TaskDetailFragment : Fragment() {
         }, viewLifecycleOwner, Lifecycle.State.RESUMED)
     }
 
+    /*
+    ----------------------------------------------------
+    Description:  -Clears all animation callbacks from the completeTask ImageView,
+                   resetting its state so it functions correctly if used again.
+                  -Sets _binding to null, avoiding memory leaks.
+    ----------------------------------------------------
+    */
     override fun onDestroyView() {
         super.onDestroyView()
 
-        // safe calls used just in case, but should always be AnimatedVectorDrawable
+        // Should always be AnimatedVectorDrawable, but safe calls used anyway
         (binding.imageView.drawable as? AnimatedVectorDrawable)?.clearAnimationCallbacks()
+
         _binding = null
     }
 
+    /*
+    ----------------------------------------------------
+    Description:  -This function is called when the user taps the 'delete'
+                   menu button on the top app bar.
+                  -Displays a dialog to the user, asking to confirm if they'd
+                   like to delete the Task. If yes, then calls deleteTask().
+    ----------------------------------------------------
+    */
     private fun showDeleteConfirmationDialog() {
         MaterialAlertDialogBuilder(requireContext())
             .setMessage(getString(R.string.delete_confirmation_message))
@@ -166,6 +210,15 @@ class TaskDetailFragment : Fragment() {
             .show()
     }
 
+    /*
+    ----------------------------------------------------
+    Parameters:   task (Task)
+    Description:  -This function is called when the user taps the 'edit'
+                   menu button on the top app bar.
+                  -Moves to the TaskListAddModifyItem Fragment, passing the
+                   current Tasks' ID as a navigation argument.
+    ----------------------------------------------------
+    */
     private fun editTask(task: Task) {
         val action = TaskDetailFragmentDirections.actionTaskDetailFragmentToTaskListAddModifyItem(
             "Edit Task",
@@ -175,11 +228,32 @@ class TaskDetailFragment : Fragment() {
         this.findNavController().navigate(action)
     }
 
+    /*
+    ----------------------------------------------------
+    Parameters:   task (Task)
+    Description:  -Calls the deleteTask() function from the ViewModel, and
+                   navigates back to TaskListFragment.
+    ----------------------------------------------------
+    */
     private fun deleteTask(task: Task) {
         viewModel.deleteTask(task)
         findNavController().navigateUp()
     }
 
+    /*
+    ----------------------------------------------------
+    Parameters:   task (Task)
+    Description:  -Completes the Task by deleting it from the database.
+                  -The edit and delete Menu options are disabled, as the Task no longer
+                   exists for them to perform operations on.
+                  -A new animation is displayed to signify Task completion. The user
+                   does not need to continue holding the ImageView, and can even exit
+                   the app or navigate back before this animation ends.
+                  -When the animation finishes, the user will automatically be navigated
+                   to the TaskListFragment. This callback is cleared in onDestroyView(),
+                   so the user must still be on this Fragment for the navigation to occur.
+    ----------------------------------------------------
+    */
     @SuppressLint("ClickableViewAccessibility")
     private fun completeTask(task: Task) {
 
@@ -188,7 +262,7 @@ class TaskDetailFragment : Fragment() {
         completeState = true
         activity?.invalidateOptionsMenu()
 
-        // Play second half of animation
+        // Play next animation
         binding.imageView.setImageResource(R.drawable.complete_task_anim_2)
         val imageViewDrawable = binding.imageView.drawable as AnimatedVectorDrawable
 
