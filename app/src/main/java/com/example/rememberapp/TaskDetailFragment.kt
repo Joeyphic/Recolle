@@ -13,6 +13,7 @@ import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -29,7 +30,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 class TaskDetailFragment : Fragment() {
 
-    private val viewModel: TaskDetailViewModel by activityViewModels {
+    private val viewModel: TaskDetailViewModel by viewModels {
         TaskDetailViewModelFactory(
             (activity?.application as RememberApplication).database.taskDao()
         )
@@ -44,10 +45,6 @@ class TaskDetailFragment : Fragment() {
      */
     private var _binding: TaskDetailFragmentBinding? = null
     private val binding get() = _binding!!
-
-    // TODO: Fix Bug - After rotating, completeState is reset.
-    lateinit var task: Task
-    var completeState: Boolean = false
 
     /*
     ----------------------------------------------------
@@ -97,6 +94,9 @@ class TaskDetailFragment : Fragment() {
                   -Uses MenuProvider to add Edit and Delete options to the top app bar.
                    These added options are disabled when the Task is completed, since the
                    Task would already be removed from the database.
+                  -Lastly, this function checks whether the viewModel.completeState variable
+                   is true, and calls completeTask() if so. Handles configuration changes,
+                   such as if the user rotates their screen in completeState.
     ----------------------------------------------------
     */
     @SuppressLint("ClickableViewAccessibility")
@@ -105,11 +105,13 @@ class TaskDetailFragment : Fragment() {
 
         // Navigation argument
         val id = navigationArgs.taskId
+
+        // TODO: Change or add comment. Do we really need an observer here?
         viewModel.retrieveTask(id).observe(this.viewLifecycleOwner) { selectedTask ->
             selectedTask?.let {
-                task = selectedTask
-                bind(task)
+                viewModel.task = selectedTask
             }
+            bind(viewModel.task)
         }
 
         // Complete Task Button
@@ -122,7 +124,7 @@ class TaskDetailFragment : Fragment() {
 
                     imageViewDrawable.registerAnimationCallback(object : Animatable2.AnimationCallback() {
                         override fun onAnimationEnd(drawable: Drawable?) {
-                            this@TaskDetailFragment.completeTask(task)
+                            this@TaskDetailFragment.completeTask(viewModel.task)
                         }
                     })
                     imageViewDrawable.start()
@@ -147,7 +149,7 @@ class TaskDetailFragment : Fragment() {
             override fun onPrepareMenu(menu: Menu) {
                 super.onPrepareMenu(menu)
 
-                if(completeState) {
+                if(viewModel.completeState) {
                     menu.getItem(0).isEnabled = false
                     menu.getItem(1).isEnabled = false
                 }
@@ -157,7 +159,7 @@ class TaskDetailFragment : Fragment() {
 
                 return when (menuItem.itemId) {
                     R.id.edit -> {
-                        editTask(task)
+                        editTask(viewModel.task)
                         true
                     }
                     R.id.delete -> {
@@ -174,6 +176,13 @@ class TaskDetailFragment : Fragment() {
                 }
             }
         }, viewLifecycleOwner, Lifecycle.State.RESUMED)
+
+        /* TODO: This results in deleteTask() potentially being called multiple times.
+                 Need to account for this in database. */
+        // Checking completeState
+        if(viewModel.completeState) {
+            completeTask(viewModel.task)
+        }
     }
 
     /*
@@ -205,7 +214,7 @@ class TaskDetailFragment : Fragment() {
             .setMessage(getString(R.string.delete_confirmation_message))
             .setNegativeButton(getString(R.string.cancel)) { _, _ -> }
             .setPositiveButton(getString(R.string.delete)) { _, _ ->
-                deleteTask(task)
+                deleteTask(viewModel.task)
             }
             .show()
     }
@@ -259,7 +268,7 @@ class TaskDetailFragment : Fragment() {
 
         viewModel.deleteTask(task)
         binding.imageView.setOnTouchListener(null)
-        completeState = true
+        viewModel.completeState = true
         activity?.invalidateOptionsMenu()
 
         // Play next animation

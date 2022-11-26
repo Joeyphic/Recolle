@@ -7,6 +7,11 @@ import kotlinx.coroutines.launch
 
 class TaskDetailViewModel(private val taskDao: TaskDao) : ViewModel() {
 
+    lateinit var task: Task
+
+    // If true, then task(^) has been removed from database, and we are preparing to leave fragment.
+    var completeState = false
+
     /*
     ----------------------------------------------------
     Parameters:   id (Int)
