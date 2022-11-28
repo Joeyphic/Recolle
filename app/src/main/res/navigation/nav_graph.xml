@@ -57,6 +57,9 @@
         <action
             android:id="@+id/action_taskDetailFragment_to_taskListFragment"
             app:destination="@id/taskListFragment"
-            app:popUpTo="@id/taskListFragment" />
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"
+            app:popUpTo="@id/taskListFragment"
+            />
     </fragment>
 </navigation>

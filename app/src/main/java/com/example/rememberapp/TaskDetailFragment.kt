@@ -246,7 +246,9 @@ class TaskDetailFragment : Fragment() {
     */
     private fun deleteTask(task: Task) {
         viewModel.deleteTask(task)
-        findNavController().navigateUp()
+
+        val action = TaskDetailFragmentDirections.actionTaskDetailFragmentToTaskListFragment()
+        findNavController().navigate(action)
     }
 
     /*
