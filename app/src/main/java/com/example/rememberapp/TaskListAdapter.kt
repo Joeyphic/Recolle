@@ -15,6 +15,14 @@ import com.example.rememberapp.databinding.TaskListItemFragmentBinding
 class TaskListAdapter(private val onTaskClicked: (Task) -> Unit) :
     ListAdapter<Task, TaskListAdapter.TaskViewHolder>(DiffCallback) {
 
+    /*
+    ----------------------------------------------------
+    Parameters:   parent (ViewGroup), ViewType (int)
+    Description:  -Initializes ViewHolder.
+                  -The same ViewHolder will be used for each View in the RecyclerView.
+                   Therefore, ItemType is always the same.
+    ----------------------------------------------------
+    */
     override fun onCreateViewHolder(parent: ViewGroup, ViewType: Int): TaskViewHolder {
         return TaskViewHolder(
             TaskListItemFragmentBinding.inflate(
@@ -25,6 +33,19 @@ class TaskListAdapter(private val onTaskClicked: (Task) -> Unit) :
         )
     }
 
+    /*
+    ----------------------------------------------------
+    Parameters:   holder (TaskViewHolder), position (int)
+    Description:  -Binds the data to the TaskViewHolder at the specified
+                   position.
+                  -A click listener is set here. Each fragment that uses
+                   the TaskListAdapter can customize what action will be
+                   taken on click.
+                  -When clicked in TaskListFragment, the user will be brought
+                   to TaskDetailFragment with the ID of the bound Task
+                   serving as a navigation argument.
+    ----------------------------------------------------
+    */
     override fun onBindViewHolder(holder: TaskViewHolder, position: Int) {
         val currentTask = getItem(position)
         holder.itemView.setOnClickListener {
