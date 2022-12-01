@@ -1,9 +1,12 @@
 package com.example.rememberapp.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.*
 import com.example.rememberapp.data.Task
 import com.example.rememberapp.data.TaskDao
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class TaskDetailViewModel(private val taskDao: TaskDao) : ViewModel() {
 
@@ -35,7 +38,7 @@ class TaskDetailViewModel(private val taskDao: TaskDao) : ViewModel() {
     ----------------------------------------------------
     */
     fun deleteTask(task: Task) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             taskDao.deleteTask(task)
         }
     }
