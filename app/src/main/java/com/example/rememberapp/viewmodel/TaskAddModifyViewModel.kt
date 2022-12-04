@@ -19,7 +19,7 @@ class TaskAddModifyViewModel(private val taskDao: TaskDao) : ViewModel() {
     ----------------------------------------------------
     */
     fun retrieveTask(id: Int): LiveData<Task?> {
-        return taskDao.getTaskById(id).asLiveData()
+        return taskDao.getTaskFlowById(id).asLiveData()
     }
 
     /*

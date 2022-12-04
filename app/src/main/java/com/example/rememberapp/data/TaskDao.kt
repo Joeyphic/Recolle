@@ -16,7 +16,10 @@ interface TaskDao {
     suspend fun delete(task: Task)
 
     @Query("SELECT * FROM task WHERE id=:id")
-    fun getTaskById(id: Int): Flow<Task>
+    fun getTaskFlowById(id: Int): Flow<Task>
+
+    @Query("SELECT * FROM task WHERE id=:id")
+    fun getTaskById(id: Int): Task?
 
     @Query("SELECT * FROM task WHERE position=:position")
     fun getTaskByPosition(position: Int): Task
@@ -47,6 +50,9 @@ interface TaskDao {
 
     @Transaction
     suspend fun deleteTask(task: Task) {
+
+        if (getTaskById(task.id) == null) return
+
         delete(task)
         updatePositionsAfterDeletion(task.taskListPosition)
     }
@@ -55,7 +61,7 @@ interface TaskDao {
     suspend fun updateTask(task: Task, isPriorityChanged: Boolean) {
 
         if(isPriorityChanged) {
-            val oldTask = getTaskByPosition(task.taskListPosition)
+            val oldTask = getTaskById(task.id) ?: return
             deleteTask(oldTask)
             insertTask(task)
         }

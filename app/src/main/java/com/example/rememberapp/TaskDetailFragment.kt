@@ -203,6 +203,23 @@ class TaskDetailFragment : Fragment() {
 
     /*
     ----------------------------------------------------
+    Description:  -If we are in completeState, then calls completeTask().
+                  -Without this override, if the user paused and resumed the app,
+                   then we'd be in completeState but the ImageView's animation
+                   wouldn't play. As such, the user would be frozen on the screen
+                   unless they pressed the Back or Up button.
+    ----------------------------------------------------
+    */
+    override fun onResume() {
+        super.onResume()
+
+        if(viewModel.completeState) {
+            completeTask(viewModel.task)
+        }
+    }
+
+    /*
+    ----------------------------------------------------
     Description:  -This function is called when the user taps the 'delete'
                    menu button on the top app bar.
                   -Displays a dialog to the user, asking to confirm if they'd
