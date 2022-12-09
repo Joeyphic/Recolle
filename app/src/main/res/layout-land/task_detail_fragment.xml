@@ -9,8 +9,13 @@
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/margin"
+        android:layout_height="match_parent"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="@dimen/margin"
+        android:layout_marginTop="@dimen/margin"
+        android:layout_marginEnd="@dimen/margin"
+        android:layout_marginBottom="@dimen/margin"
+        android:layout_toStartOf="@+id/imageView"
         android:background="@color/primaryColor"
         android:orientation="vertical">
 
@@ -19,14 +24,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:srcCompat="@drawable/task_list_item_banner"
-            app:tint="@color/primaryColor"/>
+            app:tint="@color/primaryColor" />
 
         <TextView
             android:id="@+id/task_name_label"
             style="@style/Widget.Remember.TextView"
             android:layout_width="wrap_content"
-            android:layout_marginTop="@dimen/margin"
             android:layout_marginStart="@dimen/margin"
+            android:layout_marginTop="@dimen/margin"
             android:text="Name:"
             android:textColor="@color/primaryTextColor"
             tools:text="Name:" />
@@ -53,8 +58,8 @@
             android:id="@+id/task_priority"
             style="@style/Widget.Remember.TextView"
             android:layout_width="wrap_content"
-            android:layout_marginBottom="@dimen/margin"
             android:layout_marginStart="@dimen/margin"
+            android:layout_marginBottom="@dimen/margin"
             android:textColor="@color/primaryTextColor"
             tools:text="High" />
 
@@ -63,9 +68,8 @@
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
+        android:layout_height="match_parent"
+        android:layout_alignParentEnd="true"
         android:padding="@dimen/margin"
         app:srcCompat="@drawable/complete_task_animation" />
 </RelativeLayout>
