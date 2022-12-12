@@ -8,6 +8,8 @@
     android:focusable="true"
     android:focusableInTouchMode="true"
     android:layout_margin="@dimen/margin">
+    <!-- TODO: Above contextClickable shows effect on screen if text is pressed on keyboard.
+          Not sure if possible to replicate on real phone, but should be fixed. -->
 
     <com.google.android.material.textfield.TextInputLayout
         style="?attr/textInputFilledStyle"

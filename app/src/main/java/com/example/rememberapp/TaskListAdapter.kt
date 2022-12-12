@@ -65,6 +65,12 @@ class TaskListAdapter(private val onTaskClicked: (Task) -> Unit) :
         }
     }
 
+    /*
+    ----------------------------------------------------
+    Description:  -DiffUtil.ItemCallback, used to identify changes in
+                   Tasks from the TaskList.
+    ----------------------------------------------------
+    */
     companion object {
         private val DiffCallback = object : DiffUtil.ItemCallback<Task>() {
             override fun areItemsTheSame(oldItem: Task, newItem: Task): Boolean {
