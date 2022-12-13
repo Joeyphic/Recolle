@@ -177,8 +177,6 @@ class TaskDetailFragment : Fragment() {
             }
         }, viewLifecycleOwner, Lifecycle.State.RESUMED)
 
-        /* TODO: This results in deleteTask() potentially being called multiple times.
-                 Need to account for this in database. */
         // Checking completeState
         if(viewModel.completeState) {
             completeTask(viewModel.task)
