@@ -66,11 +66,17 @@ class TaskDetailFragment : Fragment() {
     /*
     ----------------------------------------------------
     Parameters:   task (Task)
-    Description:  -Displays the data from the current Task to
-                   the Fragment's corresponding Views.
+    Description:  -If retrievedTask is null, then we can assume a task was previously assigned
+                   to viewModel.task, and use that for binding. This can happen when we are
+                   in completeState, meaning the Task has been deleted from the database.
+                   -Displays the data from the current Task to the Fragment's
+                    corresponding Views.
     ----------------------------------------------------
     */
-    private fun bind(task: Task) {
+    private fun bind(retrievedTask: Task?) {
+
+        var task = retrievedTask ?: viewModel.task
+
         binding.apply {
             taskName.text = task.taskName
 
@@ -108,10 +114,7 @@ class TaskDetailFragment : Fragment() {
 
         // TODO: Change or add comment. Do we really need an observer here?
         viewModel.retrieveTask(id).observe(this.viewLifecycleOwner) { selectedTask ->
-            selectedTask?.let {
-                viewModel.task = selectedTask
-            }
-            bind(viewModel.task)
+            bind(selectedTask)
         }
 
         // Complete Task Button
