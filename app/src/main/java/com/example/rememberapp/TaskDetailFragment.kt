@@ -69,23 +69,23 @@ class TaskDetailFragment : Fragment() {
     Description:  -If retrievedTask is null, then we can assume a task was previously assigned
                    to viewModel.task, and use that for binding. This can happen when we are
                    in completeState, meaning the Task has been deleted from the database.
-                   -Displays the data from the current Task to the Fragment's
-                    corresponding Views.
+                  -Displays the data from the current Task to the Fragment's
+                   corresponding Views.
     ----------------------------------------------------
     */
     private fun bind(retrievedTask: Task?) {
 
-        var task = retrievedTask ?: viewModel.task
+        viewModel.task = retrievedTask ?: viewModel.task
 
         binding.apply {
-            taskName.text = task.taskName
+            taskName.text = viewModel.task.taskName
 
             // Capitalize first letter
-            taskPriority.text = task.taskPriority.name.lowercase()
+            taskPriority.text = viewModel.task.taskPriority.name.lowercase()
                 .replaceFirstChar { it.uppercase() }
 
             // Adding Color depending on Task priority
-            binding.taskDetailBanner.setColorFilter(task.getColorByPriority())
+            binding.taskDetailBanner.setColorFilter(viewModel.task.getColorByPriority())
         }
 
     }
