@@ -23,8 +23,6 @@ class TaskListFragment : Fragment() {
     }
 
     private var _binding: TaskListFragmentBinding? = null
-
-    // TODO: Find a way to remove this non-null asserted call
     private val binding get() = _binding!!
 
     override fun onCreateView(
@@ -67,9 +65,7 @@ class TaskListFragment : Fragment() {
         itemTouchHelper.attachToRecyclerView(binding.recyclerView)
 
         binding.floatingActionButton.setOnClickListener {
-            val action = TaskListFragmentDirections.actionTaskListFragmentToTaskListAddModifyItem(
-                "Add Task"
-            )
+            val action = TaskListFragmentDirections.actionTaskListFragmentToTaskAddFragment()
             this.findNavController().navigate(action)
         }
     }

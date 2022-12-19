@@ -7,10 +7,10 @@
     <fragment
         android:id="@+id/taskListFragment"
         android:name="com.example.rememberapp.TaskListFragment"
-        android:label="Your Tasks" >
+        android:label="Your Tasks">
         <action
-            android:id="@+id/action_taskListFragment_to_taskListAddModifyItem"
-            app:destination="@id/taskListAddModifyItem"
+            android:id="@+id/action_taskListFragment_to_taskAddFragment"
+            app:destination="@id/taskAddFragment"
             app:enterAnim="@anim/nav_default_enter_anim"
             app:exitAnim="@anim/nav_default_exit_anim"
             app:popEnterAnim="@anim/nav_default_pop_enter_anim"
@@ -24,18 +24,11 @@
             app:popExitAnim="@anim/nav_default_pop_exit_anim" />
     </fragment>
     <fragment
-        android:id="@+id/taskListAddModifyItem"
-        android:name="com.example.rememberapp.TaskListAddModifyItem"
-        android:label="{title}" >
-        <argument
-            android:name="title"
-            app:argType="string" />
-        <argument
-            android:name="task_id"
-            android:defaultValue="-1"
-            app:argType="integer" />
+        android:id="@+id/taskAddFragment"
+        android:name="com.example.rememberapp.TaskAddFragment"
+        android:label="Add Task">
         <action
-            android:id="@+id/action_taskListAddModifyItem_to_taskListFragment"
+            android:id="@+id/action_taskAddFragment_to_taskListFragment"
             app:destination="@id/taskListFragment"
             app:popUpTo="@id/taskListFragment"
             app:popUpToInclusive="true" />
@@ -48,8 +41,8 @@
             android:name="task_id"
             app:argType="integer" />
         <action
-            android:id="@+id/action_taskDetailFragment_to_taskListAddModifyItem"
-            app:destination="@id/taskListAddModifyItem"
+            android:id="@+id/action_taskDetailFragment_to_taskEditFragment"
+            app:destination="@id/taskEditFragment"
             app:enterAnim="@anim/nav_default_enter_anim"
             app:exitAnim="@anim/nav_default_exit_anim"
             app:popEnterAnim="@anim/nav_default_pop_enter_anim"
@@ -59,7 +52,20 @@
             app:destination="@id/taskListFragment"
             app:popEnterAnim="@anim/nav_default_pop_enter_anim"
             app:popExitAnim="@anim/nav_default_pop_exit_anim"
+            app:popUpTo="@id/taskListFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/taskEditFragment"
+        android:name="com.example.rememberapp.TaskEditFragment"
+        android:label="Edit Task">
+        <argument
+            android:name="task_id"
+            android:defaultValue="-1"
+            app:argType="integer" />
+        <action
+            android:id="@+id/action_taskEditFragment_to_taskListFragment"
+            app:destination="@id/taskListFragment"
             app:popUpTo="@id/taskListFragment"
-            />
+            app:popUpToInclusive="true" />
     </fragment>
 </navigation>

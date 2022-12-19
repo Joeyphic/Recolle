@@ -6,7 +6,7 @@ import com.example.rememberapp.data.Task
 import com.example.rememberapp.data.TaskDao
 import kotlinx.coroutines.launch
 
-class TaskAddModifyViewModel(private val taskDao: TaskDao) : ViewModel() {
+class TaskEditViewModel(private val taskDao: TaskDao) : ViewModel() {
 
     /*
     ----------------------------------------------------
@@ -14,25 +14,12 @@ class TaskAddModifyViewModel(private val taskDao: TaskDao) : ViewModel() {
     Returns:      LiveData<Task?>
     Description:  -Retrieves the task from the database, using
                   its ID as identification.
-                  -This function is only called when the fragment is requesting to
-                  be supplied with a Task for editing.
+                  -This is one of the earliest functions called in the Fragment,
+                  as a Task needs to be supplied for editing.
     ----------------------------------------------------
     */
     fun retrieveTask(id: Int): LiveData<Task?> {
         return taskDao.getTaskFlowById(id).asLiveData()
-    }
-
-    /*
-    ----------------------------------------------------
-    Parameters:   task (Task)
-    Description:  -Prepares an asynchronous thread that the database
-                  uses to insert the Task submitted in the parameter.
-    ----------------------------------------------------
-    */
-    private fun insertTask(task: Task) {
-        viewModelScope.launch {
-            taskDao.insertTask(task)
-        }
     }
 
     /*
@@ -49,39 +36,6 @@ class TaskAddModifyViewModel(private val taskDao: TaskDao) : ViewModel() {
         viewModelScope.launch {
             taskDao.updateTask(task, isPriorityChanged)
         }
-    }
-
-    /*
-    ----------------------------------------------------
-    Parameters:   taskName (String), taskPriority (PriorityLevel)
-    Description:  -Uses the parameters to create a Task, then
-                  sends it off to another function to add the
-                  Task to the database asynchronously.
-    ----------------------------------------------------
-    */
-    fun insertTask(taskName: String, taskPriority: PriorityLevel) {
-        val newTask = getNewTaskEntry(taskName, taskPriority)
-        insertTask(newTask)
-    }
-
-    /*
-    ----------------------------------------------------
-    Parameters:   taskName (String), taskPriority (PriorityLevel)
-    Returns:      Task
-    Description:  -Is a helper function that uses a String and PriorityLevel
-                  to create a Task, and returns it.
-                  -taskListPosition is set to -1 as a temporary measure.
-                  During any insertions of this Task (ie. when insertTask() is
-                  called), then this value will be corrected.
-    ----------------------------------------------------
-    */
-    private fun getNewTaskEntry(taskName: String, taskPriority: PriorityLevel): Task {
-
-        return Task(
-            taskName = taskName,
-            taskPriority = taskPriority,
-            taskListPosition = -1
-        )
     }
 
     /*
@@ -135,13 +89,13 @@ class TaskAddModifyViewModel(private val taskDao: TaskDao) : ViewModel() {
     }
 }
 
-class TaskAddModifyViewModelFactory(private val taskDao: TaskDao) : ViewModelProvider.Factory {
+class TaskEditViewModelFactory(private val taskDao: TaskDao) : ViewModelProvider.Factory {
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
 
-        if(modelClass.isAssignableFrom(TaskAddModifyViewModel::class.java)) {
+        if(modelClass.isAssignableFrom(TaskEditViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
-            return TaskAddModifyViewModel(taskDao) as T
+            return TaskEditViewModel(taskDao) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

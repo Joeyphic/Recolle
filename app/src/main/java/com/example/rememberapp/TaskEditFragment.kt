@@ -14,20 +14,18 @@ import androidx.navigation.fragment.navArgs
 import com.example.rememberapp.data.PriorityLevel
 import com.example.rememberapp.data.Task
 import com.example.rememberapp.databinding.TaskListAddItemBinding
-import com.example.rememberapp.viewmodel.TaskAddModifyViewModel
-import com.example.rememberapp.viewmodel.TaskAddModifyViewModelFactory
+import com.example.rememberapp.viewmodel.TaskEditViewModel
+import com.example.rememberapp.viewmodel.TaskEditViewModelFactory
 
+class TaskEditFragment : Fragment() {
 
-class TaskListAddModifyItem : Fragment() {
-
-    private val viewModel: TaskAddModifyViewModel by activityViewModels {
-        TaskAddModifyViewModelFactory(
+    private val viewModel: TaskEditViewModel by activityViewModels {
+        TaskEditViewModelFactory(
             (activity?.application as RememberApplication).database.taskDao()
         )
     }
 
     private var _binding: TaskListAddItemBinding? = null
-    // TODO: Find a way to remove this non-null asserted call
     private val binding get() = _binding!!
 
     lateinit var task: Task
@@ -57,13 +55,10 @@ class TaskListAddModifyItem : Fragment() {
                 }
             }
         }
+        // Otherwise, there has been invalid input and we navigate back to the Task List.
         else {
-            binding.buttonSave.setOnClickListener {
-                addNewItem()
-            }
-
-            binding.radioGroupTaskPriority.check(binding.radioPriorityHigh.id)
-            binding.radioGroupTaskPriority.jumpDrawablesToCurrentState()
+            val action = TaskEditFragmentDirections.actionTaskEditFragmentToTaskListFragment()
+            findNavController().navigate(action)
         }
 
         // Hides keyboard when taskName (EditText) is no longer focused.
@@ -78,20 +73,6 @@ class TaskListAddModifyItem : Fragment() {
     private fun isEntryValid(): Boolean {
         val currentPriority = getPriorityFromRadioId() ?: return false
         return viewModel.isEntryValid(binding.taskName.text.toString(), currentPriority)
-    }
-
-    private fun addNewItem() {
-
-        if(isEntryValid()) {
-            // Should always be non-null since entry is validated, but the check is done anyways
-            val currentPriority = getPriorityFromRadioId() ?: return
-
-            viewModel.insertTask(binding.taskName.text.toString(), currentPriority)
-
-            val action = TaskListAddModifyItemDirections
-                         .actionTaskListAddModifyItemToTaskListFragment()
-            findNavController().navigate(action)
-        }
     }
 
     private fun getPriorityFromRadioId() : PriorityLevel? {
@@ -132,8 +113,8 @@ class TaskListAddModifyItem : Fragment() {
                 isPriorityChanged
             )
 
-            val action = TaskListAddModifyItemDirections
-                .actionTaskListAddModifyItemToTaskListFragment()
+            val action = TaskEditFragmentDirections
+                .actionTaskEditFragmentToTaskListFragment()
             findNavController().navigate(action)
         }
     }

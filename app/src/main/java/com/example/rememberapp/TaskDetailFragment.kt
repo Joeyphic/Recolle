@@ -242,13 +242,12 @@ class TaskDetailFragment : Fragment() {
     Parameters:   task (Task)
     Description:  -This function is called when the user taps the 'edit'
                    menu button on the top app bar.
-                  -Moves to the TaskListAddModifyItem Fragment, passing the
-                   current Tasks' ID as a navigation argument.
+                  -Moves to TaskEditFragment, passing the current
+                   Task's ID as a navigation argument.
     ----------------------------------------------------
     */
     private fun editTask(task: Task) {
-        val action = TaskDetailFragmentDirections.actionTaskDetailFragmentToTaskListAddModifyItem(
-            "Edit Task",
+        val action = TaskDetailFragmentDirections.actionTaskDetailFragmentToTaskEditFragment(
             task.id
         )
 
