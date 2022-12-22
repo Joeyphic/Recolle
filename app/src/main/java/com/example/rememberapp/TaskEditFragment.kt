@@ -28,7 +28,6 @@ class TaskEditFragment : Fragment() {
     private var _binding: TaskListAddItemBinding? = null
     private val binding get() = _binding!!
 
-    lateinit var task: Task
     private val navigationArgs: TaskDetailFragmentArgs by navArgs()
 
     override fun onCreateView(
@@ -50,8 +49,11 @@ class TaskEditFragment : Fragment() {
         if(id > 0) {
             viewModel.retrieveTask(id).observe(this.viewLifecycleOwner) { selectedTask ->
                 selectedTask?.let {
-                    task = selectedTask
-                    bind(task)
+                    viewModel.task = selectedTask
+
+                    // EditText and RadioButton config changes are saved. Since the fragment's
+                    // default state is an invalid input, that means it's safe to override.
+                    if(!isEntryValid()) bind()
                 }
             }
         }
@@ -84,12 +86,12 @@ class TaskEditFragment : Fragment() {
         }
     }
 
-    private fun bind(task: Task) {
+    private fun bind() {
         binding.apply {
             layoutTaskName.isHintAnimationEnabled = false
-            taskName.setText(task.taskName, TextView.BufferType.SPANNABLE)
+            taskName.setText(viewModel.task.taskName, TextView.BufferType.SPANNABLE)
 
-            when (task.taskPriority) {
+            when (viewModel.task.taskPriority) {
                 PriorityLevel.LOW -> radioGroupTaskPriority.check(radioPriorityLow.id)
                 PriorityLevel.MEDIUM -> radioGroupTaskPriority.check(radioPriorityMedium.id)
                 PriorityLevel.HIGH -> radioGroupTaskPriority.check(radioPriorityHigh.id)
@@ -103,13 +105,13 @@ class TaskEditFragment : Fragment() {
     private fun updateTask() {
         if(isEntryValid()) {
             val updatedPriority = getPriorityFromRadioId() ?: return // Since valid, is non-null
-            val isPriorityChanged = task.taskPriority != updatedPriority
+            val isPriorityChanged = viewModel.task.taskPriority != updatedPriority
 
             viewModel.updateTask(
                 this.navigationArgs.taskId,
                 binding.taskName.text.toString(),
                 updatedPriority,
-                task.taskListPosition,
+                viewModel.task.taskListPosition,
                 isPriorityChanged
             )
 

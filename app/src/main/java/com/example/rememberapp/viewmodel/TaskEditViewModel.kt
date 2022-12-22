@@ -8,6 +8,9 @@ import kotlinx.coroutines.launch
 
 class TaskEditViewModel(private val taskDao: TaskDao) : ViewModel() {
 
+    // Holds the task to be edited in this fragment.
+    lateinit var task: Task
+
     /*
     ----------------------------------------------------
     Parameters:   id (Int)
