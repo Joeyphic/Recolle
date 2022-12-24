@@ -23,8 +23,8 @@ class TaskDetailViewModel(private val taskDao: TaskDao) : ViewModel() {
                   display updated data to views.
     ----------------------------------------------------
     */
-    fun retrieveTask(id: Int): LiveData<Task?> {
-        return taskDao.getTaskFlowById(id).asLiveData()
+    fun retrieveTask(id: Int): Task? {
+        return taskDao.getTaskById(id)
     }
 
     /*
@@ -36,6 +36,7 @@ class TaskDetailViewModel(private val taskDao: TaskDao) : ViewModel() {
     ----------------------------------------------------
     */
     fun deleteTask(task: Task) {
+        // TODO: Look into potentially changing this to CoroutineScope
         viewModelScope.launch(Dispatchers.IO) {
             taskDao.deleteTask(task)
         }

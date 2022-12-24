@@ -15,6 +15,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.vectordrawable.graphics.drawable.Animatable2Compat
@@ -27,6 +28,9 @@ import com.example.rememberapp.viewmodel.TaskDetailViewModelFactory
 import com.example.rememberapp.viewmodel.TaskListViewModel
 import com.example.rememberapp.viewmodel.TaskListViewModelFactory
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class TaskDetailFragment : Fragment() {
 
@@ -65,27 +69,31 @@ class TaskDetailFragment : Fragment() {
 
     /*
     ----------------------------------------------------
-    Parameters:   task (Task)
-    Description:  -If retrievedTask is null, then we can assume a task was previously assigned
-                   to viewModel.task, and use that for binding. This can happen when we are
-                   in completeState, meaning the Task has been deleted from the database.
-                  -Displays the data from the current Task to the Fragment's
-                   corresponding Views.
+    Parameters:   taskId (Int)
+    Description:  -Uses IO thread to retrieve the Task from database, then switches back to main
+                   thread and updates the views with its data.
+                  -If retrieveTask(taskId) is null, then we can assume a task was previously
+                   assigned to viewModel.task, and use that for binding. This can happen when we
+                   are in completeState, meaning the Task has been deleted from the database.
     ----------------------------------------------------
     */
-    private fun bind(retrievedTask: Task?) {
+    private fun bind(taskId: Int) {
 
-        viewModel.task = retrievedTask ?: viewModel.task
+        lifecycleScope.launch(Dispatchers.IO) {
+            viewModel.task = viewModel.retrieveTask(taskId) ?: viewModel.task
 
-        binding.apply {
-            taskName.text = viewModel.task.taskName
+            withContext(Dispatchers.Main) {
+                binding.apply {
+                    taskName.text = viewModel.task.taskName
 
-            // Capitalize first letter
-            taskPriority.text = viewModel.task.taskPriority.name.lowercase()
-                .replaceFirstChar { it.uppercase() }
+                    // Capitalize first letter
+                    taskPriority.text = viewModel.task.taskPriority.name.lowercase()
+                        .replaceFirstChar { it.uppercase() }
 
-            // Adding Color depending on Task priority
-            binding.taskDetailBanner.setColorFilter(viewModel.task.getColorByPriority())
+                    // Add Color depending on Task priority
+                    binding.taskDetailBanner.setColorFilter(viewModel.task.getColorByPriority())
+                }
+            }
         }
 
     }
@@ -109,13 +117,9 @@ class TaskDetailFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Navigation argument
+        // Use navigation argument to bind correct Task to views
         val id = navigationArgs.taskId
-
-        // TODO: Change or add comment. Do we really need an observer here?
-        viewModel.retrieveTask(id).observe(this.viewLifecycleOwner) { selectedTask ->
-            bind(selectedTask)
-        }
+        bind(id)
 
         // Complete Task Button
         binding.imageView.setOnTouchListener(View.OnTouchListener { v, event ->
