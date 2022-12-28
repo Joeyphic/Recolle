@@ -54,6 +54,12 @@ class TaskListAdapter(private val onTaskClicked: (Task) -> Unit) :
         holder.bind(currentTask)
     }
 
+    /*
+    ----------------------------------------------------
+    Description: -The ViewHolder for the RecyclerView. Represents a single
+                  Task in the list.
+    ----------------------------------------------------
+    */
     class TaskViewHolder(private var binding: TaskListItemFragmentBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
