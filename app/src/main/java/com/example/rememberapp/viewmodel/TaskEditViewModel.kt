@@ -4,6 +4,7 @@ import androidx.lifecycle.*
 import com.example.rememberapp.data.PriorityLevel
 import com.example.rememberapp.data.Task
 import com.example.rememberapp.data.TaskDao
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class TaskEditViewModel(private val taskDao: TaskDao) : ViewModel() {
@@ -14,15 +15,15 @@ class TaskEditViewModel(private val taskDao: TaskDao) : ViewModel() {
     /*
     ----------------------------------------------------
     Parameters:   id (Int)
-    Returns:      LiveData<Task?>
+    Returns:      Task?
     Description:  -Retrieves the task from the database, using
                   its ID as identification.
                   -This is one of the earliest functions called in the Fragment,
                   as a Task needs to be supplied for editing.
     ----------------------------------------------------
     */
-    fun retrieveTask(id: Int): LiveData<Task?> {
-        return taskDao.getTaskFlowById(id).asLiveData()
+    fun retrieveTask(id: Int): Task? {
+        return taskDao.getTaskById(id)
     }
 
     /*
@@ -36,7 +37,7 @@ class TaskEditViewModel(private val taskDao: TaskDao) : ViewModel() {
     ----------------------------------------------------
     */
     private fun updateTask(task: Task, isPriorityChanged: Boolean) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             taskDao.updateTask(task, isPriorityChanged)
         }
     }

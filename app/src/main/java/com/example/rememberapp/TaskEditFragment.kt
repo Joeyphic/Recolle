@@ -10,6 +10,7 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.rememberapp.data.PriorityLevel
@@ -17,6 +18,10 @@ import com.example.rememberapp.data.Task
 import com.example.rememberapp.databinding.TaskListAddItemBinding
 import com.example.rememberapp.viewmodel.TaskEditViewModel
 import com.example.rememberapp.viewmodel.TaskEditViewModelFactory
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.lang.IllegalStateException
 
 class TaskEditFragment : Fragment() {
 
@@ -48,15 +53,7 @@ class TaskEditFragment : Fragment() {
 
         // If there's an ID, link selected task to fragment.
         if(id > 0) {
-            viewModel.retrieveTask(id).observe(this.viewLifecycleOwner) { selectedTask ->
-                selectedTask?.let {
-                    viewModel.task = selectedTask
-
-                    // EditText and RadioButton config changes are saved. Since the fragment's
-                    // default state is an invalid input, that means it's safe to override.
-                    if(!isEntryValid()) bind()
-                }
-            }
+            bind(id)
         }
         // Otherwise, there has been invalid input and we navigate back to the Task List.
         else {
@@ -87,19 +84,39 @@ class TaskEditFragment : Fragment() {
         }
     }
 
-    private fun bind() {
-        binding.apply {
-            layoutTaskName.isHintAnimationEnabled = false
-            taskName.setText(viewModel.task.taskName, TextView.BufferType.SPANNABLE)
+    // TODO: Separate into two functions. Too much happening at once.
+    private fun bind(taskId: Int) {
 
-            when (viewModel.task.taskPriority) {
-                PriorityLevel.LOW -> radioGroupTaskPriority.check(radioPriorityLow.id)
-                PriorityLevel.MEDIUM -> radioGroupTaskPriority.check(radioPriorityMedium.id)
-                PriorityLevel.HIGH -> radioGroupTaskPriority.check(radioPriorityHigh.id)
+        lifecycleScope.launch(Dispatchers.IO) {
+            val currentTask = viewModel.retrieveTask(taskId)
+
+            withContext(Dispatchers.Main) {
+                if(currentTask == null) {
+                    val action = TaskEditFragmentDirections
+                        .actionTaskEditFragmentToTaskListFragment()
+                    findNavController().navigate(action)
+                }
+                else {
+                    viewModel.task = currentTask
+                    binding.buttonSave.setOnClickListener { updateTask() }
+
+                    // EditText and RadioButton config changes are saved. Since the fragment's
+                    // default state is an invalid input, that means it's safe to override.
+                    if(isEntryValid()) return@withContext
+
+                    binding.apply {
+                        layoutTaskName.isHintAnimationEnabled = false
+                        taskName.setText(viewModel.task.taskName, TextView.BufferType.SPANNABLE)
+
+                        when (viewModel.task.taskPriority) {
+                            PriorityLevel.LOW -> radioGroupTaskPriority.check(radioPriorityLow.id)
+                            PriorityLevel.MEDIUM -> radioGroupTaskPriority.check(radioPriorityMedium.id)
+                            PriorityLevel.HIGH -> radioGroupTaskPriority.check(radioPriorityHigh.id)
+                        }
+                        radioGroupTaskPriority.jumpDrawablesToCurrentState()
+                    }
+                }
             }
-            radioGroupTaskPriority.jumpDrawablesToCurrentState()
-
-            buttonSave.setOnClickListener { updateTask() }
         }
     }
 

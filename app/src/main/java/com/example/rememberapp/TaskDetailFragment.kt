@@ -72,6 +72,8 @@ class TaskDetailFragment : Fragment() {
     Parameters:   taskId (Int)
     Description:  -Uses IO thread to retrieve the Task from database, then switches back to main
                    thread and updates the views with its data.
+                  -Uses currentTask variable as an intermediary to ensure viewModel.task contains
+                   a value before using it for binding.
                   -If retrieveTask(taskId) is null, then we can assume a task was previously
                    assigned to viewModel.task, and use that for binding. This can happen when we
                    are in completeState, meaning the Task has been deleted from the database.
@@ -80,9 +82,11 @@ class TaskDetailFragment : Fragment() {
     private fun bind(taskId: Int) {
 
         lifecycleScope.launch(Dispatchers.IO) {
-            viewModel.task = viewModel.retrieveTask(taskId) ?: viewModel.task
+            val currentTask = viewModel.retrieveTask(taskId) ?: viewModel.task
 
             withContext(Dispatchers.Main) {
+                viewModel.task = currentTask
+
                 binding.apply {
                     taskName.text = viewModel.task.taskName
 
@@ -95,7 +99,6 @@ class TaskDetailFragment : Fragment() {
                 }
             }
         }
-
     }
 
     /*

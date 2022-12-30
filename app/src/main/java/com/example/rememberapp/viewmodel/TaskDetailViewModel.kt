@@ -19,8 +19,6 @@ class TaskDetailViewModel(private val taskDao: TaskDao) : ViewModel() {
     Returns:      LiveData<Task?>
     Description:  -Retrieves the task from the database, using
                   its ID as identification.
-                  -Returns LiveData since it will be used to
-                  display updated data to views.
     ----------------------------------------------------
     */
     fun retrieveTask(id: Int): Task? {
@@ -37,6 +35,7 @@ class TaskDetailViewModel(private val taskDao: TaskDao) : ViewModel() {
     */
     fun deleteTask(task: Task) {
         // TODO: Look into potentially changing this to CoroutineScope
+        //  ALSO. Wrap head around global coroutineScope.
         viewModelScope.launch(Dispatchers.IO) {
             taskDao.deleteTask(task)
         }

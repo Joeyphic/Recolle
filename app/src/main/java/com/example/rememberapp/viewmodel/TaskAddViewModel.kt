@@ -4,6 +4,7 @@ import androidx.lifecycle.*
 import com.example.rememberapp.data.PriorityLevel
 import com.example.rememberapp.data.Task
 import com.example.rememberapp.data.TaskDao
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class TaskAddViewModel(private val taskDao: TaskDao) : ViewModel() {
@@ -16,7 +17,7 @@ class TaskAddViewModel(private val taskDao: TaskDao) : ViewModel() {
     ----------------------------------------------------
     */
     private fun insertTask(task: Task) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             taskDao.insertTask(task)
         }
     }
