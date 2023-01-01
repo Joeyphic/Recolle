@@ -89,6 +89,19 @@ class TaskListAdapter(private val onTaskClicked: (Task) -> Unit) :
         }
     }
 
+    /*
+    ----------------------------------------------------
+    Class:        TaskTouchHelper
+    Parameters:   adapter (TaskListAdapter), onItemMove ((from: Int, to:Int) -> Unit)
+    Description:  -This class is used to hold, drag, and rearrange TaskList items
+                   in the TaskListFragment.
+                  -This feature is important, because the user can organize tasks closer to
+                   their personal preference. It helps make the app feel like their own.
+                  -The user can rearrange tasks that are in the same priority, but not those that
+                   are of different priority. This makes it so the highest priority tasks are
+                   always on the top, maintaining organization for the user.
+    ----------------------------------------------------
+    */
     class TaskTouchHelper(
         private val adapter: TaskListAdapter,
         private val onItemMove: (from: Int, to: Int) -> Unit
