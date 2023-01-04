@@ -40,6 +40,16 @@ class TaskAddFragment : Fragment() {
         return fragmentBinding.root
     }
 
+    /*
+    ----------------------------------------------------
+    Parameters:   view (View), savedInstanceState (Bundle?)
+    Description:  -We set the default state of the screen, which is binding the save button
+                   to addNewItem(), and setting the radio button to the highest priority.
+                  -We hide the keyboard when EditText is no longer focused. This is
+                   intended to give room for the user to look at the details of their
+                   new Task before submitting it.
+    ----------------------------------------------------
+    */
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -60,11 +70,41 @@ class TaskAddFragment : Fragment() {
         }
     }
 
+    /*
+    ----------------------------------------------------
+    Returns:      Boolean
+    Description:  -Checks if priority RadioButton is selected, then sends to viewModel
+                   to determine validity of both fields.
+    ----------------------------------------------------
+    */
     private fun isEntryValid(): Boolean {
         val currentPriority = getPriorityFromRadioId() ?: return false
         return viewModel.isEntryValid(binding.taskName.text.toString(), currentPriority)
     }
 
+    /*
+    ----------------------------------------------------
+    Returns:      PriorityLevel?
+    Description:  -Returns the PriorityLevel corresponding to which radio button
+                   in the fragment is selected. Returns null if none are selected.
+    ----------------------------------------------------
+    */
+    private fun getPriorityFromRadioId() : PriorityLevel? {
+        return when (binding.radioGroupTaskPriority.checkedRadioButtonId) {
+            binding.radioPriorityHigh.id -> PriorityLevel.HIGH
+            binding.radioPriorityMedium.id -> PriorityLevel.MEDIUM
+            binding.radioPriorityLow.id -> PriorityLevel.LOW
+            else -> null
+        }
+    }
+
+    /*
+    ----------------------------------------------------
+    Description:  -If isEntryValid() returns true, then the Task is suitable to be added to the
+                   database. As such, it is sent to the ViewModel to perform the insertion.
+                  -Afterwards, we return to TaskListFragment.
+    ----------------------------------------------------
+    */
     private fun addNewItem() {
 
         if(isEntryValid()) {
@@ -79,15 +119,7 @@ class TaskAddFragment : Fragment() {
         }
     }
 
-    private fun getPriorityFromRadioId() : PriorityLevel? {
-        return when (binding.radioGroupTaskPriority.checkedRadioButtonId) {
-            binding.radioPriorityHigh.id -> PriorityLevel.HIGH
-            binding.radioPriorityMedium.id -> PriorityLevel.MEDIUM
-            binding.radioPriorityLow.id -> PriorityLevel.LOW
-            else -> null
-        }
-    }
-
+    // Sets _binding to null, avoiding memory leaks.
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null

@@ -56,7 +56,8 @@ class TaskListAdapter(private val onTaskClicked: (Task) -> Unit) :
 
     /*
     ----------------------------------------------------
-    Description: -The ViewHolder for the RecyclerView. Represents a single
+    Inner class:  TaskViewHolder
+    Description:  -The ViewHolder for the RecyclerView. Represents a single
                   Task in the list.
     ----------------------------------------------------
     */
@@ -91,7 +92,7 @@ class TaskListAdapter(private val onTaskClicked: (Task) -> Unit) :
 
     /*
     ----------------------------------------------------
-    Class:        TaskTouchHelper
+    Inner class:  TaskTouchHelper
     Parameters:   adapter (TaskListAdapter), onItemMove ((from: Int, to:Int) -> Unit)
     Description:  -This class is used to hold, drag, and rearrange TaskList items
                    in the TaskListFragment.
@@ -102,6 +103,8 @@ class TaskListAdapter(private val onTaskClicked: (Task) -> Unit) :
                    always on the top, maintaining organization for the user.
     ----------------------------------------------------
     */
+
+    // TODO: Consider overriding canDropOver(), and/or create isDraggable boolean flag.
     class TaskTouchHelper(
         private val adapter: TaskListAdapter,
         private val onItemMove: (from: Int, to: Int) -> Unit
@@ -118,6 +121,7 @@ class TaskListAdapter(private val onTaskClicked: (Task) -> Unit) :
                 from = viewHolder.adapterPosition
 
                 viewHolder.itemView.background.alpha = 200
+                viewHolder.itemView.isClickable = false
 
                 temporaryList = adapter.currentList.toMutableList()
                 adapter.submitList(temporaryList)
@@ -127,7 +131,9 @@ class TaskListAdapter(private val onTaskClicked: (Task) -> Unit) :
         override fun clearView(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder) {
             super.clearView(recyclerView, viewHolder)
             to = viewHolder.adapterPosition
+
             viewHolder.itemView.background.alpha = 255
+            viewHolder.itemView.isClickable = true
 
             val maxIndex = maxOf(from, to)
             val minIndex = minOf(from, to)
