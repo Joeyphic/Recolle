@@ -104,7 +104,7 @@ class TaskListAdapter(private val onTaskClicked: (Task) -> Unit) :
     ----------------------------------------------------
     */
 
-    // TODO: Consider overriding canDropOver(), and/or create isDraggable boolean flag.
+    // TODO: Create isDraggable boolean flag or find another option.
     class TaskTouchHelper(
         private val adapter: TaskListAdapter,
         private val onItemMove: (from: Int, to: Int) -> Unit
@@ -118,6 +118,7 @@ class TaskListAdapter(private val onTaskClicked: (Task) -> Unit) :
             super.onSelectedChanged(viewHolder, actionState)
 
             if(actionState == ACTION_STATE_DRAG && viewHolder != null) {
+                setDefaultDragDirs(0)
                 from = viewHolder.adapterPosition
 
                 viewHolder.itemView.background.alpha = 200
@@ -130,6 +131,8 @@ class TaskListAdapter(private val onTaskClicked: (Task) -> Unit) :
 
         override fun clearView(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder) {
             super.clearView(recyclerView, viewHolder)
+
+            setDefaultDragDirs(ItemTouchHelper.UP or ItemTouchHelper.DOWN)
             to = viewHolder.adapterPosition
 
             viewHolder.itemView.background.alpha = 255
@@ -144,6 +147,17 @@ class TaskListAdapter(private val onTaskClicked: (Task) -> Unit) :
             onItemMove(from, to)
         }
 
+        override fun canDropOver(
+            recyclerView: RecyclerView,
+            current: RecyclerView.ViewHolder,
+            target: RecyclerView.ViewHolder
+        ): Boolean {
+
+            val posFrom = current.adapterPosition
+            val posTo = target.adapterPosition
+
+            return temporaryList[posFrom].taskPriority == temporaryList[posTo].taskPriority
+        }
         // Idea is use onMove to check Priority between Tasks and move if same.
         // Can set position at beginning (selChanged) and end (clrView), then pass that value
         // to database with orderPosition value in ViewModel.
@@ -160,18 +174,14 @@ class TaskListAdapter(private val onTaskClicked: (Task) -> Unit) :
             // Although adapter is passed parameter, we can still use adapterPosition since we
             // are in TaskListAdapter.kt. That's why this class is in the adapter!
 
-            val taskPositionFrom = viewHolder.adapterPosition
-            val taskPositionTo = target.adapterPosition
+            val posFrom = viewHolder.adapterPosition
+            val posTo = target.adapterPosition
 
-            if(temporaryList[taskPositionFrom].taskPriority == temporaryList[taskPositionTo].taskPriority)
-            {
-                val currentTask = temporaryList[taskPositionFrom]
-                temporaryList.removeAt(taskPositionFrom)
-                temporaryList.add(taskPositionTo, currentTask)
+            val currentTask = temporaryList[posFrom]
+            temporaryList.removeAt(posFrom)
+            temporaryList.add(posTo, currentTask)
 
-                adapter.notifyItemMoved(taskPositionFrom, taskPositionTo)
-            }
-            else return false
+            adapter.notifyItemMoved(posFrom, posTo)
 
             Log.i("TaskListAdapter", "list2: " + adapter.currentList)
             return true
