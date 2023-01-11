@@ -70,6 +70,7 @@ class TaskListFragment : Fragment() {
         }
     }
 
+    // Sets _binding to null, avoiding memory leaks.
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
