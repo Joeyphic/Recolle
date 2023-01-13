@@ -27,12 +27,6 @@ interface TaskDao {
     @Query("SELECT COUNT(*) FROM task WHERE priority=:taskPriorityStr OR priority=:taskPriorityStr2")
     fun getNumberOfTasksByPriorities(taskPriorityStr: String, taskPriorityStr2: String = ""): Int
 
-    @Query("UPDATE task SET position = position + 1 WHERE position>=:taskSortOrder")
-    suspend fun updatePositionsBeforeInsertion(taskSortOrder: Int)
-
-    @Query("UPDATE task SET position = position - 1 WHERE position>=:taskSortOrder")
-    suspend fun updatePositionsAfterDeletion(taskSortOrder: Int)
-
     @Query("UPDATE task SET position = (position + :shiftAmount) WHERE position BETWEEN :taskFromPosition AND :taskToPosition")
     suspend fun shiftTaskPositions(shiftAmount: Int, taskFromPosition: Int, taskToPosition: Int)
 
@@ -44,7 +38,7 @@ interface TaskDao {
             PriorityLevel.LOW ->
                 getNumberOfTasksByPriorities("HIGH", "MEDIUM")
         }
-        updatePositionsBeforeInsertion(task.taskListPosition)
+        shiftTaskPositions(+1, task.taskListPosition, Int.MAX_VALUE)
         insert(task)
     }
 
@@ -54,7 +48,7 @@ interface TaskDao {
         if (getTaskById(task.id) == null) return
 
         delete(task)
-        updatePositionsAfterDeletion(task.taskListPosition)
+        shiftTaskPositions(-1, task.taskListPosition, Int.MAX_VALUE)
     }
 
     @Transaction
