@@ -16,13 +16,7 @@ interface TaskDao {
     suspend fun delete(task: Task)
 
     @Query("SELECT * FROM task WHERE id=:id")
-    fun getTaskFlowById(id: Int): Flow<Task>
-
-    @Query("SELECT * FROM task WHERE id=:id")
     fun getTaskById(id: Int): Task?
-
-    @Query("SELECT * FROM task WHERE position=:position")
-    fun getTaskByPosition(position: Int): Task
 
     @Query("SELECT COUNT(*) FROM task WHERE priority=:taskPriorityStr OR priority=:taskPriorityStr2")
     fun getNumberOfTasksByPriorities(taskPriorityStr: String, taskPriorityStr2: String = ""): Int
@@ -45,7 +39,7 @@ interface TaskDao {
     @Transaction
     suspend fun deleteTask(task: Task) {
 
-        if (getTaskById(task.id) == null) return
+        getTaskById(task.id) ?: return
 
         delete(task)
         shiftTaskPositions(-1, task.taskListPosition, Int.MAX_VALUE)
@@ -65,20 +59,21 @@ interface TaskDao {
     }
 
     @Transaction
-    suspend fun moveTask(taskFromPosition: Int, taskToPosition: Int) {
+    suspend fun moveTask(taskId: Int, toPosition: Int) {
 
-        val currentTask = getTaskByPosition(taskFromPosition)
+        val currentTask = getTaskById(taskId) ?: return
+        val fromPosition = currentTask.taskListPosition
 
         // lower to higher
-        if(taskFromPosition < taskToPosition) {
-            shiftTaskPositions(-1, taskFromPosition + 1, taskToPosition)
+        if(fromPosition < toPosition) {
+            shiftTaskPositions(-1, fromPosition + 1, toPosition)
         }
         // higher to lower
-        else {
-            shiftTaskPositions(+1, taskToPosition, taskFromPosition - 1)
+        else if(fromPosition > toPosition) {
+            shiftTaskPositions(+1, toPosition, fromPosition - 1)
         }
 
-        currentTask.taskListPosition = taskToPosition
+        currentTask.taskListPosition = toPosition
         update(currentTask)
     }
 

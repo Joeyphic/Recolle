@@ -17,17 +17,16 @@ class TaskListViewModel(private val taskDao: TaskDao) : ViewModel() {
 
     /*
     ----------------------------------------------------
-    Parameters:   fromPosition (Int), toPosition (Int)
-    Description:  -Prepares an asynchronous thread that calls
-                  the taskDao to move the position of a task.
-                  -As a result, the task's index in allTasks will
-                  change, as well as the taskPosition values of
-                  all affected Tasks.
+    Parameters:   taskId (Int), toPosition (Int)
+    Description:  -Prepares an asynchronous thread that calls the taskDao to move the
+                   position of a Task.
+                  -As a result, the Task's index in allTasks will change, as well as
+                   the taskListPosition values of all affected Tasks.
     ----------------------------------------------------
     */
-    fun moveTaskPosition(fromPosition: Int, toPosition: Int) {
+    fun moveTaskPosition(taskId: Int, toPosition: Int) {
         viewModelScope.launch {
-            taskDao.moveTask(fromPosition, toPosition)
+            taskDao.moveTask(taskId, toPosition)
         }
     }
 }

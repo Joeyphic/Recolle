@@ -59,8 +59,8 @@ class TaskListFragment : Fragment() {
             viewModel.recordedTaskList = tasks
         }
 
-        val itemTouchHelper = ItemTouchHelper(TaskListAdapter.TaskTouchHelper(adapter) { from, to ->
-            viewModel.moveTaskPosition(from, to)
+        val itemTouchHelper = ItemTouchHelper(TaskListAdapter.TaskTouchHelper(adapter) { taskId, to ->
+            viewModel.moveTaskPosition(taskId, to)
         })
         itemTouchHelper.attachToRecyclerView(binding.recyclerView)
 

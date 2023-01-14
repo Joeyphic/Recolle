@@ -94,8 +94,8 @@ class TaskListAdapter(private val onTaskClicked: (Task) -> Unit) :
     ----------------------------------------------------
     Inner class:  TaskTouchHelper
     Parameters:   adapter (TaskListAdapter), onItemMove ((from: Int, to:Int) -> Unit)
-    Description:  -This class is used to hold, drag, and rearrange TaskList items
-                   in the TaskListFragment.
+    Description:  -This class is used to hold, drag, and rearrange Tasks in TaskListFragment.
+                   It will also interact with the Room database to save the order.
                   -This feature is important, because the user can organize tasks closer to
                    their personal preference. It helps make the app feel like their own.
                   -The user can rearrange tasks that are in the same priority, but not those that
@@ -104,22 +104,18 @@ class TaskListAdapter(private val onTaskClicked: (Task) -> Unit) :
     ----------------------------------------------------
     */
 
-    // TODO: Create isDraggable boolean flag or find another option.
     class TaskTouchHelper(
         private val adapter: TaskListAdapter,
-        private val onItemMove: (from: Int, to: Int) -> Unit
+        private val onItemMove: (taskId: Int, to: Int) -> Unit
     ) : ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP or ItemTouchHelper.DOWN, 0) {
 
         lateinit var temporaryList : MutableList<Task>
-        private var from = -1
-        private var to = -1
 
         override fun onSelectedChanged(viewHolder: RecyclerView.ViewHolder?, actionState: Int) {
             super.onSelectedChanged(viewHolder, actionState)
 
             if(actionState == ACTION_STATE_DRAG && viewHolder != null) {
                 setDefaultDragDirs(0)
-                from = viewHolder.adapterPosition
 
                 viewHolder.itemView.background.alpha = 200
                 viewHolder.itemView.isClickable = false
@@ -133,18 +129,21 @@ class TaskListAdapter(private val onTaskClicked: (Task) -> Unit) :
             super.clearView(recyclerView, viewHolder)
 
             setDefaultDragDirs(ItemTouchHelper.UP or ItemTouchHelper.DOWN)
-            to = viewHolder.adapterPosition
 
             viewHolder.itemView.background.alpha = 255
             viewHolder.itemView.isClickable = true
 
-            val maxIndex = maxOf(from, to)
-            val minIndex = minOf(from, to)
+            val taskId = temporaryList[viewHolder.adapterPosition].id
+            val originalPosition = temporaryList[viewHolder.adapterPosition].taskListPosition
+            val toPosition = viewHolder.adapterPosition
+
+            val maxIndex = maxOf(originalPosition, toPosition)
+            val minIndex = minOf(originalPosition, toPosition)
             for(i in minIndex..maxIndex) {
                 temporaryList[i].taskListPosition = i
             }
 
-            onItemMove(from, to)
+            onItemMove(taskId, toPosition)
         }
 
         override fun canDropOver(
