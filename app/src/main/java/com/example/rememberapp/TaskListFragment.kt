@@ -5,6 +5,8 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.doOnLayout
+import androidx.core.view.setPadding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
@@ -57,6 +59,12 @@ class TaskListFragment : Fragment() {
         viewModel.allTasks.observe(this.viewLifecycleOwner) { tasks ->
             adapter.submitList(tasks)
             viewModel.recordedTaskList = tasks
+        }
+
+        binding.floatingActionButton.doOnLayout {
+            binding.recyclerView.setPadding(0,0,0,
+                (it.paddingBottom + it.measuredHeight)
+            )
         }
 
         val itemTouchHelper = ItemTouchHelper(TaskListAdapter.TaskTouchHelper(adapter) { taskId, to ->

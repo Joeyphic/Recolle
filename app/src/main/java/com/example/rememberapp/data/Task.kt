@@ -30,6 +30,6 @@ fun Task.getColorByPriority(): Int {
     return when (taskPriority) {
         PriorityLevel.LOW -> Color.rgb(215, 255, 217)
         PriorityLevel.MEDIUM -> Color.rgb(255,255, 207)
-        PriorityLevel.HIGH -> Color.rgb(255, 204, 203)
+        PriorityLevel.HIGH -> Color.rgb(255, 215, 203)
     }
 }

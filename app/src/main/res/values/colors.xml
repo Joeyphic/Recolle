@@ -8,7 +8,7 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
-    <color name="priorityHigh">#FFFFCCCB</color>
+    <color name="priorityHigh">#FFD7CD</color>
     <color name="priorityMedium">#FFFFFFCF</color>
     <color name="priorityLow">#FFD7FFD9</color>
 
