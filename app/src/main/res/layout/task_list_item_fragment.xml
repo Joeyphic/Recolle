@@ -16,28 +16,19 @@
 
     <TextView
         android:id="@+id/task_name"
-        android:layout_width="match_parent"
+        android:layout_width="380dp"
         android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:layout_marginStart="-1dp"
         android:layout_toEndOf="@id/task_icon"
-        android:maxLines="1"
-        android:paddingTop="16dp"
+        android:minLines="2"
+        android:maxLines="2"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
         android:paddingEnd="16dp"
         android:textAppearance="?attr/textAppearanceSubtitle1"
         android:textColor="@color/black"
         tools:text="Task: Buy batteries for Remote" />
-
-    <TextView
-        android:id="@+id/task_description"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/task_name"
-        android:layout_gravity="center_vertical"
-        android:layout_toEndOf="@id/task_icon"
-        android:maxLines="2"
-        android:paddingEnd="16dp"
-        android:textAppearance="?attr/textAppearanceBody2"
-        android:textColor="@color/black"
-        tools:text="Requires Double A Batteries" />
 
     <com.google.android.material.divider.MaterialDivider
         android:layout_width="match_parent"
