@@ -18,6 +18,7 @@
         android:id="@+id/task_name"
         android:layout_width="380dp"
         android:layout_height="wrap_content"
+        android:ellipsize="end"
         android:gravity="center_vertical"
         android:layout_marginStart="-1dp"
         android:layout_toEndOf="@id/task_icon"
