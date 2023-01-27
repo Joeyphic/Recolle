@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.rememberapp.data.Task
 import com.example.rememberapp.data.getColorByPriority
-import com.example.rememberapp.databinding.TaskListItemFragmentBinding
+import com.example.rememberapp.databinding.TaskListItemBinding
 
 class TaskListAdapter(private val onTaskClicked: (Task) -> Unit) :
     ListAdapter<Task, TaskListAdapter.TaskViewHolder>(DiffCallback) {
@@ -25,7 +25,7 @@ class TaskListAdapter(private val onTaskClicked: (Task) -> Unit) :
     */
     override fun onCreateViewHolder(parent: ViewGroup, ViewType: Int): TaskViewHolder {
         return TaskViewHolder(
-            TaskListItemFragmentBinding.inflate(
+            TaskListItemBinding.inflate(
                 LayoutInflater.from(
                     parent.context
                 )
@@ -61,7 +61,7 @@ class TaskListAdapter(private val onTaskClicked: (Task) -> Unit) :
                   Task in the list.
     ----------------------------------------------------
     */
-    class TaskViewHolder(private var binding: TaskListItemFragmentBinding) :
+    class TaskViewHolder(private var binding: TaskListItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(task: Task) {
