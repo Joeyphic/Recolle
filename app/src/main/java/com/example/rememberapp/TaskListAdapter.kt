@@ -1,15 +1,17 @@
 package com.example.rememberapp
 
+import android.content.Context
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.ItemTouchHelper.ACTION_STATE_DRAG
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.example.rememberapp.data.PriorityLevel
 import com.example.rememberapp.data.Task
-import com.example.rememberapp.data.getColorByPriority
 import com.example.rememberapp.databinding.TaskListItemBinding
 
 class TaskListAdapter(private val onTaskClicked: (Task) -> Unit) :
@@ -51,7 +53,7 @@ class TaskListAdapter(private val onTaskClicked: (Task) -> Unit) :
         holder.itemView.setOnClickListener {
             onTaskClicked(currentTask)
         }
-        holder.bind(currentTask)
+        holder.bind(holder.itemView.context, currentTask)
     }
 
     /*
@@ -64,10 +66,33 @@ class TaskListAdapter(private val onTaskClicked: (Task) -> Unit) :
     class TaskViewHolder(private var binding: TaskListItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(task: Task) {
+        /*
+        ----------------------------------------------------
+        Parameters:   ctx (Context), task (Task)
+        Description:  -Binds the task details to the ViewHolder.
+        ----------------------------------------------------
+        */
+        fun bind(ctx: Context, task: Task) {
             binding.apply {
                 taskName.text = task.taskName
-                relativeLayout.setBackgroundColor(task.getColorByPriority())
+                relativeLayout.setBackgroundColor(getColorByPriority(ctx, task.taskPriority))
+            }
+        }
+
+        /*
+        ----------------------------------------------------
+        Parameters:   ctx (Context), level (PriorityLevel)
+        Returns:      Int
+        Description:  -Takes a PriorityLevel as a parameter, and returns an integer representing its
+                       corresponding color.
+                      -We use the Context in order to access the color resources.
+        ----------------------------------------------------
+        */
+        private fun getColorByPriority(ctx: Context, level: PriorityLevel): Int {
+            return when (level) {
+                PriorityLevel.LOW -> ContextCompat.getColor(ctx, R.color.priorityLow)
+                PriorityLevel.MEDIUM -> ContextCompat.getColor(ctx, R.color.priorityMedium)
+                PriorityLevel.HIGH -> ContextCompat.getColor(ctx, R.color.priorityHigh)
             }
         }
     }

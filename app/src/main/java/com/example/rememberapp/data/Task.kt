@@ -24,12 +24,3 @@ data class Task(
 enum class PriorityLevel {
     LOW, MEDIUM, HIGH
 }
-
-// TODO: Move this to fragments since it focuses on design.
-fun Task.getColorByPriority(): Int {
-    return when (taskPriority) {
-        PriorityLevel.LOW -> Color.rgb(215, 255, 217)
-        PriorityLevel.MEDIUM -> Color.rgb(255,255, 207)
-        PriorityLevel.HIGH -> Color.rgb(255, 215, 203)
-    }
-}

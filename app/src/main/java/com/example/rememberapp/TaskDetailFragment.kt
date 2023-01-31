@@ -9,6 +9,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.*
 import androidx.activity.addCallback
+import androidx.core.content.ContextCompat
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
@@ -19,8 +20,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.vectordrawable.graphics.drawable.Animatable2Compat
+import com.example.rememberapp.data.PriorityLevel
 import com.example.rememberapp.data.Task
-import com.example.rememberapp.data.getColorByPriority
 import com.example.rememberapp.databinding.TaskDetailFragmentBinding
 import com.example.rememberapp.databinding.TaskListFragmentBinding
 import com.example.rememberapp.viewmodel.TaskDetailViewModel
@@ -95,7 +96,7 @@ class TaskDetailFragment : Fragment() {
                         .replaceFirstChar { it.uppercase() }
 
                     // Add Color depending on Task priority
-                    binding.taskDetailBanner.setColorFilter(viewModel.task.getColorByPriority())
+                    taskDetailBanner.setColorFilter(getColorByPriority(viewModel.task.taskPriority))
                 }
             }
         }
@@ -308,5 +309,21 @@ class TaskDetailFragment : Fragment() {
             }
         })
         imageViewDrawable.start()
+    }
+
+    /*
+    ----------------------------------------------------
+    Parameters:   level (PriorityLevel)
+    Returns:      Int
+    Description:  -Takes a PriorityLevel as a parameter, and returns an integer representing its
+                   corresponding color.
+    ----------------------------------------------------
+    */
+    private fun getColorByPriority(level: PriorityLevel): Int {
+        return when (level) {
+            PriorityLevel.LOW -> ContextCompat.getColor(requireContext(), R.color.priorityLow)
+            PriorityLevel.MEDIUM -> ContextCompat.getColor(requireContext(), R.color.priorityMedium)
+            PriorityLevel.HIGH -> ContextCompat.getColor(requireContext(), R.color.priorityHigh)
+        }
     }
 }
