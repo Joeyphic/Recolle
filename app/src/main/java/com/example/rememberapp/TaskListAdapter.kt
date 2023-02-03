@@ -136,6 +136,18 @@ class TaskListAdapter(private val onTaskClicked: (Task) -> Unit) :
 
         lateinit var temporaryList : MutableList<Task>
 
+        /*
+        ----------------------------------------------------
+        Parameters:   viewHolder (RecyclerView.ViewHolder?), actionState (Int)
+        Description:  -The function is called when the actionState changes. We're only interested in
+                       when the ViewHolder's dragging begins, as we determine what happens after
+                       dragging finishes in the clearView() function.
+                      -DragDirs is set to 0, as this ensures no other ViewHolder can be dragged
+                       while our current one is being interacted with.
+                      -We change the adapter's list to a TemporaryList. This allows us to modify the
+                       list to the user without changing the underlying Room database quite yet.
+        ----------------------------------------------------
+        */
         override fun onSelectedChanged(viewHolder: RecyclerView.ViewHolder?, actionState: Int) {
             super.onSelectedChanged(viewHolder, actionState)
 
@@ -150,6 +162,72 @@ class TaskListAdapter(private val onTaskClicked: (Task) -> Unit) :
             }
         }
 
+        /*
+        ----------------------------------------------------
+        Parameters:   recyclerView (RecyclerView), current: (RecyclerView.ViewHolder),
+                       target: (RecyclerView.ViewHolder)
+        Returns:      boolean
+        Description:  -We ensure that Tasks can only change positions in the list if their
+                       taskPriority is the same as the one which the dragged ViewHolder represents.
+        ----------------------------------------------------
+        */
+        override fun canDropOver(
+            recyclerView: RecyclerView,
+            current: RecyclerView.ViewHolder,
+            target: RecyclerView.ViewHolder
+        ): Boolean {
+
+            val posFrom = current.adapterPosition
+            val posTo = target.adapterPosition
+
+            return temporaryList[posFrom].taskPriority == temporaryList[posTo].taskPriority
+        }
+
+        /*
+        ----------------------------------------------------
+        Parameters:   recyclerView (RecyclerView), viewHolder: (RecyclerView.ViewHolder),
+                       target: (RecyclerView.ViewHolder)
+        Returns:      boolean
+        Description:  -We are using temporaryList during this move operation, because otherwise we'd
+                       have to modify the Room database on each move, which is unnecessary overhead.
+                      -We remove the represented Task from temporaryList then immediately add it
+                       back to the new location. A swap would not work because it is possible for a
+                       ViewHolder to be moved multiple spots away from its original position.
+        ----------------------------------------------------
+        */
+        override fun onMove(
+            recyclerView: RecyclerView,
+            viewHolder: RecyclerView.ViewHolder,
+            target: RecyclerView.ViewHolder
+        ): Boolean {
+
+            val posFrom = viewHolder.adapterPosition
+            val posTo = target.adapterPosition
+
+            val currentTask = temporaryList[posFrom]
+            temporaryList.removeAt(posFrom)
+            temporaryList.add(posTo, currentTask)
+
+            adapter.notifyItemMoved(posFrom, posTo)
+
+            Log.i("TaskListAdapter", "list2: " + adapter.currentList)
+            return true
+        }
+
+        /*
+        ----------------------------------------------------
+        Parameters:   recyclerView (RecyclerView), viewHolder: (RecyclerView.ViewHolder)
+        Description:  -This function is called after the ViewHolder is done moving. As such, the
+                       the finishing operations are handled here.
+                      -The DefaultDragDirs are changed back to their original values, which allows
+                       for other ViewHolders to be dragged again.
+                      -The taskListPosition variable of the Tasks is modified in accordance to their
+                       final location after moving. This is done to avoid visual effects that occur
+                       when the TaskList is later updated from the database.
+                      -Lastly, the taskId and position after moving are sent to the ViewModel,
+                       which performs the moveTask operation in the TaskDao.
+        ----------------------------------------------------
+        */
         override fun clearView(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder) {
             super.clearView(recyclerView, viewHolder)
 
@@ -171,48 +249,9 @@ class TaskListAdapter(private val onTaskClicked: (Task) -> Unit) :
             onItemMove(taskId, toPosition)
         }
 
-        override fun canDropOver(
-            recyclerView: RecyclerView,
-            current: RecyclerView.ViewHolder,
-            target: RecyclerView.ViewHolder
-        ): Boolean {
-
-            val posFrom = current.adapterPosition
-            val posTo = target.adapterPosition
-
-            return temporaryList[posFrom].taskPriority == temporaryList[posTo].taskPriority
-        }
-        // Idea is use onMove to check Priority between Tasks and move if same.
-        // Can set position at beginning (selChanged) and end (clrView), then pass that value
-        // to database with orderPosition value in ViewModel.
-        // notifyItemMoved seems to be the key BC theres no previous rev. (In dev diary)
-
-        override fun onMove(
-            recyclerView: RecyclerView,
-            viewHolder: RecyclerView.ViewHolder,
-            target: RecyclerView.ViewHolder
-        ): Boolean {
-            Log.i("TaskListAdapter", "vh pos " + viewHolder.adapterPosition)
-            Log.i("TaskListAdapter", "target pos " + target.adapterPosition)
-            Log.i("TaskListAdapter", "list: " + adapter.currentList)
-            // Although adapter is passed parameter, we can still use adapterPosition since we
-            // are in TaskListAdapter.kt. That's why this class is in the adapter!
-
-            val posFrom = viewHolder.adapterPosition
-            val posTo = target.adapterPosition
-
-            val currentTask = temporaryList[posFrom]
-            temporaryList.removeAt(posFrom)
-            temporaryList.add(posTo, currentTask)
-
-            adapter.notifyItemMoved(posFrom, posTo)
-
-            Log.i("TaskListAdapter", "list2: " + adapter.currentList)
-            return true
-        }
-
+        // Swiping is not supported in this list
         override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-            return // Swiping is not supported in this list
+            return
         }
     }
 }
