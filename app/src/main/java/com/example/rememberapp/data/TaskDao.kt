@@ -6,31 +6,22 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface TaskDao {
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insert(task: Task)
-
-    @Update
-    suspend fun update(task: Task)
-
-    @Delete
-    suspend fun delete(task: Task)
-
     @Query("SELECT * FROM task WHERE id=:id")
     fun getTaskById(id: Int): Task?
 
-    @Query("SELECT COUNT(*) FROM task WHERE priority=:taskPriorityStr OR priority=:taskPriorityStr2")
-    fun getNumberOfTasksByPriorities(taskPriorityStr: String, taskPriorityStr2: String = ""): Int
+    @Query("SELECT COUNT(*) FROM task WHERE priority=:priority1 OR priority=:priority2")
+    fun taskCountByPriority(priority1: PriorityLevel, priority2: PriorityLevel? = null): Int
 
-    @Query("UPDATE task SET position = (position + :shiftAmount) WHERE position BETWEEN :taskFromPosition AND :taskToPosition")
-    suspend fun shiftTaskPositions(shiftAmount: Int, taskFromPosition: Int, taskToPosition: Int)
+    @Query("UPDATE task SET position = (position + :shiftAmount) WHERE position BETWEEN :firstIndex AND :lastIndex")
+    suspend fun shiftTaskPositions(shiftAmount: Int, firstIndex: Int, lastIndex: Int)
 
     @Transaction
     suspend fun insertTask(task: Task) {
         task.taskListPosition = when (task.taskPriority) {
             PriorityLevel.HIGH -> 0
-            PriorityLevel.MEDIUM -> getNumberOfTasksByPriorities("HIGH")
+            PriorityLevel.MEDIUM -> taskCountByPriority(PriorityLevel.HIGH)
             PriorityLevel.LOW ->
-                getNumberOfTasksByPriorities("HIGH", "MEDIUM")
+                taskCountByPriority(PriorityLevel.HIGH, PriorityLevel.MEDIUM)
         }
         shiftTaskPositions(+1, task.taskListPosition, Int.MAX_VALUE)
         insert(task)
@@ -69,12 +60,12 @@ interface TaskDao {
             shiftTaskPositions(-1, fromPosition + 1, toPosition)
         }
         // higher to lower
-        else if(fromPosition > toPosition) {
+        else if(toPosition < fromPosition) {
             shiftTaskPositions(+1, toPosition, fromPosition - 1)
         }
 
         currentTask.taskListPosition = toPosition
-        update(currentTask)
+        updateTask(currentTask, false)
     }
 
     /**
@@ -84,4 +75,16 @@ interface TaskDao {
      */
     @Query("SELECT * FROM task ORDER BY position ASC")
     fun getAllTasks(): Flow<List<Task>>
+
+    // Only call from insertTask()
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insert(task: Task)
+
+    // Only call from updateTask()
+    @Update
+    suspend fun update(task: Task)
+
+    // Only call from deleteTask()
+    @Delete
+    suspend fun delete(task: Task)
 }
