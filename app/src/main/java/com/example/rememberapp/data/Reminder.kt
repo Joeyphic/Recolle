@@ -3,7 +3,7 @@ package com.example.rememberapp.data
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import java.sql.Date
+import java.time.LocalDateTime
 
 @Entity(tableName = "reminder")
 data class Reminder(
@@ -12,7 +12,7 @@ data class Reminder(
     @ColumnInfo(name = "name")
     val name: String,
     @ColumnInfo(name = "remind_time")
-    val remindTime: Date,
+    val remindTime: LocalDateTime,
     @ColumnInfo(name = "event_time")
-    var eventTime: Date
+    var eventTime: LocalDateTime
 )
