@@ -19,13 +19,13 @@ class TaskListAdapter(private val onTaskClicked: (Task) -> Unit) :
 
     /*
     ----------------------------------------------------
-    Parameters:   parent (ViewGroup), ViewType (int)
+    Parameters:   parent (ViewGroup), viewType (int)
     Description:  -Initializes ViewHolder.
                   -The same ViewHolder will be used for each View in the RecyclerView.
                    Therefore, ItemType is always the same.
     ----------------------------------------------------
     */
-    override fun onCreateViewHolder(parent: ViewGroup, ViewType: Int): TaskViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TaskViewHolder {
         return TaskViewHolder(
             TaskListItemBinding.inflate(
                 LayoutInflater.from(

@@ -7,36 +7,55 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.rememberapp.data.Reminder
+import com.example.rememberapp.databinding.RemindListHeaderBinding
 import com.example.rememberapp.databinding.RemindListItemBinding
 import java.lang.IllegalStateException
 
 class RemindListAdapter(private val onReminderClicked: (RemindListElement) -> Unit) :
-    ListAdapter<RemindListElement, RemindListAdapter.RemindViewHolder>(RemindListAdapter.DiffCallback) {
+    ListAdapter<RemindListElement, RecyclerView.ViewHolder>(RemindListAdapter.DiffCallback) {
 
 
-    override fun onCreateViewHolder(parent: ViewGroup, ViewType: Int): RemindListAdapter.RemindViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
 
-        return RemindListAdapter.RemindViewHolder(
-            RemindListItemBinding.inflate(
-                LayoutInflater.from(
-                    parent.context
+        if(viewType == 0) {
+            return RemindViewHolder(
+                RemindListItemBinding.inflate(
+                    LayoutInflater.from(
+                        parent.context
+                    )
                 )
             )
-        )
+        }
+
+        // TODO: Fix error-prone code. Constants or error handling?
+        else { // if(viewType == 1)
+            return HeaderViewHolder(
+                RemindListHeaderBinding.inflate(
+                    LayoutInflater.from(
+                        parent.context
+                    )
+                )
+            )
+        }
     }
 
     // Have to support two item types now?
-    override fun onBindViewHolder(holder: RemindListAdapter.RemindViewHolder, position: Int) {
-        val currentElement = getItem(position)
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
 
-        if(currentElement is RemindListElement.Header) {
-            holder.bind(holder.itemView.context, currentElement.header)
-        }
-        else if(currentElement is RemindListElement.Item) {
-            holder.bind(holder.itemView.context, currentElement.reminder)
+        when(val currentElement = getItem(position)) {
 
-            holder.itemView.setOnClickListener {
-                onReminderClicked(currentElement)
+            is RemindListElement.Header -> {
+                val headerHolder = holder as HeaderViewHolder
+                headerHolder.bind(holder.itemView.context, currentElement.header)
+            }
+
+            is RemindListElement.Item -> {
+                val reminderHolder = holder as RemindViewHolder
+                reminderHolder.bind(holder.itemView.context, currentElement.reminder)
+                
+                reminderHolder.itemView.setOnClickListener {
+                    onReminderClicked(currentElement)
+                }
             }
         }
     }
@@ -57,6 +76,10 @@ class RemindListAdapter(private val onReminderClicked: (RemindListElement) -> Un
                 // binding
             }
         }
+    }
+
+    class HeaderViewHolder(private var binding: RemindListHeaderBinding) :
+        RecyclerView.ViewHolder(binding.root) {
 
         fun bind(ctx: Context, header: String) {
             binding.apply {
