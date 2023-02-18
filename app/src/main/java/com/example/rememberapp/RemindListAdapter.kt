@@ -10,6 +10,7 @@ import com.example.rememberapp.data.Reminder
 import com.example.rememberapp.databinding.RemindListHeaderBinding
 import com.example.rememberapp.databinding.RemindListItemBinding
 import java.lang.IllegalStateException
+import java.time.LocalTime
 
 class RemindListAdapter(private val onReminderClicked: (RemindListElement) -> Unit) :
     ListAdapter<RemindListElement, RecyclerView.ViewHolder>(RemindListAdapter.DiffCallback) {
@@ -52,7 +53,7 @@ class RemindListAdapter(private val onReminderClicked: (RemindListElement) -> Un
             is RemindListElement.Item -> {
                 val reminderHolder = holder as RemindViewHolder
                 reminderHolder.bind(holder.itemView.context, currentElement.reminder)
-                
+
                 reminderHolder.itemView.setOnClickListener {
                     onReminderClicked(currentElement)
                 }
@@ -72,8 +73,30 @@ class RemindListAdapter(private val onReminderClicked: (RemindListElement) -> Un
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(ctx: Context, reminder: Reminder) {
+
+            val eventDate = reminder.eventTime.toLocalDate()
+            val eventTime = reminder.eventTime.toLocalTime()
+            val remindDate = reminder.remindTime.toLocalDate()
+            val remindTime = reminder.remindTime.toLocalTime()
+
+            val outputString = if(eventDate == remindDate && eventTime == remindTime) {
+                "@ $eventTime."
+            }
+            else if(eventDate == remindDate) {
+                "@ ${eventTime}. Remind ${eventTime.hour - remindTime.hour} hours before."
+            }
+            else if(eventDate.minusDays(1) == remindDate && remindTime.isAfter(LocalTime.of(19, 0))) {
+                "@ ${eventTime}. Remind the night before."
+            }
+            else if(eventDate.minusDays(1) == remindDate) {
+                "@ ${eventTime}. Remind the day before."
+            }
+            else {
+                "@ ${eventTime}. Remind on ${reminder.eventTime}."
+            }
+
             binding.apply {
-                // binding
+                reminderName.text = outputString
             }
         }
     }
@@ -81,9 +104,10 @@ class RemindListAdapter(private val onReminderClicked: (RemindListElement) -> Un
     class HeaderViewHolder(private var binding: RemindListHeaderBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
+        // TODO: Perhaps change from String to LocalDateTime
         fun bind(ctx: Context, header: String) {
             binding.apply {
-                // binding
+                dayName.text = header
             }
         }
     }
