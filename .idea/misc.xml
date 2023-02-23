@@ -13,12 +13,14 @@
         <entry key="..\:/Users/Joey/AndroidStudioProjects/RememberApp/app/src/main/res/drawable/ic_baseline_delete_24.xml" value="0.1" />
         <entry key="..\:/Users/Joey/AndroidStudioProjects/RememberApp/app/src/main/res/drawable/ic_baseline_edit_24.xml" value="0.1" />
         <entry key="..\:/Users/Joey/AndroidStudioProjects/RememberApp/app/src/main/res/drawable/ic_launcher_background.xml" value="0.124" />
+        <entry key="..\:/Users/Joey/AndroidStudioProjects/RememberApp/app/src/main/res/drawable/ic_schedule_24.xml" value="0.2" />
         <entry key="..\:/Users/Joey/AndroidStudioProjects/RememberApp/app/src/main/res/drawable/priority_high_gadient.xml" value="0.176" />
+        <entry key="..\:/Users/Joey/AndroidStudioProjects/RememberApp/app/src/main/res/drawable/schedule-48px.xml" value="0.8" />
         <entry key="..\:/Users/Joey/AndroidStudioProjects/RememberApp/app/src/main/res/drawable/task_list_item_banner.xml" value="0.115" />
         <entry key="..\:/Users/Joey/AndroidStudioProjects/RememberApp/app/src/main/res/layout-land/task_detail_fragment.xml" value="0.21516754850088182" />
         <entry key="..\:/Users/Joey/AndroidStudioProjects/RememberApp/app/src/main/res/layout-land/task_list_add_item.xml" value="0.21535745807590467" />
         <entry key="..\:/Users/Joey/AndroidStudioProjects/RememberApp/app/src/main/res/layout/activity_main.xml" value="0.1" />
-        <entry key="..\:/Users/Joey/AndroidStudioProjects/RememberApp/app/src/main/res/layout/remind_list_add_item.xml" value="0.20478837109876016" />
+        <entry key="..\:/Users/Joey/AndroidStudioProjects/RememberApp/app/src/main/res/layout/remind_list_add_item.xml" value="0.264" />
         <entry key="..\:/Users/Joey/AndroidStudioProjects/RememberApp/app/src/main/res/layout/remind_list_fragment.xml" value="0.1672710788757933" />
         <entry key="..\:/Users/Joey/AndroidStudioProjects/RememberApp/app/src/main/res/layout/remind_list_header.xml" value="0.1" />
         <entry key="..\:/Users/Joey/AndroidStudioProjects/RememberApp/app/src/main/res/layout/remind_list_item.xml" value="0.1672710788757933" />
