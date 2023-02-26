@@ -12,4 +12,9 @@
     <string name="content_desc_task_delete">Delete task</string>
     <string name="delete_confirmation_message">Delete this task?</string>
     <string name="cancel">Cancel</string>
+    <string name="reminder_name">Reminder Name</string>
+    <string name="event_date">Event Date</string>
+    <string name="event_time">Event Time</string>
+    <string name="remind_date">Remind Date</string>
+    <string name="remind_time">Remind Time</string>
 </resources>
