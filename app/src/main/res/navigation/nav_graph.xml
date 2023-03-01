@@ -2,21 +2,21 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/taskListFragment">
+    app:startDestination="@id/homeFragment">
 
     <fragment
-        android:id="@+id/taskListFragment"
-        android:name="com.example.rememberapp.TaskListFragment"
+        android:id="@+id/homeFragment"
+        android:name="com.example.rememberapp.HomeFragment"
         android:label="Your Tasks">
         <action
-            android:id="@+id/action_taskListFragment_to_taskAddFragment"
+            android:id="@+id/action_homeFragment_to_taskAddFragment"
             app:destination="@id/taskAddFragment"
             app:enterAnim="@anim/nav_default_enter_anim"
             app:exitAnim="@anim/nav_default_exit_anim"
             app:popEnterAnim="@anim/nav_default_pop_enter_anim"
             app:popExitAnim="@anim/nav_default_pop_exit_anim" />
         <action
-            android:id="@+id/action_taskListFragment_to_taskDetailFragment"
+            android:id="@+id/action_homeFragment_to_taskDetailFragment"
             app:destination="@id/taskDetailFragment"
             app:enterAnim="@anim/nav_default_enter_anim"
             app:exitAnim="@anim/nav_default_exit_anim"
@@ -28,9 +28,9 @@
         android:name="com.example.rememberapp.TaskAddFragment"
         android:label="Add Task">
         <action
-            android:id="@+id/action_taskAddFragment_to_taskListFragment"
-            app:destination="@id/taskListFragment"
-            app:popUpTo="@id/taskListFragment"
+            android:id="@+id/action_taskAddFragment_to_homeFragment"
+            app:destination="@id/homeFragment"
+            app:popUpTo="@id/homeFragment"
             app:popUpToInclusive="true" />
     </fragment>
     <fragment
@@ -48,11 +48,11 @@
             app:popEnterAnim="@anim/nav_default_pop_enter_anim"
             app:popExitAnim="@anim/nav_default_pop_exit_anim" />
         <action
-            android:id="@+id/action_taskDetailFragment_to_taskListFragment"
-            app:destination="@id/taskListFragment"
+            android:id="@+id/action_taskDetailFragment_to_homeFragment"
+            app:destination="@id/homeFragment"
             app:popEnterAnim="@anim/nav_default_pop_enter_anim"
             app:popExitAnim="@anim/nav_default_pop_exit_anim"
-            app:popUpTo="@id/taskListFragment" />
+            app:popUpTo="@id/homeFragment" />
     </fragment>
     <fragment
         android:id="@+id/taskEditFragment"
@@ -63,9 +63,9 @@
             android:defaultValue="-1"
             app:argType="integer" />
         <action
-            android:id="@+id/action_taskEditFragment_to_taskListFragment"
-            app:destination="@id/taskListFragment"
-            app:popUpTo="@id/taskListFragment"
+            android:id="@+id/action_taskEditFragment_to_homeFragment"
+            app:destination="@id/homeFragment"
+            app:popUpTo="@id/homeFragment"
             app:popUpToInclusive="true" />
     </fragment>
 </navigation>

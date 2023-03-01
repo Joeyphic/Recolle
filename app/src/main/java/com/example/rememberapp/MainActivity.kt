@@ -19,6 +19,10 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
         navController = navHostFragment.navController
 
         setupActionBarWithNavController(this, navController)
+
+        // TODO: Better style Top App Bar & TabLayout in HomeFragment
+        // Removes elevation between Top App Bar and TabLayout in HomeFragment
+        supportActionBar?.elevation = 0f
     }
 
     override fun onSupportNavigateUp(): Boolean {

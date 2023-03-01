@@ -54,7 +54,7 @@ class TaskListFragment : Fragment() {
 
         // Initialize Adapter
         val adapter = TaskListAdapter {
-            val action = TaskListFragmentDirections.actionTaskListFragmentToTaskDetailFragment(it.id)
+            val action = HomeFragmentDirections.actionHomeFragmentToTaskDetailFragment(it.id)
             this.findNavController().navigate(action)
         }
 
@@ -82,7 +82,7 @@ class TaskListFragment : Fragment() {
         }
 
         binding.floatingActionButton.setOnClickListener {
-            val action = TaskListFragmentDirections.actionTaskListFragmentToTaskAddFragment()
+            val action = HomeFragmentDirections.actionHomeFragmentToTaskAddFragment()
             this.findNavController().navigate(action)
         }
 

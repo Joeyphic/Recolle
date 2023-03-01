@@ -272,7 +272,7 @@ class TaskDetailFragment : Fragment() {
     private fun deleteTask(task: Task) {
         viewModel.deleteTask(task)
 
-        val action = TaskDetailFragmentDirections.actionTaskDetailFragmentToTaskListFragment()
+        val action = TaskDetailFragmentDirections.actionTaskDetailFragmentToHomeFragment()
         findNavController().navigate(action)
     }
 
@@ -304,7 +304,7 @@ class TaskDetailFragment : Fragment() {
 
         imageViewDrawable.registerAnimationCallback(object : Animatable2.AnimationCallback() {
             override fun onAnimationEnd(drawable: Drawable?) {
-                val action = TaskDetailFragmentDirections.actionTaskDetailFragmentToTaskListFragment()
+                val action = TaskDetailFragmentDirections.actionTaskDetailFragmentToHomeFragment()
                 findNavController().navigate(action)
             }
         })

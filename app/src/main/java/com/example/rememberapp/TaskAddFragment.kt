@@ -114,7 +114,7 @@ class TaskAddFragment : Fragment() {
             viewModel.insertTask(binding.taskName.text.toString(), currentPriority)
 
             val action = TaskAddFragmentDirections
-                         .actionTaskAddFragmentToTaskListFragment()
+                         .actionTaskAddFragmentToHomeFragment()
             findNavController().navigate(action)
         }
     }

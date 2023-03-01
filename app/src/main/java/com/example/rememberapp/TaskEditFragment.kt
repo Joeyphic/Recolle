@@ -68,7 +68,7 @@ class TaskEditFragment : Fragment() {
         }
         // Otherwise, exit prematurely.
         else {
-            val action = TaskEditFragmentDirections.actionTaskEditFragmentToTaskListFragment()
+            val action = TaskEditFragmentDirections.actionTaskEditFragmentToHomeFragment()
             findNavController().navigate(action)
         }
 
@@ -104,7 +104,7 @@ class TaskEditFragment : Fragment() {
             withContext(Dispatchers.Main) {
                 if(currentTask == null) {
                     val action = TaskEditFragmentDirections
-                        .actionTaskEditFragmentToTaskListFragment()
+                        .actionTaskEditFragmentToHomeFragment()
                     findNavController().navigate(action)
                 }
                 else {
@@ -181,7 +181,7 @@ class TaskEditFragment : Fragment() {
             )
 
             val action = TaskEditFragmentDirections
-                .actionTaskEditFragmentToTaskListFragment()
+                .actionTaskEditFragmentToHomeFragment()
             findNavController().navigate(action)
         }
     }
