@@ -22,6 +22,12 @@
             app:exitAnim="@anim/nav_default_exit_anim"
             app:popEnterAnim="@anim/nav_default_pop_enter_anim"
             app:popExitAnim="@anim/nav_default_pop_exit_anim" />
+        <action
+            android:id="@+id/action_homeFragment_to_remindAddFragment"
+            app:destination="@id/remindAddFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_remindDetailFragment"
+            app:destination="@id/remindDetailFragment" />
     </fragment>
     <fragment
         android:id="@+id/taskAddFragment"
@@ -67,5 +73,24 @@
             app:destination="@id/homeFragment"
             app:popUpTo="@id/homeFragment"
             app:popUpToInclusive="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/remindAddFragment"
+        android:name="com.example.rememberapp.RemindAddFragment"
+        android:label="RemindAddFragment" >
+        <action
+            android:id="@+id/action_remindAddFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/remindDetailFragment"
+        android:name="com.example.rememberapp.RemindDetailFragment"
+        android:label="RemindDetailFragment" >
+        <argument
+            android:name="reminder_id"
+            app:argType="integer" />
+        <action
+            android:id="@+id/action_remindDetailFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
     </fragment>
 </navigation>
