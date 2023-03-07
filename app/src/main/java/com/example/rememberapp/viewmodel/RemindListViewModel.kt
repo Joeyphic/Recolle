@@ -38,7 +38,7 @@ class RemindListViewModelFactory(private val remindDao: RemindDao) : ViewModelPr
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
 
-        if(modelClass.isAssignableFrom(TaskAddViewModel::class.java)) {
+        if(modelClass.isAssignableFrom(RemindListViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
             return RemindListViewModel(remindDao) as T
         }

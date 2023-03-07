@@ -12,6 +12,8 @@ import com.example.rememberapp.databinding.RemindListAddItemBinding
 import com.example.rememberapp.viewmodel.TaskAddViewModel
 import com.example.rememberapp.viewmodel.TaskAddViewModelFactory
 import com.google.android.material.datepicker.MaterialDatePicker
+import com.google.android.material.timepicker.MaterialTimePicker
+import com.google.android.material.timepicker.TimeFormat
 
 class RemindAddFragment : Fragment() {
 
@@ -23,6 +25,20 @@ class RemindAddFragment : Fragment() {
 
     private var _binding: RemindListAddItemBinding? = null
     private val binding get() = _binding!!
+
+    val datePicker =
+        MaterialDatePicker.Builder.datePicker()
+            .setTitleText("Select date")
+            .setSelection(MaterialDatePicker.todayInUtcMilliseconds())
+            .build()
+
+    val timePicker =
+        MaterialTimePicker.Builder()
+            .setTimeFormat(TimeFormat.CLOCK_12H)
+            .setHour(12)
+            .setMinute(10)
+            .setTitleText("Select Appointment time")
+            .build()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -55,6 +71,7 @@ class RemindAddFragment : Fragment() {
                     .setTitleText("Select event date")
                     .setSelection(MaterialDatePicker.todayInUtcMilliseconds())
                     .build()
+
             datePicker.show(parentFragmentManager, "eventDate")
         }
     }
