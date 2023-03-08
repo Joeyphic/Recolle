@@ -1,16 +1,16 @@
 package com.example.rememberapp
 
-import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.example.rememberapp.databinding.RemindListAddItemBinding
 import com.example.rememberapp.viewmodel.TaskAddViewModel
 import com.example.rememberapp.viewmodel.TaskAddViewModelFactory
+import com.google.android.material.datepicker.CalendarConstraints
+import com.google.android.material.datepicker.DateValidatorPointForward
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
@@ -26,13 +26,12 @@ class RemindAddFragment : Fragment() {
     private var _binding: RemindListAddItemBinding? = null
     private val binding get() = _binding!!
 
-    val datePicker =
-        MaterialDatePicker.Builder.datePicker()
-            .setTitleText("Select date")
-            .setSelection(MaterialDatePicker.todayInUtcMilliseconds())
-            .build()
+    private var eventDateEpochMilli : Long? = null
+    private var eventTimeEpochMilli : Long? = null
+    private var remindDateEpochMilli : Long? = null
+    private var remindTimeEpochMilli : Long? = null
 
-    val timePicker =
+    private val timePicker =
         MaterialTimePicker.Builder()
             .setTimeFormat(TimeFormat.CLOCK_12H)
             .setHour(12)
@@ -64,15 +63,39 @@ class RemindAddFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.eventDate.setOnClickListener {
+            val selection = eventDateEpochMilli ?: MaterialDatePicker.todayInUtcMilliseconds()
+            val datePicker = createDatePicker(selection)
 
-            // datePicker doesn't seem to save data yet.
-            val datePicker =
-                MaterialDatePicker.Builder.datePicker()
-                    .setTitleText("Select event date")
-                    .setSelection(MaterialDatePicker.todayInUtcMilliseconds())
-                    .build()
-
-            datePicker.show(parentFragmentManager, "eventDate")
+            datePicker.addOnPositiveButtonClickListener {
+                eventDateEpochMilli = datePicker.selection
+                binding.eventDate.setText(datePicker.headerText)
+            }
+            datePicker.show(parentFragmentManager, "RemindAddFragment")
         }
+
+        binding.remindDate.setOnClickListener {
+            val selection = remindDateEpochMilli ?: MaterialDatePicker.todayInUtcMilliseconds()
+            val datePicker = createDatePicker(selection)
+
+            datePicker.addOnPositiveButtonClickListener {
+                remindDateEpochMilli = datePicker.selection
+                binding.remindDate.setText(datePicker.headerText)
+            }
+            datePicker.show(parentFragmentManager, "RemindAddFragment")
+        }
+    }
+
+    private fun createDatePicker(selection: Long): MaterialDatePicker<Long> {
+
+        val constraintsBuilder =
+            CalendarConstraints.Builder()
+                .setStart(MaterialDatePicker.todayInUtcMilliseconds())
+                .setValidator(DateValidatorPointForward.now())
+
+        return MaterialDatePicker.Builder.datePicker()
+            .setTitleText("Select date")
+            .setSelection(selection)
+            .setCalendarConstraints(constraintsBuilder.build())
+            .build()
     }
 }
