@@ -14,6 +14,8 @@ import com.google.android.material.datepicker.DateValidatorPointForward
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
+import java.time.LocalTime
+import java.time.format.DateTimeFormatter
 
 class RemindAddFragment : Fragment() {
 
@@ -27,9 +29,9 @@ class RemindAddFragment : Fragment() {
     private val binding get() = _binding!!
 
     private var eventDateEpochMilli : Long? = null
-    private var eventTimeEpochMilli : Long? = null
+    private var eventTime : LocalTime? = null
     private var remindDateEpochMilli : Long? = null
-    private var remindTimeEpochMilli : Long? = null
+    private var remindTime : LocalTime? = null
 
     private val timePicker =
         MaterialTimePicker.Builder()
@@ -73,6 +75,18 @@ class RemindAddFragment : Fragment() {
             datePicker.show(parentFragmentManager, "RemindAddFragment")
         }
 
+        binding.eventTime.setOnClickListener {
+            val timePicker = createTimePicker(eventTime ?: LocalTime.NOON)
+
+            timePicker.addOnPositiveButtonClickListener {
+                eventTime = LocalTime.of(timePicker.hour, timePicker.minute)
+                binding.eventTime.setText(
+                    eventTime?.format(DateTimeFormatter.ofPattern("hh:mm a"))
+                )
+            }
+            timePicker.show(parentFragmentManager, "RemindAddFragment")
+        }
+
         binding.remindDate.setOnClickListener {
             val selection = remindDateEpochMilli ?: MaterialDatePicker.todayInUtcMilliseconds()
             val datePicker = createDatePicker(selection)
@@ -82,6 +96,18 @@ class RemindAddFragment : Fragment() {
                 binding.remindDate.setText(datePicker.headerText)
             }
             datePicker.show(parentFragmentManager, "RemindAddFragment")
+        }
+
+        binding.remindTime.setOnClickListener {
+            val timePicker = createTimePicker(remindTime ?: eventTime ?: LocalTime.NOON)
+
+            timePicker.addOnPositiveButtonClickListener {
+                remindTime = LocalTime.of(timePicker.hour, timePicker.minute)
+                binding.remindTime.setText(
+                    remindTime?.format(DateTimeFormatter.ofPattern("hh:mm a"))
+                )
+            }
+            timePicker.show(parentFragmentManager, "RemindAddFragment")
         }
     }
 
@@ -96,6 +122,16 @@ class RemindAddFragment : Fragment() {
             .setTitleText("Select date")
             .setSelection(selection)
             .setCalendarConstraints(constraintsBuilder.build())
+            .build()
+    }
+
+    private fun createTimePicker(time: LocalTime): MaterialTimePicker {
+
+        return MaterialTimePicker.Builder()
+            .setTimeFormat(TimeFormat.CLOCK_12H)
+            .setHour(time.hour)
+            .setMinute(time.minute)
+            .setTitleText("Select time")
             .build()
     }
 }
