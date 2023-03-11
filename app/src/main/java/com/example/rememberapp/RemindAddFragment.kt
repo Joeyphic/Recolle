@@ -1,6 +1,7 @@
 package com.example.rememberapp
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,7 +15,7 @@ import com.google.android.material.datepicker.DateValidatorPointForward
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
-import java.time.LocalTime
+import java.time.*
 import java.time.format.DateTimeFormatter
 
 class RemindAddFragment : Fragment() {
@@ -28,18 +29,10 @@ class RemindAddFragment : Fragment() {
     private var _binding: RemindListAddItemBinding? = null
     private val binding get() = _binding!!
 
-    private var eventDateEpochMilli : Long? = null
+    private var eventDate : LocalDate? = null
     private var eventTime : LocalTime? = null
-    private var remindDateEpochMilli : Long? = null
+    private var remindDate : LocalDate? = null
     private var remindTime : LocalTime? = null
-
-    private val timePicker =
-        MaterialTimePicker.Builder()
-            .setTimeFormat(TimeFormat.CLOCK_12H)
-            .setHour(12)
-            .setMinute(10)
-            .setTitleText("Select Appointment time")
-            .build()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -51,26 +44,22 @@ class RemindAddFragment : Fragment() {
         return fragmentBinding.root
     }
 
-    /*
-    ----------------------------------------------------
-    Parameters:   view (View), savedInstanceState (Bundle?)
-    Description:  -We set the default state of the screen, which is binding the save button
-                   to addNewItem(), and setting the radio button to the highest priority.
-                  -We hide the keyboard when EditText is no longer focused. This is
-                   intended to give room for the user to look at the details of their
-                   new Task before submitting it.
-    ----------------------------------------------------
-    */
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         binding.eventDate.setOnClickListener {
+            val eventDateEpochMilli = eventDate?.let {
+                it.atStartOfDay(ZoneOffset.UTC).toInstant().toEpochMilli()
+            }
             val selection = eventDateEpochMilli ?: MaterialDatePicker.todayInUtcMilliseconds()
             val datePicker = createDatePicker(selection)
 
             datePicker.addOnPositiveButtonClickListener {
-                eventDateEpochMilli = datePicker.selection
-                binding.eventDate.setText(datePicker.headerText)
+                val newSelection = datePicker.selection ?: return@addOnPositiveButtonClickListener
+                eventDate = Instant.ofEpochMilli(newSelection).atZone(ZoneOffset.UTC).toLocalDate()
+                binding.eventDate.setText(
+                    eventDate?.format(DateTimeFormatter.ofPattern("MMMM d, yyyy"))
+                )
             }
             datePicker.show(parentFragmentManager, "RemindAddFragment")
         }
@@ -88,12 +77,18 @@ class RemindAddFragment : Fragment() {
         }
 
         binding.remindDate.setOnClickListener {
+            val remindDateEpochMilli = remindDate?.let {
+                it.atStartOfDay(ZoneOffset.UTC).toInstant().toEpochMilli()
+            }
             val selection = remindDateEpochMilli ?: MaterialDatePicker.todayInUtcMilliseconds()
             val datePicker = createDatePicker(selection)
 
             datePicker.addOnPositiveButtonClickListener {
-                remindDateEpochMilli = datePicker.selection
-                binding.remindDate.setText(datePicker.headerText)
+                val newSelection = datePicker.selection ?: return@addOnPositiveButtonClickListener
+                remindDate = Instant.ofEpochMilli(newSelection).atZone(ZoneOffset.UTC).toLocalDate()
+                binding.remindDate.setText(
+                    remindDate?.format(DateTimeFormatter.ofPattern("MMMM d, yyyy"))
+                )
             }
             datePicker.show(parentFragmentManager, "RemindAddFragment")
         }
