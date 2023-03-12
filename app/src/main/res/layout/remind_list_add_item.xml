@@ -133,4 +133,14 @@
             android:focusable="false" />
     </com.google.android.material.textfield.TextInputLayout>
 
+    <Button
+        android:id="@+id/button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin"
+        android:text="Save"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/layout_remind_time" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
