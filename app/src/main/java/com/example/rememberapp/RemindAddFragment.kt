@@ -1,13 +1,14 @@
 package com.example.rememberapp
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.example.rememberapp.databinding.RemindListAddItemBinding
+import com.example.rememberapp.viewmodel.RemindAddViewModel
+import com.example.rememberapp.viewmodel.RemindAddViewModelFactory
 import com.example.rememberapp.viewmodel.TaskAddViewModel
 import com.example.rememberapp.viewmodel.TaskAddViewModelFactory
 import com.google.android.material.datepicker.CalendarConstraints
@@ -20,19 +21,14 @@ import java.time.format.DateTimeFormatter
 
 class RemindAddFragment : Fragment() {
 
-    private val viewModel: TaskAddViewModel by viewModels {
-        TaskAddViewModelFactory(
-            (activity?.application as RememberApplication).database.taskDao()
+    private val viewModel: RemindAddViewModel by viewModels {
+        RemindAddViewModelFactory(
+            (activity?.application as RememberApplication).database.remindDao()
         )
     }
 
     private var _binding: RemindListAddItemBinding? = null
     private val binding get() = _binding!!
-
-    private var eventDate : LocalDate? = null
-    private var eventTime : LocalTime? = null
-    private var remindDate : LocalDate? = null
-    private var remindTime : LocalTime? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -48,36 +44,24 @@ class RemindAddFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.eventDate.setOnClickListener {
-            val eventDateEpochMilli = eventDate?.let {
-                it.atStartOfDay(ZoneOffset.UTC).toInstant().toEpochMilli()
-            }
-            val selection = eventDateEpochMilli ?: MaterialDatePicker.todayInUtcMilliseconds()
-            val datePicker = createDatePicker(selection)
-
-            datePicker.addOnPositiveButtonClickListener {
-                val newSelection = datePicker.selection ?: return@addOnPositiveButtonClickListener
-                eventDate = Instant.ofEpochMilli(newSelection).atZone(ZoneOffset.UTC).toLocalDate()
-                binding.eventDate.setText(
-                    eventDate?.format(DateTimeFormatter.ofPattern("MMMM d, yyyy"))
-                )
-            }
+            val datePicker = viewModel.initializeEventDatePicker()
             datePicker.show(parentFragmentManager, "RemindAddFragment")
         }
 
         binding.eventTime.setOnClickListener {
-            val timePicker = createTimePicker(eventTime ?: LocalTime.NOON)
+            val timePicker = createTimePicker(viewModel.eventTime ?: LocalTime.NOON)
 
             timePicker.addOnPositiveButtonClickListener {
-                eventTime = LocalTime.of(timePicker.hour, timePicker.minute)
+                viewModel.eventTime = LocalTime.of(timePicker.hour, timePicker.minute)
                 binding.eventTime.setText(
-                    eventTime?.format(DateTimeFormatter.ofPattern("hh:mm a"))
+                    viewModel.eventTime?.format(DateTimeFormatter.ofPattern("hh:mm a"))
                 )
             }
             timePicker.show(parentFragmentManager, "RemindAddFragment")
         }
 
         binding.remindDate.setOnClickListener {
-            val remindDateEpochMilli = remindDate?.let {
+            val remindDateEpochMilli = viewModel.remindDate?.let {
                 it.atStartOfDay(ZoneOffset.UTC).toInstant().toEpochMilli()
             }
             val selection = remindDateEpochMilli ?: MaterialDatePicker.todayInUtcMilliseconds()
@@ -85,21 +69,21 @@ class RemindAddFragment : Fragment() {
 
             datePicker.addOnPositiveButtonClickListener {
                 val newSelection = datePicker.selection ?: return@addOnPositiveButtonClickListener
-                remindDate = Instant.ofEpochMilli(newSelection).atZone(ZoneOffset.UTC).toLocalDate()
+                viewModel.remindDate = Instant.ofEpochMilli(newSelection).atZone(ZoneOffset.UTC).toLocalDate()
                 binding.remindDate.setText(
-                    remindDate?.format(DateTimeFormatter.ofPattern("MMMM d, yyyy"))
+                    viewModel.remindDate?.format(DateTimeFormatter.ofPattern("MMMM d, yyyy"))
                 )
             }
             datePicker.show(parentFragmentManager, "RemindAddFragment")
         }
 
         binding.remindTime.setOnClickListener {
-            val timePicker = createTimePicker(remindTime ?: eventTime ?: LocalTime.NOON)
+            val timePicker = createTimePicker(viewModel.remindTime ?: viewModel.eventTime ?: LocalTime.NOON)
 
             timePicker.addOnPositiveButtonClickListener {
-                remindTime = LocalTime.of(timePicker.hour, timePicker.minute)
+                viewModel.remindTime = LocalTime.of(timePicker.hour, timePicker.minute)
                 binding.remindTime.setText(
-                    remindTime?.format(DateTimeFormatter.ofPattern("hh:mm a"))
+                    viewModel.remindTime?.format(DateTimeFormatter.ofPattern("hh:mm a"))
                 )
             }
             timePicker.show(parentFragmentManager, "RemindAddFragment")
