@@ -9,6 +9,8 @@ import com.google.android.material.datepicker.DateValidatorPointForward
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalTime
@@ -17,13 +19,23 @@ import java.time.format.DateTimeFormatter
 
 class RemindAddViewModel(private val remindDao: RemindDao) : ViewModel() {
 
-    var eventDate: LocalDate? = null
-    var eventTime: LocalTime? = null
-    var remindDate: LocalDate? = null
-    var remindTime: LocalTime? = null
+    private val _eventDate = MutableStateFlow<LocalDate?>(null)
+    val eventDate: StateFlow<LocalDate?> = _eventDate
+
+    private val _eventTime = MutableStateFlow<LocalTime?>(null)
+    val eventTime: StateFlow<LocalTime?> = _eventTime
+
+    private val _remindDate = MutableStateFlow<LocalDate?>(null)
+    val remindDate: StateFlow<LocalDate?> = _remindDate
+
+    private val _remindTime = MutableStateFlow<LocalTime?>(null)
+    val remindTime: StateFlow<LocalTime?> = _remindTime
+
+    val dateFormat: DateTimeFormatter = DateTimeFormatter.ofPattern("MMMM d, yyyy")
+    val timeFormat: DateTimeFormatter = DateTimeFormatter.ofPattern("hh:mm a")
 
     fun initializeEventDatePicker() : MaterialDatePicker<Long> {
-        val eventDateEpochMilli = eventDate?.let {
+        val eventDateEpochMilli = eventDate.value?.let {
             it.atStartOfDay(ZoneOffset.UTC).toInstant().toEpochMilli()
         }
         val selection = eventDateEpochMilli ?: MaterialDatePicker.todayInUtcMilliseconds()
@@ -31,10 +43,45 @@ class RemindAddViewModel(private val remindDao: RemindDao) : ViewModel() {
 
         datePicker.addOnPositiveButtonClickListener {
             val newSelection = datePicker.selection ?: return@addOnPositiveButtonClickListener
-            eventDate = Instant.ofEpochMilli(newSelection).atZone(ZoneOffset.UTC).toLocalDate()
+            _eventDate.value = Instant.ofEpochMilli(newSelection).atZone(ZoneOffset.UTC).toLocalDate()
         }
 
         return datePicker
+    }
+
+    fun initializeEventTimePicker() : MaterialTimePicker {
+        val timePicker = createTimePicker(eventTime.value ?: LocalTime.NOON)
+
+        timePicker.addOnPositiveButtonClickListener {
+            _eventTime.value = LocalTime.of(timePicker.hour, timePicker.minute)
+        }
+
+        return timePicker
+    }
+
+    fun initializeRemindDatePicker() : MaterialDatePicker<Long> {
+        val initialDateEpochMilli = (remindDate.value ?: eventDate.value)?.let {
+            it.atStartOfDay(ZoneOffset.UTC).toInstant().toEpochMilli()
+        }
+        val selection = initialDateEpochMilli ?: MaterialDatePicker.todayInUtcMilliseconds()
+        val datePicker = createDatePicker(selection)
+
+        datePicker.addOnPositiveButtonClickListener {
+            val newSelection = datePicker.selection ?: return@addOnPositiveButtonClickListener
+            _remindDate.value = Instant.ofEpochMilli(newSelection).atZone(ZoneOffset.UTC).toLocalDate()
+        }
+
+        return datePicker
+    }
+
+    fun initializeRemindTimePicker() : MaterialTimePicker {
+        val timePicker = createTimePicker(remindTime.value ?: eventTime.value ?: LocalTime.NOON)
+
+        timePicker.addOnPositiveButtonClickListener {
+            _remindTime.value = LocalTime.of(timePicker.hour, timePicker.minute)
+        }
+
+        return timePicker
     }
 
 
