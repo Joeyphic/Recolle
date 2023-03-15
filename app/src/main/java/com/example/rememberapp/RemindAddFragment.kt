@@ -52,25 +52,25 @@ class RemindAddFragment : Fragment() {
 
                 launch {
                     viewModel.eventDate.collect {
-                        binding.eventDate.setText(it?.format(viewModel.dateFormat))
+                        binding.eventDate.setText(it?.format(viewModel.dateFormat) ?: "")
                     }
                 }
 
                 launch {
                     viewModel.eventTime.collect {
-                        binding.eventTime.setText(it?.format(viewModel.timeFormat))
+                        binding.eventTime.setText(it?.format(viewModel.timeFormat) ?: "")
                     }
                 }
 
                 launch {
                     viewModel.remindDate.collect {
-                        binding.remindDate.setText(it?.format(viewModel.dateFormat))
+                        binding.remindDate.setText(it?.format(viewModel.dateFormat) ?: "")
                     }
                 }
 
                 launch {
                     viewModel.remindTime.collect {
-                        binding.remindTime.setText(it?.format(viewModel.timeFormat))
+                        binding.remindTime.setText(it?.format(viewModel.timeFormat) ?: "")
                     }
                 }
             }
