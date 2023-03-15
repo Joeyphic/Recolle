@@ -1,6 +1,7 @@
 package com.example.rememberapp
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -47,30 +48,44 @@ class RemindAddFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // TODO: Use UI State. https://developer.android.com/topic/architecture/ui-layer/events
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
 
                 launch {
                     viewModel.eventDate.collect {
                         binding.eventDate.setText(it?.format(viewModel.dateFormat) ?: "")
+                        viewModel.updateUIState()
                     }
                 }
 
                 launch {
                     viewModel.eventTime.collect {
                         binding.eventTime.setText(it?.format(viewModel.timeFormat) ?: "")
+                        viewModel.updateUIState()
                     }
                 }
 
                 launch {
                     viewModel.remindDate.collect {
                         binding.remindDate.setText(it?.format(viewModel.dateFormat) ?: "")
+                        viewModel.updateUIState()
                     }
                 }
 
                 launch {
                     viewModel.remindTime.collect {
                         binding.remindTime.setText(it?.format(viewModel.timeFormat) ?: "")
+                        viewModel.updateUIState()
+                    }
+                }
+
+                launch {
+                    viewModel.uiState.collect {
+                        Log.i("uistate", "collected.")
+                        if(it.isSaveEnabled) {
+                            binding.saveButton.isEnabled = true
+                        }
                     }
                 }
             }
@@ -94,6 +109,10 @@ class RemindAddFragment : Fragment() {
         binding.remindTime.setOnClickListener {
             val remindTimePicker = viewModel.initializeRemindTimePicker()
             remindTimePicker.show(parentFragmentManager, "RemindAddFragment")
+        }
+
+        binding.saveButton.setOnClickListener {
+            viewModel.addNewReminder()
         }
     }
 }

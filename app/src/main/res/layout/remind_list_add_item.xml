@@ -134,9 +134,10 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/save_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:enabled="false"
         android:layout_marginTop="@dimen/margin"
         android:text="Save"
         app:layout_constraintEnd_toEndOf="parent"

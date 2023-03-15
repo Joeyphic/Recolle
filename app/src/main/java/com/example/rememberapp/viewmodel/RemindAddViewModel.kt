@@ -11,13 +11,19 @@ import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import java.time.Instant
-import java.time.LocalDate
-import java.time.LocalTime
-import java.time.ZoneOffset
+import kotlinx.coroutines.flow.update
+import java.time.*
 import java.time.format.DateTimeFormatter
 
 class RemindAddViewModel(private val remindDao: RemindDao) : ViewModel() {
+
+    data class RemindAddUiState(
+        var isAutoEnabled: Boolean = false,
+        var isSaveEnabled: Boolean = false,
+        var errorMessage: String? = null
+    )
+    private val _uiState = MutableStateFlow(RemindAddUiState())
+    val uiState: StateFlow<RemindAddUiState> = _uiState
 
     private val _eventDate = MutableStateFlow<LocalDate?>(null)
     val eventDate: StateFlow<LocalDate?> = _eventDate
@@ -84,6 +90,21 @@ class RemindAddViewModel(private val remindDao: RemindDao) : ViewModel() {
         return timePicker
     }
 
+    fun addNewReminder() {
+        val eventDateTime = LocalDateTime.of(eventDate.value ?: return, eventTime.value ?: return)
+        val remindDateTime = LocalDateTime.of(remindDate.value ?: return, remindTime.value ?: return)
+
+    }
+
+    fun updateUIState() {
+        if(eventDate.value == null || eventTime.value == null) return
+        else _uiState.value.isAutoEnabled = true
+
+        if(remindDate.value == null || remindTime.value == null) return
+        else _uiState.update { currentUiState ->
+            currentUiState.copy(isSaveEnabled = true)
+        }
+    }
 
     private fun createDatePicker(selection: Long): MaterialDatePicker<Long> {
 
