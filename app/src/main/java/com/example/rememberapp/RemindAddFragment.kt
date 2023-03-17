@@ -82,10 +82,8 @@ class RemindAddFragment : Fragment() {
 
                 launch {
                     viewModel.uiState.collect {
-                        Log.i("uistate", "collected.")
-                        if(it.isSaveEnabled) {
-                            binding.saveButton.isEnabled = true
-                        }
+                        if(it.isAutoEnabled) binding.autoButton.isEnabled = true
+                        if(it.isSaveEnabled) binding.saveButton.isEnabled = true
                     }
                 }
             }

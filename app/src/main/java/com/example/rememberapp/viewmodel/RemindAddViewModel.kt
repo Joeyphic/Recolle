@@ -98,7 +98,9 @@ class RemindAddViewModel(private val remindDao: RemindDao) : ViewModel() {
 
     fun updateUIState() {
         if(eventDate.value == null || eventTime.value == null) return
-        else _uiState.value.isAutoEnabled = true
+        else _uiState.update { currentUiState ->
+            currentUiState.copy(isAutoEnabled = true)
+        }
 
         if(remindDate.value == null || remindTime.value == null) return
         else _uiState.update { currentUiState ->
