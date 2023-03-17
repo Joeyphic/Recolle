@@ -2,16 +2,19 @@ package com.example.rememberapp.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
 import com.example.rememberapp.data.RemindDao
-import com.example.rememberapp.data.TaskDao
+import com.example.rememberapp.data.Reminder
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.DateValidatorPointForward
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import java.time.*
 import java.time.format.DateTimeFormatter
 
@@ -22,6 +25,7 @@ class RemindAddViewModel(private val remindDao: RemindDao) : ViewModel() {
         var isSaveEnabled: Boolean = false,
         var errorMessage: String? = null
     )
+
     private val _uiState = MutableStateFlow(RemindAddUiState())
     val uiState: StateFlow<RemindAddUiState> = _uiState
 
@@ -40,7 +44,13 @@ class RemindAddViewModel(private val remindDao: RemindDao) : ViewModel() {
     val dateFormat: DateTimeFormatter = DateTimeFormatter.ofPattern("MMMM d, yyyy")
     val timeFormat: DateTimeFormatter = DateTimeFormatter.ofPattern("hh:mm a")
 
-    fun initializeEventDatePicker() : MaterialDatePicker<Long> {
+    fun insertReminder(reminder: Reminder) {
+        viewModelScope.launch(Dispatchers.IO) {
+            remindDao.insert(reminder)
+        }
+    }
+
+    fun initializeEventDatePicker(): MaterialDatePicker<Long> {
         val eventDateEpochMilli = eventDate.value?.let {
             it.atStartOfDay(ZoneOffset.UTC).toInstant().toEpochMilli()
         }
@@ -49,13 +59,14 @@ class RemindAddViewModel(private val remindDao: RemindDao) : ViewModel() {
 
         datePicker.addOnPositiveButtonClickListener {
             val newSelection = datePicker.selection ?: return@addOnPositiveButtonClickListener
-            _eventDate.value = Instant.ofEpochMilli(newSelection).atZone(ZoneOffset.UTC).toLocalDate()
+            _eventDate.value =
+                Instant.ofEpochMilli(newSelection).atZone(ZoneOffset.UTC).toLocalDate()
         }
 
         return datePicker
     }
 
-    fun initializeEventTimePicker() : MaterialTimePicker {
+    fun initializeEventTimePicker(): MaterialTimePicker {
         val timePicker = createTimePicker(eventTime.value ?: LocalTime.NOON)
 
         timePicker.addOnPositiveButtonClickListener {
@@ -65,7 +76,7 @@ class RemindAddViewModel(private val remindDao: RemindDao) : ViewModel() {
         return timePicker
     }
 
-    fun initializeRemindDatePicker() : MaterialDatePicker<Long> {
+    fun initializeRemindDatePicker(): MaterialDatePicker<Long> {
         val initialDateEpochMilli = (remindDate.value ?: eventDate.value)?.let {
             it.atStartOfDay(ZoneOffset.UTC).toInstant().toEpochMilli()
         }
@@ -74,13 +85,14 @@ class RemindAddViewModel(private val remindDao: RemindDao) : ViewModel() {
 
         datePicker.addOnPositiveButtonClickListener {
             val newSelection = datePicker.selection ?: return@addOnPositiveButtonClickListener
-            _remindDate.value = Instant.ofEpochMilli(newSelection).atZone(ZoneOffset.UTC).toLocalDate()
+            _remindDate.value =
+                Instant.ofEpochMilli(newSelection).atZone(ZoneOffset.UTC).toLocalDate()
         }
 
         return datePicker
     }
 
-    fun initializeRemindTimePicker() : MaterialTimePicker {
+    fun initializeRemindTimePicker(): MaterialTimePicker {
         val timePicker = createTimePicker(remindTime.value ?: eventTime.value ?: LocalTime.NOON)
 
         timePicker.addOnPositiveButtonClickListener {
@@ -90,10 +102,22 @@ class RemindAddViewModel(private val remindDao: RemindDao) : ViewModel() {
         return timePicker
     }
 
-    fun addNewReminder() {
+    fun autoSetRemindVariables() {
         val eventDateTime = LocalDateTime.of(eventDate.value ?: return, eventTime.value ?: return)
-        val remindDateTime = LocalDateTime.of(remindDate.value ?: return, remindTime.value ?: return)
+        val remindDateTime = eventDateTime.minusHours(3)
+        _remindDate.value = remindDateTime.toLocalDate()
+        _remindTime.value = remindDateTime.toLocalTime()
+    }
 
+    fun createNewReminderOrNull(reminderName: String): Reminder? {
+        val eventDateTime =
+            LocalDateTime.of(eventDate.value ?: return null, eventTime.value ?: return null)
+        val remindDateTime =
+            LocalDateTime.of(remindDate.value ?: return null, remindTime.value ?: return null)
+        val newReminder = getNewReminderEntry(reminderName, eventDateTime, remindDateTime)
+
+        checkForReminderErrors(newReminder)
+        return if(uiState.value.errorMessage == null) newReminder else null
     }
 
     fun updateUIState() {
@@ -106,6 +130,30 @@ class RemindAddViewModel(private val remindDao: RemindDao) : ViewModel() {
         else _uiState.update { currentUiState ->
             currentUiState.copy(isSaveEnabled = true)
         }
+    }
+
+    private fun getNewReminderEntry(reminderName: String, eventDateTime: LocalDateTime, remindDateTime: LocalDateTime): Reminder {
+        return Reminder(
+            name = reminderName,
+            eventTime = eventDateTime,
+            remindTime = remindDateTime)
+    }
+
+    private fun checkForReminderErrors(reminder: Reminder) {
+        if(reminder.name.isEmpty()) {
+            _uiState.update { currentUiState ->
+                currentUiState.copy(errorMessage = "Don't forget to give an event name for your new reminder.")
+            }
+        }
+        else if(reminder.remindTime.isAfter(reminder.eventTime)) {
+            _uiState.update { currentUiState ->
+                currentUiState.copy(errorMessage = "Make sure your remind time is not after your event time.")
+            }
+        }
+    }
+
+    fun errorMessageShown() {
+        _uiState.value.errorMessage = null
     }
 
     private fun createDatePicker(selection: Long): MaterialDatePicker<Long> {
