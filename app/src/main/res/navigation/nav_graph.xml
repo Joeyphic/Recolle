@@ -92,5 +92,16 @@
         <action
             android:id="@+id/action_remindDetailFragment_to_homeFragment"
             app:destination="@id/homeFragment" />
+        <action
+            android:id="@+id/action_remindDetailFragment_to_remindEditFragment"
+            app:destination="@id/remindEditFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/remindEditFragment"
+        android:name="com.example.rememberapp.RemindEditFragment"
+        android:label="RemindEditFragment" >
+        <argument
+            android:name="reminder_id"
+            app:argType="integer" />
     </fragment>
 </navigation>

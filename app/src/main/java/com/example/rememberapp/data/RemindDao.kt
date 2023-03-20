@@ -12,6 +12,9 @@ interface RemindDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(reminder: Reminder)
 
+    @Query("SELECT * FROM reminder WHERE id=:id")
+    fun getReminderById(id: Int): Reminder?
+
     @Query("SELECT * FROM reminder ORDER BY event_time ASC")
     fun getAllReminders(): Flow<List<Reminder>>
 }

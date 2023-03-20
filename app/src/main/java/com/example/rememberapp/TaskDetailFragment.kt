@@ -237,7 +237,7 @@ class TaskDetailFragment : Fragment() {
     */
     private fun showDeleteConfirmationDialog() {
         MaterialAlertDialogBuilder(requireContext())
-            .setMessage(getString(R.string.delete_confirmation_message))
+            .setMessage(getString(R.string.task_delete_confirmation_message))
             .setNegativeButton(getString(R.string.cancel)) { _, _ -> }
             .setPositiveButton(getString(R.string.delete)) { _, _ ->
                 deleteTask(viewModel.task)
