@@ -19,8 +19,8 @@ class RemindListAdapter(private val onReminderClicked: (RemindListElement) -> Un
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
 
         if(viewType == 0) {
-            return RemindViewHolder(
-                RemindListItemBinding.inflate(
+            return HeaderViewHolder(
+                RemindListHeaderBinding.inflate(
                     LayoutInflater.from(
                         parent.context
                     )
@@ -30,8 +30,8 @@ class RemindListAdapter(private val onReminderClicked: (RemindListElement) -> Un
 
         // TODO: Fix error-prone code. Constants or error handling?
         else { // if(viewType == 1)
-            return HeaderViewHolder(
-                RemindListHeaderBinding.inflate(
+            return RemindViewHolder(
+                RemindListItemBinding.inflate(
                     LayoutInflater.from(
                         parent.context
                     )
