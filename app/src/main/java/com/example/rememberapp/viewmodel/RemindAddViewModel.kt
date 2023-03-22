@@ -1,5 +1,6 @@
 package com.example.rememberapp.viewmodel
 
+import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -23,6 +24,7 @@ class RemindAddViewModel(private val remindDao: RemindDao) : ViewModel() {
     data class RemindAddUiState(
         var isAutoEnabled: Boolean = false,
         var isSaveEnabled: Boolean = false,
+        var picker: DialogFragment? = null,
         var errorMessage: String? = null
     )
 
@@ -50,7 +52,10 @@ class RemindAddViewModel(private val remindDao: RemindDao) : ViewModel() {
         }
     }
 
-    fun initializeEventDatePicker(): MaterialDatePicker<Long> {
+    fun initializeEventDatePicker() {
+
+        if(uiState.value.picker != null) return
+
         val eventDateEpochMilli = eventDate.value?.let {
             it.atStartOfDay(ZoneOffset.UTC).toInstant().toEpochMilli()
         }
@@ -58,25 +63,39 @@ class RemindAddViewModel(private val remindDao: RemindDao) : ViewModel() {
         val datePicker = createDatePicker(selection)
 
         datePicker.addOnPositiveButtonClickListener {
+            _uiState.update { it.copy(picker = null) }
             val newSelection = datePicker.selection ?: return@addOnPositiveButtonClickListener
             _eventDate.value =
                 Instant.ofEpochMilli(newSelection).atZone(ZoneOffset.UTC).toLocalDate()
         }
 
-        return datePicker
+        datePicker.addOnDismissListener {
+            _uiState.update { it.copy(picker = null) }
+        }
+
+        _uiState.update { it.copy(picker = datePicker) }
     }
 
-    fun initializeEventTimePicker(): MaterialTimePicker {
+    fun initializeEventTimePicker() {
+        if(uiState.value.picker != null) return
+
         val timePicker = createTimePicker(eventTime.value ?: LocalTime.NOON)
 
         timePicker.addOnPositiveButtonClickListener {
+            _uiState.update { it.copy(picker = null) }
             _eventTime.value = LocalTime.of(timePicker.hour, timePicker.minute)
         }
 
-        return timePicker
+        timePicker.addOnDismissListener {
+            _uiState.update { it.copy(picker = null) }
+        }
+
+        _uiState.update { it.copy(picker = timePicker) }
     }
 
-    fun initializeRemindDatePicker(): MaterialDatePicker<Long> {
+    fun initializeRemindDatePicker() {
+        if(uiState.value.picker != null) return
+
         val initialDateEpochMilli = (remindDate.value ?: eventDate.value)?.let {
             it.atStartOfDay(ZoneOffset.UTC).toInstant().toEpochMilli()
         }
@@ -84,22 +103,34 @@ class RemindAddViewModel(private val remindDao: RemindDao) : ViewModel() {
         val datePicker = createDatePicker(selection)
 
         datePicker.addOnPositiveButtonClickListener {
+            _uiState.update { it.copy(picker = null) }
             val newSelection = datePicker.selection ?: return@addOnPositiveButtonClickListener
             _remindDate.value =
                 Instant.ofEpochMilli(newSelection).atZone(ZoneOffset.UTC).toLocalDate()
         }
 
-        return datePicker
+        datePicker.addOnDismissListener {
+            _uiState.update { it.copy(picker = null) }
+        }
+
+        _uiState.update { it.copy(picker = datePicker) }
     }
 
-    fun initializeRemindTimePicker(): MaterialTimePicker {
+    fun initializeRemindTimePicker() {
+        if(uiState.value.picker != null) return
+
         val timePicker = createTimePicker(remindTime.value ?: eventTime.value ?: LocalTime.NOON)
 
         timePicker.addOnPositiveButtonClickListener {
+            _uiState.update { it.copy(picker = null) }
             _remindTime.value = LocalTime.of(timePicker.hour, timePicker.minute)
         }
 
-        return timePicker
+        timePicker.addOnDismissListener {
+            _uiState.update { it.copy(picker = null) }
+        }
+
+        _uiState.update { it.copy(picker = timePicker) }
     }
 
     fun autoSetRemindVariables() {

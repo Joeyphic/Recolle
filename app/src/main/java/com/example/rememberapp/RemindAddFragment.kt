@@ -103,31 +103,18 @@ class RemindAddFragment : Fragment() {
                                 }
                             }
                         }
+                        if(it.picker != null) {
+                            it.picker?.show(parentFragmentManager, "RemindAddFragment")
+                        }
                     }
                 }
             }
         }
 
-        //TODO: Fix bug where multiple picker options can be shown at once.
-        binding.eventDate.setOnClickListener {
-            val eventDatePicker = viewModel.initializeEventDatePicker()
-            eventDatePicker.show(parentFragmentManager, "RemindAddFragment")
-        }
-
-        binding.eventTime.setOnClickListener {
-            val eventTimePicker = viewModel.initializeEventTimePicker()
-            eventTimePicker.show(parentFragmentManager, "RemindAddFragment")
-        }
-
-        binding.remindDate.setOnClickListener {
-            val remindDatePicker = viewModel.initializeRemindDatePicker()
-            remindDatePicker.show(parentFragmentManager, "RemindAddFragment")
-        }
-
-        binding.remindTime.setOnClickListener {
-            val remindTimePicker = viewModel.initializeRemindTimePicker()
-            remindTimePicker.show(parentFragmentManager, "RemindAddFragment")
-        }
+        binding.eventDate.setOnClickListener { viewModel.initializeEventDatePicker() }
+        binding.eventTime.setOnClickListener { viewModel.initializeEventTimePicker() }
+        binding.remindDate.setOnClickListener { viewModel.initializeRemindDatePicker() }
+        binding.remindTime.setOnClickListener { viewModel.initializeRemindTimePicker() }
 
         binding.autoButton.setOnClickListener {
             viewModel.autoSetRemindVariables()
