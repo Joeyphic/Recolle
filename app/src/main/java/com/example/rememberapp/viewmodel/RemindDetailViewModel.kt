@@ -5,10 +5,12 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.rememberapp.data.RemindDao
 import com.example.rememberapp.data.Reminder
 import com.example.rememberapp.data.Task
+import java.time.format.DateTimeFormatter
 
 class RemindDetailViewModel(private val remindDao: RemindDao) : ViewModel() {
     // Holds the reminder to be edited in this fragment.
     lateinit var reminder: Reminder
+    val dateTimeFormat: DateTimeFormatter = DateTimeFormatter.ofPattern("MMMM d, yyyy @ h:mm a")
 
     fun retrieveReminder(id: Int): Reminder? {
         return remindDao.getReminderById(id)

@@ -1,6 +1,104 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/relative_layout_detail"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/linearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/margin"
+        android:background="@color/primaryColor"
+        android:orientation="vertical"
+        android:layout_alignParentTop="true">
+
+        <TextView
+            android:id="@+id/reminder_name_label"
+            style="@style/Widget.Remember.TextView"
+            android:layout_width="wrap_content"
+            android:layout_marginTop="@dimen/margin"
+            android:layout_marginStart="@dimen/margin"
+            android:text="Name:"
+            android:textColor="@color/primaryTextColor"
+            tools:text="Name:" />
+
+        <TextView
+            android:id="@+id/reminder_name"
+            style="@style/Widget.Remember.TextView"
+            android:layout_width="wrap_content"
+            android:layout_marginStart="@dimen/margin"
+            android:textColor="@color/primaryTextColor"
+            tools:text="Schedule the meeting" />
+
+        <TextView
+            android:id="@+id/reminder_event_time_label"
+            style="@style/Widget.Remember.TextView"
+            android:layout_width="wrap_content"
+            android:layout_marginStart="@dimen/margin"
+            android:layout_marginTop="@dimen/margin"
+            android:text="Event Time:"
+            android:textColor="@color/primaryTextColor"
+            tools:text="Event Time:" />
+
+        <TextView
+            android:id="@+id/reminder_event_time"
+            style="@style/Widget.Remember.TextView"
+            android:layout_width="wrap_content"
+            android:layout_marginStart="@dimen/margin"
+            android:textColor="@color/primaryTextColor"
+            tools:text="High" />
+
+        <TextView
+            android:id="@+id/reminder_remind_time_label"
+            style="@style/Widget.Remember.TextView"
+            android:layout_width="wrap_content"
+            android:layout_marginStart="@dimen/margin"
+            android:layout_marginTop="@dimen/margin"
+            android:text="Remind Time:"
+            android:textColor="@color/primaryTextColor"
+            tools:text="Remind Time:" />
+
+        <TextView
+            android:id="@+id/reminder_remind_time"
+            style="@style/Widget.Remember.TextView"
+            android:layout_width="wrap_content"
+            android:layout_marginBottom="@dimen/margin"
+            android:layout_marginStart="@dimen/margin"
+            android:textColor="@color/primaryTextColor"
+            tools:text="High" />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/linearLayout2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/linearLayout"
+        android:layout_marginTop="@dimen/margin"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/button_delete"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/margin"
+            android:layout_weight="1"
+            android:text="Delete"
+            app:icon="@drawable/ic_baseline_delete_24"
+            app:iconGravity="textStart"/>
+
+        <Button
+            android:id="@+id/button_clear"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/margin"
+            android:layout_weight="1"
+            android:text="Check in"
+            app:icon="@drawable/ic_baseline_check_24"
+            app:iconGravity="textStart" />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+</RelativeLayout>

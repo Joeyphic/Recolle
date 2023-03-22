@@ -52,6 +52,12 @@ class RemindDetailFragment : Fragment() {
 
             withContext(Dispatchers.Main) {
                 viewModel.reminder = currentTask
+
+                binding.apply {
+                    reminderName.text = currentTask.name
+                    reminderEventTime.text = currentTask.eventTime.format(viewModel.dateTimeFormat)
+                    reminderRemindTime.text = currentTask.remindTime.format(viewModel.dateTimeFormat)
+                }
             }
         }
     }
