@@ -1,9 +1,6 @@
 package com.example.rememberapp.data
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -11,6 +8,9 @@ interface RemindDao {
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(reminder: Reminder)
+
+    @Update
+    suspend fun update(reminder: Reminder)
 
     @Query("SELECT * FROM reminder WHERE id=:id")
     fun getReminderById(id: Int): Reminder?
