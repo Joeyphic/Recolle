@@ -12,6 +12,7 @@
     <color name="priorityMedium">#FFFFFFCF</color>
     <color name="priorityLow">#FFD7FFD9</color>
 
+    <color name="remindListItemBackgroundColor">#FFFFEBD5</color>
     <!-- Using Brown_400 from Material Color Picker-->
     <color name="primaryColor">#FF8D6E63</color>
     <color name="primaryLightColor">#FFBE9C91</color>

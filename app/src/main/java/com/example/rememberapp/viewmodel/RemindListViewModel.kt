@@ -25,7 +25,7 @@ class RemindListViewModel(private val remindDao: RemindDao) : ViewModel() {
 
             if(previousDate != currentDate) {
                 val formattedDate =
-                    currentDate.format(DateTimeFormatter.ofPattern("MMMM d, yyyy"))
+                    currentDate.format(DateTimeFormatter.ofPattern("EEEE, MMMM d, yyyy"))
                 outputList.add(RemindListElement.Header(formattedDate))
                 previousDate = currentDate
             }

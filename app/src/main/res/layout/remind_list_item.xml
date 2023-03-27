@@ -5,7 +5,7 @@
     android:id="@+id/relative_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="?attr/selectableItemBackground"
+    android:background="@color/remindListItemBackgroundColor"
     android:minHeight="60dp">
 
     <!-- Consider removing hardcoding of dimensions -->
