@@ -11,6 +11,7 @@ import com.example.rememberapp.databinding.RemindListHeaderBinding
 import com.example.rememberapp.databinding.RemindListItemBinding
 import java.lang.IllegalStateException
 import java.time.LocalTime
+import java.time.format.DateTimeFormatter
 
 class RemindListAdapter(private val onReminderClicked: (RemindListElement) -> Unit) :
     ListAdapter<RemindListElement, RecyclerView.ViewHolder>(RemindListAdapter.DiffCallback) {
@@ -74,29 +75,29 @@ class RemindListAdapter(private val onReminderClicked: (RemindListElement) -> Un
 
         fun bind(ctx: Context, reminder: Reminder) {
 
-            val eventDate = reminder.eventTime.toLocalDate()
-            val eventTime = reminder.eventTime.toLocalTime()
-            val remindDate = reminder.remindTime.toLocalDate()
-            val remindTime = reminder.remindTime.toLocalTime()
+            val timeFormat: DateTimeFormatter = DateTimeFormatter.ofPattern("hh:mm a")
+            val dateTimeFormatWithoutYear: DateTimeFormatter = DateTimeFormatter.ofPattern("hh:mm a, MMM d")
+            val dateTimeFormat: DateTimeFormatter = DateTimeFormatter.ofPattern("hh:mm a, MMM d, yyyy")
 
-            val outputString = if(eventDate == remindDate && eventTime == remindTime) {
-                "@ $eventTime."
+            val eventDateTime = reminder.eventTime
+            val remindDateTime = reminder.remindTime
+
+            val outputString = if(eventDateTime == remindDateTime) {
+                "@ ${eventDateTime.format(timeFormat)}."
             }
-            else if(eventDate == remindDate) {
-                "@ ${eventTime}. Remind ${eventTime.hour - remindTime.hour} hours before."
+            else if(eventDateTime.toLocalDate() == remindDateTime.toLocalDate()) {
+                "@ ${eventDateTime.format(timeFormat)}. Remind at ${remindDateTime.format(timeFormat)}."
             }
-            else if(eventDate.minusDays(1) == remindDate && remindTime.isAfter(LocalTime.of(19, 0))) {
-                "@ ${eventTime}. Remind the night before."
-            }
-            else if(eventDate.minusDays(1) == remindDate) {
-                "@ ${eventTime}. Remind the day before."
+            else if(eventDateTime.year == remindDateTime.year) {
+                "@ ${eventDateTime.format(timeFormat)}. Remind at ${remindDateTime.format(dateTimeFormatWithoutYear)}."
             }
             else {
-                "@ ${eventTime}. Remind on ${reminder.eventTime}."
+                "@ ${eventDateTime.format(timeFormat)}. Remind at ${remindDateTime.format(dateTimeFormat)}."
             }
 
             binding.apply {
-                reminderName.text = outputString
+                reminderName.text = reminder.name
+                reminderTimes.text = outputString
             }
         }
     }

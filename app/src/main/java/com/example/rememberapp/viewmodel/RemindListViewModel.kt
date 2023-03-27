@@ -9,6 +9,7 @@ import com.example.rememberapp.data.RemindDao
 import com.example.rememberapp.data.Reminder
 import com.example.rememberapp.data.TaskDao
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 class RemindListViewModel(private val remindDao: RemindDao) : ViewModel() {
@@ -24,8 +25,13 @@ class RemindListViewModel(private val remindDao: RemindDao) : ViewModel() {
             val currentDate = reminder.eventTime.toLocalDate()
 
             if(previousDate != currentDate) {
-                val formattedDate =
+
+                val formattedDate = if(currentDate.year == LocalDateTime.now().year) {
+                    currentDate.format(DateTimeFormatter.ofPattern("EEEE, MMMM d"))
+                }
+                else {
                     currentDate.format(DateTimeFormatter.ofPattern("EEEE, MMMM d, yyyy"))
+                }
                 outputList.add(RemindListElement.Header(formattedDate))
                 previousDate = currentDate
             }
