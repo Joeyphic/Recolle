@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.rememberapp">
 
+    <uses-permission android:name="android.permission.USE_EXACT_ALARM" />
     <application
         android:name="com.example.rememberapp.RememberApplication"
         android:allowBackup="true"
@@ -23,6 +24,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <receiver android:name=".RemindAlarmReceiver" />
     </application>
 
 </manifest>

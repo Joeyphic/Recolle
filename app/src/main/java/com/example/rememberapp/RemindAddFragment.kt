@@ -1,7 +1,6 @@
 package com.example.rememberapp
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,19 +13,10 @@ import androidx.navigation.fragment.findNavController
 import com.example.rememberapp.databinding.RemindListAddItemBinding
 import com.example.rememberapp.viewmodel.RemindAddViewModel
 import com.example.rememberapp.viewmodel.RemindAddViewModelFactory
-import com.example.rememberapp.viewmodel.TaskAddViewModel
-import com.example.rememberapp.viewmodel.TaskAddViewModelFactory
-import com.google.android.material.datepicker.CalendarConstraints
-import com.google.android.material.datepicker.DateValidatorPointForward
-import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.google.android.material.timepicker.MaterialTimePicker
-import com.google.android.material.timepicker.TimeFormat
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.time.*
-import java.time.format.DateTimeFormatter
 
 class RemindAddFragment : Fragment() {
 
@@ -51,6 +41,7 @@ class RemindAddFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val scheduler = RemindAlarmScheduler(view.context)
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -125,6 +116,7 @@ class RemindAddFragment : Fragment() {
                 ?: return@setOnClickListener
 
             viewModel.insertReminder(newReminder)
+            scheduler.schedule(newReminder) // TODO: Make schedule variable clearer
 
             val action = RemindAddFragmentDirections.actionRemindAddFragmentToHomeFragment()
             findNavController().navigate(action)
