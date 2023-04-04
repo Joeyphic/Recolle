@@ -1,5 +1,9 @@
 package com.example.rememberapp
 
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.content.Context
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.navigation.NavController
@@ -23,9 +27,28 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
         // TODO: Better style Top App Bar & TabLayout in HomeFragment
         // Removes elevation between Top App Bar and TabLayout in HomeFragment
         supportActionBar?.elevation = 0f
+
+        createNotificationChannel()
     }
 
     override fun onSupportNavigateUp(): Boolean {
         return navController.navigateUp() || super.onSupportNavigateUp()
     }
+
+    private fun createNotificationChannel() {
+
+        // Create the notification channel
+        val name = getString(R.string.remind_notification_channel_title)
+        val descriptionText = getString(R.string.remind_notification_channel_description)
+        val importance = NotificationManager.IMPORTANCE_HIGH
+        val channel = NotificationChannel("RemindNotificationChannel", name, importance).apply {
+            description = descriptionText
+        }
+
+        // Register the channel with the system
+        val notificationManager: NotificationManager =
+            getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager.createNotificationChannel(channel)
+    }
+
 }

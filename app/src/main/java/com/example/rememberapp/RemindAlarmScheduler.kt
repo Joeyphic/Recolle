@@ -12,7 +12,7 @@ class RemindAlarmScheduler(private val context: Context): AlarmScheduler<Reminde
     private val alarmManager = context.getSystemService(AlarmManager::class.java)
 
     override fun schedule(reminder: Reminder) {
-        val alarmMessage = "${reminder.name} at ${reminder.eventTime}"
+        val alarmMessage = reminder.name
 
         val intent = Intent(context, RemindAlarmReceiver::class.java).apply {
             putExtra("EXTRA_MESSAGE", alarmMessage)
