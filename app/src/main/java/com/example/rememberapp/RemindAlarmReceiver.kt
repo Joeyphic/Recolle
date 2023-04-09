@@ -12,14 +12,15 @@ import androidx.core.app.NotificationManagerCompat
 
 class RemindAlarmReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context?, intent: Intent?) {
-        val message = intent?.getStringExtra("EXTRA_MESSAGE") ?: return
+        val title = intent?.getStringExtra("EXTRA_TITLE") ?: return
+        val message = intent.getStringExtra("EXTRA_MESSAGE")
         Log.i("RemindAlarms", "An alarm just triggered: $message")
 
         context?.let {
             var builder = NotificationCompat.Builder(context, "RemindNotificationChannel")
                 .setSmallIcon(R.drawable.ic_material_schedule_24)
-                .setContentTitle(message)
-                .setContentText("And here's the text!")
+                .setContentTitle(title)
+                .setContentText(message)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
 
             with(NotificationManagerCompat.from(context)) {

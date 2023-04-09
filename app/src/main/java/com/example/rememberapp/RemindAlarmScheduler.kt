@@ -5,16 +5,20 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import com.example.rememberapp.data.Reminder
+import java.time.LocalDateTime
 import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 
 class RemindAlarmScheduler(private val context: Context): AlarmScheduler<Reminder> {
 
     private val alarmManager = context.getSystemService(AlarmManager::class.java)
 
     override fun schedule(reminder: Reminder) {
-        val alarmMessage = reminder.name
+        val alarmTitle = "Reminder: ${reminder.name}"
+        val alarmMessage = createAlarmMessage(reminder.eventTime, reminder.remindTime)
 
         val intent = Intent(context, RemindAlarmReceiver::class.java).apply {
+            putExtra("EXTRA_TITLE", alarmTitle)
             putExtra("EXTRA_MESSAGE", alarmMessage)
         }
 
@@ -39,5 +43,25 @@ class RemindAlarmScheduler(private val context: Context): AlarmScheduler<Reminde
                 PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
             )
         )
+    }
+
+    // TODO: Add to string resources.
+    private fun createAlarmMessage(eventDateTime: LocalDateTime, remindDateTime: LocalDateTime) : String {
+        val timeFormat: DateTimeFormatter = DateTimeFormatter.ofPattern("hh:mm a")
+        val dateTimeFormatWithoutYear: DateTimeFormatter = DateTimeFormatter.ofPattern("MMM d 'at' hh:mm a")
+        val dateTimeFormat: DateTimeFormatter = DateTimeFormatter.ofPattern("MMM d, yyyy 'at' hh:mm a")
+
+        return if(eventDateTime == remindDateTime) {
+            "Event occurring right now."
+        }
+        else if(eventDateTime.toLocalDate() == remindDateTime.toLocalDate()) {
+            "Event occurring at ${eventDateTime.format(timeFormat)}."
+        }
+        else if(eventDateTime.year == remindDateTime.year) {
+            "Event occurring on ${eventDateTime.format(dateTimeFormatWithoutYear)}."
+        }
+        else {
+            "Event occurring on ${eventDateTime.format(dateTimeFormat)}."
+        }
     }
 }
