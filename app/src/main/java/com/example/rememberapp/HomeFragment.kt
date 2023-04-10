@@ -36,6 +36,11 @@ class HomeFragment : Fragment() {
         tabLayout = binding.tabLayout
         viewPager = binding.viewPager
 
+        // -A better user experience is provided by loading both pages at once.
+        // -If this line is removed, then dragging logic in TaskListFragment must be modified to
+        //  ensure it works even when RemindListFragment is loaded first.
+        viewPager.offscreenPageLimit = 1
+
         viewPager.adapter = PagerAdapter(this)
         TabLayoutMediator(tabLayout, viewPager) { tab, index ->
             tab.text = when(index) {
