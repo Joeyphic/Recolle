@@ -20,6 +20,7 @@ class RemindAlarmScheduler(private val context: Context): AlarmScheduler<Reminde
         val intent = Intent(context, RemindAlarmReceiver::class.java).apply {
             putExtra("EXTRA_TITLE", alarmTitle)
             putExtra("EXTRA_MESSAGE", alarmMessage)
+            putExtra("EXTRA_ID", reminder.id)
         }
 
         alarmManager.setExactAndAllowWhileIdle(
