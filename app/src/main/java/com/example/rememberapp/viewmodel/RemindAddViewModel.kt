@@ -46,10 +46,8 @@ class RemindAddViewModel(private val remindDao: RemindDao) : ViewModel() {
     val dateFormat: DateTimeFormatter = DateTimeFormatter.ofPattern("MMMM d, yyyy")
     val timeFormat: DateTimeFormatter = DateTimeFormatter.ofPattern("hh:mm a")
 
-    fun insertReminder(reminder: Reminder) {
-        viewModelScope.launch(Dispatchers.IO) {
-            remindDao.insert(reminder)
-        }
+    suspend fun insertReminder(reminder: Reminder): Long {
+        return remindDao.insert(reminder)
     }
 
     fun initializeEventDatePicker() {

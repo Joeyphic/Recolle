@@ -14,6 +14,7 @@ import com.example.rememberapp.databinding.RemindListAddItemBinding
 import com.example.rememberapp.viewmodel.RemindAddViewModel
 import com.example.rememberapp.viewmodel.RemindAddViewModelFactory
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -112,12 +113,14 @@ class RemindAddFragment : Fragment() {
         }
 
         binding.saveButton.setOnClickListener {
-            val newReminder = viewModel.createNewReminderOrNull(binding.reminderName.text.toString())
+            var newReminder = viewModel.createNewReminderOrNull(binding.reminderName.text.toString())
                 ?: return@setOnClickListener
 
-            viewModel.insertReminder(newReminder)
-            scheduler.schedule(newReminder) // TODO: Make schedule variable clearer
-
+            CoroutineScope(Dispatchers.IO).launch {
+                val reminderId = viewModel.insertReminder(newReminder)
+                newReminder = newReminder.copy(id = reminderId.toInt())
+                scheduler.schedule(newReminder) // TODO: Make schedule variable clearer
+            }
             val action = RemindAddFragmentDirections.actionRemindAddFragmentToHomeFragment()
             findNavController().navigate(action)
         }

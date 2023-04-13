@@ -25,7 +25,7 @@ class RemindAlarmReceiver : BroadcastReceiver() {
                 .setContentText(message)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
 
-            val arg = RemindDetailFragmentArgs(4).toBundle()
+            val arg = RemindDetailFragmentArgs(reminderId).toBundle()
 
             val pendingIntent = NavDeepLinkBuilder(context)
                 .setGraph(R.navigation.nav_graph)
