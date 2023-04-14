@@ -16,5 +16,8 @@ interface RemindDao {
     fun getReminderById(id: Int): Reminder?
 
     @Query("SELECT * FROM reminder ORDER BY event_time ASC")
-    fun getAllReminders(): Flow<List<Reminder>>
+    fun getAllReminders(): List<Reminder>
+
+    @Query("SELECT * FROM reminder ORDER BY event_time ASC")
+    fun getAllRemindersFlow(): Flow<List<Reminder>>
 }

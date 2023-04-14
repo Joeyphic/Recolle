@@ -19,7 +19,7 @@ class RemindAlarmReceiver : BroadcastReceiver() {
         Log.i("RemindAlarms", "An alarm just triggered: $message")
 
         context?.let {
-            var builder = NotificationCompat.Builder(context, "RemindNotificationChannel")
+            val builder = NotificationCompat.Builder(context, "RemindNotificationChannel")
                 .setSmallIcon(R.drawable.ic_material_schedule_24)
                 .setContentTitle(title)
                 .setContentText(message)
@@ -42,7 +42,7 @@ class RemindAlarmReceiver : BroadcastReceiver() {
                     ) != PackageManager.PERMISSION_GRANTED
                 ) return
 
-                notify(2, builder.build())
+                notify(reminderId, builder.build())
             }
         }
     }

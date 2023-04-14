@@ -2,8 +2,11 @@ package com.example.rememberapp
 
 import android.app.AlarmManager
 import android.app.PendingIntent
+import android.content.BroadcastReceiver
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import com.example.rememberapp.data.Reminder
 import java.time.LocalDateTime
 import java.time.ZoneId
@@ -33,6 +36,16 @@ class RemindAlarmScheduler(private val context: Context): AlarmScheduler<Reminde
                 PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
             )
         )
+
+        // Enables BootReceiver
+        val receiver = ComponentName(context, RemindBootReceiver::class.java)
+
+        context.packageManager.setComponentEnabledSetting(
+            receiver,
+            PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
+            PackageManager.DONT_KILL_APP
+        )
+
     }
 
     override fun cancel(reminder: Reminder) {

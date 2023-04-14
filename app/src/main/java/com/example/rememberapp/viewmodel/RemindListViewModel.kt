@@ -7,14 +7,13 @@ import androidx.lifecycle.asLiveData
 import com.example.rememberapp.RemindListElement
 import com.example.rememberapp.data.RemindDao
 import com.example.rememberapp.data.Reminder
-import com.example.rememberapp.data.TaskDao
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 class RemindListViewModel(private val remindDao: RemindDao) : ViewModel() {
 
-    val allReminders: LiveData<List<Reminder>> = remindDao.getAllReminders().asLiveData()
+    val allReminders: LiveData<List<Reminder>> = remindDao.getAllRemindersFlow().asLiveData()
 
     fun generateRemindList(sortedReminders: List<Reminder>) : List<RemindListElement> {
 
