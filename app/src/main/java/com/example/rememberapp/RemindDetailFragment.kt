@@ -76,7 +76,7 @@ class RemindDetailFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Use navigation argument to bind correct Task to views
+        // Use navigation argument to bind correct Reminder to views
         val id = navigationArgs.reminderId
         bind(id)
 
@@ -135,8 +135,15 @@ class RemindDetailFragment : Fragment() {
             .setMessage(getString(R.string.reminder_delete_confirmation_message))
             .setNegativeButton(getString(R.string.cancel)) { _, _ -> }
             .setPositiveButton(getString(R.string.delete)) { _, _ ->
-                //deleteTask(viewModel.task)
+                deleteReminder()
             }
             .show()
+    }
+
+    private fun deleteReminder() {
+        viewModel.deleteReminder()
+
+        // Allows us to retain our place in the RemindList, instead of being at the top.
+        this.findNavController().navigateUp()
     }
 }

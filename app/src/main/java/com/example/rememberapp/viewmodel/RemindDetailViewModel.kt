@@ -2,9 +2,12 @@ package com.example.rememberapp.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
 import com.example.rememberapp.data.RemindDao
 import com.example.rememberapp.data.Reminder
 import com.example.rememberapp.data.Task
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.time.format.DateTimeFormatter
 
 class RemindDetailViewModel(private val remindDao: RemindDao) : ViewModel() {
@@ -14,6 +17,12 @@ class RemindDetailViewModel(private val remindDao: RemindDao) : ViewModel() {
 
     fun retrieveReminder(id: Int): Reminder? {
         return remindDao.getReminderById(id)
+    }
+
+    fun deleteReminder() {
+        viewModelScope.launch(Dispatchers.IO) {
+            remindDao.delete(reminder)
+        }
     }
 }
 

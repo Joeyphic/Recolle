@@ -267,13 +267,14 @@ class TaskDetailFragment : Fragment() {
     Parameters:   task (Task)
     Description:  -Calls the deleteTask() function from the ViewModel, and
                    navigates back to TaskListFragment.
+                  -We use .navigateUp() so that we retain our vertical position in the TaskList,
+                   as opposed to having it be refreshed.
     ----------------------------------------------------
     */
     private fun deleteTask(task: Task) {
         viewModel.deleteTask(task)
 
-        val action = TaskDetailFragmentDirections.actionTaskDetailFragmentToHomeFragment()
-        findNavController().navigate(action)
+        findNavController().navigateUp()
     }
 
     /*
