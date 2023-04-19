@@ -40,6 +40,8 @@ class RemindListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        viewModel.clearOutdatedCheckedReminders()
+
         // May not need the 'if statement' if we disable clicking on headers. However, good for
         // readability for now.
         val adapter = RemindListAdapter {

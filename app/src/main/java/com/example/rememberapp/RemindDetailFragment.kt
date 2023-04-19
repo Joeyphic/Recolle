@@ -19,6 +19,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.time.LocalDateTime
 
 class RemindDetailFragment : Fragment() {
 
@@ -57,6 +58,7 @@ class RemindDetailFragment : Fragment() {
                     reminderName.text = currentTask.name
                     reminderEventTime.text = currentTask.eventTime.format(viewModel.dateTimeFormat)
                     reminderRemindTime.text = currentTask.remindTime.format(viewModel.dateTimeFormat)
+                    buttonCheck.isEnabled = LocalDateTime.now() >= currentTask.remindTime
                 }
             }
         }
@@ -79,6 +81,9 @@ class RemindDetailFragment : Fragment() {
         // Use navigation argument to bind correct Reminder to views
         val id = navigationArgs.reminderId
         bind(id)
+
+        // Set onClick Listener for buttonCheck
+        binding.buttonCheck.setOnClickListener { viewModel.checkReminder() }
 
         // Initializing MenuProvider
         val menuHost: MenuHost = requireActivity()

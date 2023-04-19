@@ -19,6 +19,12 @@ class RemindDetailViewModel(private val remindDao: RemindDao) : ViewModel() {
         return remindDao.getReminderById(id)
     }
 
+    fun checkReminder() {
+        viewModelScope.launch(Dispatchers.IO) {
+            remindDao.checkReminderById(reminder.id)
+        }
+    }
+
     fun deleteReminder() {
         viewModelScope.launch(Dispatchers.IO) {
             remindDao.delete(reminder)

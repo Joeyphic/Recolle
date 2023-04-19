@@ -1,14 +1,12 @@
 package com.example.rememberapp.viewmodel
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.asLiveData
+import androidx.lifecycle.*
 import com.example.rememberapp.RemindListElement
 import com.example.rememberapp.data.RemindDao
 import com.example.rememberapp.data.Reminder
-import java.time.LocalDate
-import java.time.LocalDateTime
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import java.time.*
 import java.time.format.DateTimeFormatter
 
 class RemindListViewModel(private val remindDao: RemindDao) : ViewModel() {
@@ -38,6 +36,15 @@ class RemindListViewModel(private val remindDao: RemindDao) : ViewModel() {
         }
 
         return outputList
+    }
+
+    fun clearOutdatedCheckedReminders() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val deviceTimeOffset = ZoneId.systemDefault().rules.getOffset(Instant.now())
+            remindDao.clearCheckedRemindersBeforeTime(
+                LocalDateTime.now().plusHours(2).toEpochSecond(ZoneOffset.UTC)
+            )
+        }
     }
 }
 

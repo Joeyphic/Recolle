@@ -84,9 +84,10 @@
         android:weightSum="1">
 
         <Button
-            android:id="@+id/button_clear"
+            android:id="@+id/button_check"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:enabled="false"
             android:layout_marginHorizontal="@dimen/margin"
             android:layout_weight="0.5"
             android:text="Check in"

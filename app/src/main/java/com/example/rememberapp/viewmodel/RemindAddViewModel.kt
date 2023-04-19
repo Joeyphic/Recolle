@@ -164,6 +164,7 @@ class RemindAddViewModel(private val remindDao: RemindDao) : ViewModel() {
     private fun getNewReminderEntry(reminderName: String, eventDateTime: LocalDateTime, remindDateTime: LocalDateTime): Reminder {
         return Reminder(
             name = reminderName,
+            checked = false,
             eventTime = eventDateTime,
             remindTime = remindDateTime)
     }
