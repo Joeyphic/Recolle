@@ -1,8 +1,11 @@
 package com.example.rememberapp
 
 import android.annotation.SuppressLint
+import android.app.NotificationManager
+import android.content.Context
 import android.os.Bundle
 import android.view.*
+import androidx.core.app.NotificationManagerCompat
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
@@ -13,13 +16,15 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.rememberapp.data.Reminder
 import com.example.rememberapp.databinding.RemindDetailFragmentBinding
-import com.example.rememberapp.viewmodel.RemindDetailViewModelFactory
 import com.example.rememberapp.viewmodel.RemindDetailViewModel
+import com.example.rememberapp.viewmodel.RemindDetailViewModelFactory
+import com.google.android.material.button.MaterialButton
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.time.LocalDateTime
+
 
 class RemindDetailFragment : Fragment() {
 
@@ -58,7 +63,13 @@ class RemindDetailFragment : Fragment() {
                     reminderName.text = currentTask.name
                     reminderEventTime.text = currentTask.eventTime.format(viewModel.dateTimeFormat)
                     reminderRemindTime.text = currentTask.remindTime.format(viewModel.dateTimeFormat)
-                    buttonCheck.isEnabled = LocalDateTime.now() >= currentTask.remindTime
+
+                    if(currentTask.checked) {
+                        showReminderIsChecked()
+                    }
+                    else {
+                        buttonCheck.isEnabled = LocalDateTime.now() >= currentTask.remindTime
+                    }
                 }
             }
         }
@@ -83,7 +94,17 @@ class RemindDetailFragment : Fragment() {
         bind(id)
 
         // Set onClick Listener for buttonCheck
-        binding.buttonCheck.setOnClickListener { viewModel.checkReminder() }
+        binding.buttonCheck.setOnClickListener {
+            viewModel.checkReminder()
+
+            /*
+            val ns = Context.NOTIFICATION_SERVICE
+            (context?.getSystemService(ns) as NotificationManager).cancel(viewModel.reminder.id)
+             */
+            NotificationManagerCompat.from(view.context).cancel(viewModel.reminder.id)
+
+            showReminderIsChecked()
+        }
 
         // Initializing MenuProvider
         val menuHost: MenuHost = requireActivity()
@@ -150,5 +171,11 @@ class RemindDetailFragment : Fragment() {
 
         // Allows us to retain our place in the RemindList, instead of being at the top.
         this.findNavController().navigateUp()
+    }
+
+    private fun showReminderIsChecked() {
+        (binding.buttonCheck as? MaterialButton)?.setIconResource(R.drawable.ic_baseline_check_24)
+        binding.buttonCheck.text = "Checked in"
+        binding.buttonCheck.isEnabled = false
     }
 }

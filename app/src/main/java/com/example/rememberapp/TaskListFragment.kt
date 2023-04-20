@@ -64,7 +64,6 @@ class TaskListFragment : Fragment() {
             }
         })
 
-        // TODO: Fix Dragging not working when returning from RemindAddFragment
         binding.recyclerView.adapter = adapter
 
         viewModel.recordedTaskList?.let {

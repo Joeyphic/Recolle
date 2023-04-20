@@ -14,8 +14,6 @@
          android:focusedByDefault. -->
     <requestFocus />
 
-    <!-- TODO: Add buttons on right side of date and time with calendar & clock icons (or similar) -->
-
     <com.google.android.material.textfield.TextInputLayout
         style="?attr/textInputFilledStyle"
         android:id="@+id/layout_reminder_name"

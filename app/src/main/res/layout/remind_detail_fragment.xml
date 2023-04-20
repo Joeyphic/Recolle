@@ -91,7 +91,6 @@
             android:layout_marginHorizontal="@dimen/margin"
             android:layout_weight="0.5"
             android:text="Check in"
-            app:icon="@drawable/ic_baseline_check_24"
             app:iconGravity="textStart" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>

@@ -36,7 +36,7 @@ class RemindBootReceiver : BroadcastReceiver() {
             }
 
             reminders.forEach {
-                if (it.remindTime > LocalDateTime.now()) { scheduler.schedule(it) }
+                if (!it.checked) { scheduler.schedule(it) }
             }
         }
     }
