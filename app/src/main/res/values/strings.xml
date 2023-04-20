@@ -20,4 +20,5 @@
     <string name="reminder_delete_confirmation_message">Delete this reminder?</string>
     <string name="remind_notification_channel_title">Reminder Notifications</string>
     <string name="remind_notification_channel_description">Handles notifications for reminders.</string>
+    <string name="checked_description">Reminder will be cleared two hours after the event time.</string>
 </resources>

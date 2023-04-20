@@ -177,5 +177,6 @@ class RemindDetailFragment : Fragment() {
         (binding.buttonCheck as? MaterialButton)?.setIconResource(R.drawable.ic_baseline_check_24)
         binding.buttonCheck.text = "Checked in"
         binding.buttonCheck.isEnabled = false
+        binding.checkedDescriptionLabel.visibility = View.VISIBLE
     }
 }

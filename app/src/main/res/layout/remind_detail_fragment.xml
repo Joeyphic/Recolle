@@ -92,6 +92,15 @@
             android:layout_weight="0.5"
             android:text="Check in"
             app:iconGravity="textStart" />
-
     </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <TextView
+        android:id="@+id/checked_description_label"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/linearLayout2"
+        android:textAlignment="center"
+        android:visibility="invisible"
+        android:text="@string/checked_description"/>
+
 </RelativeLayout>
