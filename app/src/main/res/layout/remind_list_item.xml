@@ -13,13 +13,15 @@
         android:id="@+id/reminder_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_toStartOf="@id/alert_icon"
         android:ellipsize="end"
         android:paddingStart="32dp"
         android:paddingTop="8dp"
         android:paddingEnd="16dp"
         android:maxLines="1"
         android:textAppearance="?attr/textAppearanceSubtitle1"
-        android:textColor="@color/black"/>
+        android:textColor="@color/black"
+        tools:text="Coffee shop with friend"/>
 
     <TextView
         android:id="@+id/reminder_times"
@@ -27,11 +29,22 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/reminder_name"
         android:layout_gravity="center_vertical"
+        android:layout_toStartOf="@id/alert_icon"
         android:paddingStart="32dp"
         android:paddingEnd="16dp"
         android:maxLines="2"
         android:textAppearance="?attr/textAppearanceBody2"
-        android:textColor="@color/black"/>
+        android:textColor="@color/black"
+        tools:text="\@ 12 PM. Remind at 9 AM."/>
+
+    <ImageView
+        android:id="@+id/alert_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:padding="@dimen/margin"
+        android:visibility="gone"
+        app:srcCompat="@drawable/ic_baseline_priority_high_24" />
 
     <com.google.android.material.divider.MaterialDivider
         android:layout_width="match_parent"

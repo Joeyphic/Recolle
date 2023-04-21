@@ -1,7 +1,9 @@
 package com.example.rememberapp
 
 import android.content.Context
+import android.graphics.Color
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -10,6 +12,7 @@ import com.example.rememberapp.data.Reminder
 import com.example.rememberapp.databinding.RemindListHeaderBinding
 import com.example.rememberapp.databinding.RemindListItemBinding
 import java.lang.IllegalStateException
+import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 
@@ -98,6 +101,14 @@ class RemindListAdapter(private val onReminderClicked: (RemindListElement) -> Un
             binding.apply {
                 reminderName.text = reminder.name
                 reminderTimes.text = outputString
+                if(LocalDateTime.now() > reminder.eventTime && !reminder.checked) {
+                    alertIcon.visibility = View.VISIBLE
+                    alertIcon.setColorFilter(ctx.getColor((R.color.remindOverdueColor)))
+                }
+                else if(LocalDateTime.now() > reminder.remindTime && !reminder.checked) {
+                    alertIcon.visibility = View.VISIBLE
+                    alertIcon.setColorFilter(ctx.getColor((R.color.primaryDarkColor)))
+                }
             }
         }
     }
