@@ -32,7 +32,6 @@ class RemindListAdapter(private val onReminderClicked: (RemindListElement) -> Un
             )
         }
 
-        // TODO: Fix error-prone code. Constants or error handling?
         else { // if(viewType == 1)
             return RemindViewHolder(
                 RemindListItemBinding.inflate(
@@ -72,7 +71,7 @@ class RemindListAdapter(private val onReminderClicked: (RemindListElement) -> Un
         }
     }
 
-
+    // TODO: Add checkmark to RemindViewHolder when Reminder is checked.
     class RemindViewHolder(private var binding: RemindListItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
@@ -116,7 +115,7 @@ class RemindListAdapter(private val onReminderClicked: (RemindListElement) -> Un
     class HeaderViewHolder(private var binding: RemindListHeaderBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        // TODO: Perhaps change from String to LocalDateTime
+        // TODO: Cannot be LocalDateTime, must be string. Want to add "(Today)" to current date.
         fun bind(ctx: Context, header: String) {
             binding.apply {
                 dayName.text = header

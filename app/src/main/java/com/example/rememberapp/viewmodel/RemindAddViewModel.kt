@@ -180,6 +180,11 @@ class RemindAddViewModel(private val remindDao: RemindDao) : ViewModel() {
                 currentUiState.copy(errorMessage = "Make sure your remind time is not after your event time.")
             }
         }
+        else if(LocalDateTime.now() >= reminder.eventTime) {
+            _uiState.update { currentUiState ->
+                currentUiState.copy(errorMessage = "The event time should be after the current time.")
+            }
+        }
     }
 
     fun errorMessageShown() {

@@ -42,7 +42,7 @@ class RemindAddFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val scheduler = RemindAlarmScheduler(view.context)
+        val alarmScheduler = RemindAlarmScheduler(view.context)
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -119,7 +119,7 @@ class RemindAddFragment : Fragment() {
             CoroutineScope(Dispatchers.IO).launch {
                 val reminderId = viewModel.insertReminder(newReminder)
                 newReminder = newReminder.copy(id = reminderId.toInt())
-                scheduler.schedule(newReminder) // TODO: Make schedule variable clearer
+                alarmScheduler.schedule(newReminder)
             }
             val action = RemindAddFragmentDirections.actionRemindAddFragmentToHomeFragment()
             findNavController().navigate(action)

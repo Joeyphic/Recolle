@@ -24,7 +24,7 @@ class MainActivity : AppCompatActivity(R.layout.activity_main) {
 
         setupActionBarWithNavController(this, navController)
 
-        // TODO: Better style Top App Bar & TabLayout in HomeFragment
+        // TODO: Better style Top App Bar & TabLayout in HomeFragment. Name change.
         // Removes elevation between Top App Bar and TabLayout in HomeFragment
         supportActionBar?.elevation = 0f
 

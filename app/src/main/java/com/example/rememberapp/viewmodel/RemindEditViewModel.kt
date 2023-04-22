@@ -152,7 +152,6 @@ class RemindEditViewModel(private val remindDao: RemindDao) : ViewModel() {
         _uiState.update { it.copy(picker = timePicker) }
     }
 
-    // TODO: Decide about existence of the Auto button in RemindEditFragment
     fun autoSetRemindVariables() {
         val eventDateTime = LocalDateTime.of(eventDate.value ?: return, eventTime.value ?: return)
         val remindDateTime = eventDateTime.minusHours(3)
@@ -188,6 +187,7 @@ class RemindEditViewModel(private val remindDao: RemindDao) : ViewModel() {
         return Reminder(
             id = id,
             name = reminderName,
+            checked = false,
             eventTime = eventDateTime,
             remindTime = remindDateTime)
     }
@@ -201,6 +201,11 @@ class RemindEditViewModel(private val remindDao: RemindDao) : ViewModel() {
         else if(reminder.remindTime.isAfter(reminder.eventTime)) {
             _uiState.update { currentUiState ->
                 currentUiState.copy(errorMessage = "Make sure your remind time is not after your event time.")
+            }
+        }
+        else if(LocalDateTime.now() >= reminder.eventTime) {
+            _uiState.update { currentUiState ->
+                currentUiState.copy(errorMessage = "The event time should be after the current time.")
             }
         }
     }

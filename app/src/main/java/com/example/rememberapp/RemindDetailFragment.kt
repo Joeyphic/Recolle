@@ -101,7 +101,7 @@ class RemindDetailFragment : Fragment() {
             val ns = Context.NOTIFICATION_SERVICE
             (context?.getSystemService(ns) as NotificationManager).cancel(viewModel.reminder.id)
              */
-            NotificationManagerCompat.from(view.context).cancel(viewModel.reminder.id)
+            NotificationManagerCompat.from(requireContext()).cancel(viewModel.reminder.id)
 
             showReminderIsChecked()
         }
@@ -168,7 +168,7 @@ class RemindDetailFragment : Fragment() {
 
     private fun deleteReminder() {
         viewModel.deleteReminder()
-
+        NotificationManagerCompat.from(requireContext()).cancel(viewModel.reminder.id)
         // Allows us to retain our place in the RemindList, instead of being at the top.
         this.findNavController().navigateUp()
     }

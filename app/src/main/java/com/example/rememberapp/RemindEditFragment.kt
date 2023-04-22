@@ -44,6 +44,7 @@ class RemindEditFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val alarmScheduler = RemindAlarmScheduler(view.context)
 
         val id = navigationArgs.reminderId
 
@@ -136,6 +137,7 @@ class RemindEditFragment : Fragment() {
                 ?: return@setOnClickListener
 
             viewModel.updateReminder(newReminder)
+            alarmScheduler.schedule(newReminder)
 
             val action = RemindEditFragmentDirections.actionRemindEditFragmentToHomeFragment()
             findNavController().navigate(action)
