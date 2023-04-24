@@ -5,6 +5,7 @@ import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -100,13 +101,21 @@ class RemindListAdapter(private val onReminderClicked: (RemindListElement) -> Un
             binding.apply {
                 reminderName.text = reminder.name
                 reminderTimes.text = outputString
-                if(LocalDateTime.now() > reminder.eventTime && !reminder.checked) {
-                    alertIcon.visibility = View.VISIBLE
-                    alertIcon.setColorFilter(ctx.getColor((R.color.remindOverdueColor)))
-                }
-                else if(LocalDateTime.now() > reminder.remindTime && !reminder.checked) {
-                    alertIcon.visibility = View.VISIBLE
+
+                if(reminder.checked) {
+                    alertIcon.setImageResource(R.drawable.ic_baseline_check_24)
                     alertIcon.setColorFilter(ctx.getColor((R.color.primaryDarkColor)))
+                    alertIcon.visibility = View.VISIBLE
+                }
+                else if(LocalDateTime.now() > reminder.eventTime) {
+                    alertIcon.setImageResource(R.drawable.ic_baseline_priority_high_24)
+                    alertIcon.setColorFilter(ctx.getColor((R.color.remindOverdueColor)))
+                    alertIcon.visibility = View.VISIBLE
+                }
+                else if(LocalDateTime.now() >= reminder.remindTime) {
+                    alertIcon.setImageResource(R.drawable.ic_baseline_priority_high_24)
+                    alertIcon.setColorFilter(ctx.getColor((R.color.primaryDarkColor)))
+                    alertIcon.visibility = View.VISIBLE
                 }
             }
         }
