@@ -72,7 +72,6 @@ class RemindListAdapter(private val onReminderClicked: (RemindListElement) -> Un
         }
     }
 
-    // TODO: Add checkmark to RemindViewHolder when Reminder is checked.
     class RemindViewHolder(private var binding: RemindListItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
 

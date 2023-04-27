@@ -85,7 +85,7 @@
     <fragment
         android:id="@+id/remindAddFragment"
         android:name="com.example.rememberapp.RemindAddFragment"
-        android:label="RemindAddFragment" >
+        android:label="Add Reminder" >
         <action
             android:id="@+id/action_remindAddFragment_to_homeFragment"
             app:destination="@id/homeFragment" />
@@ -93,7 +93,7 @@
     <fragment
         android:id="@+id/remindDetailFragment"
         android:name="com.example.rememberapp.RemindDetailFragment"
-        android:label="RemindDetailFragment" >
+        android:label="Reminder Details" >
         <argument
             android:name="reminder_id"
             app:argType="integer" />
@@ -113,7 +113,7 @@
     <fragment
         android:id="@+id/remindEditFragment"
         android:name="com.example.rememberapp.RemindEditFragment"
-        android:label="RemindEditFragment" >
+        android:label="Edit Reminder" >
         <argument
             android:name="reminder_id"
             app:argType="integer" />

@@ -16,7 +16,6 @@ class RemindBootReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context?, intent: Intent?) {
         if (intent?.action != "android.intent.action.BOOT_COMPLETED" || context == null) return
 
-        Log.i("RemindAlarms", "RemindBootReceiver Activated!")
         CoroutineScope(Dispatchers.IO).launch {
             val remindDao = RememberRoomDatabase.getDatabase(context).remindDao()
             val scheduler = RemindAlarmScheduler(context)

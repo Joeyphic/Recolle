@@ -44,8 +44,8 @@ class HomeFragment : Fragment() {
         viewPager.adapter = PagerAdapter(this)
         TabLayoutMediator(tabLayout, viewPager) { tab, index ->
             tab.text = when(index) {
-                0 -> "Tasks"
-                1 -> "Reminders"
+                0 -> getString(R.string.home_tab_tasks)
+                1 -> getString(R.string.home_tab_reminders)
                 else -> throw IllegalStateException("Invalid Index")
             }
         }.attach()

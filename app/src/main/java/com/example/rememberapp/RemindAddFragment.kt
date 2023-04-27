@@ -83,9 +83,9 @@ class RemindAddFragment : Fragment() {
                             withContext(Dispatchers.Main) {
                                 context?.let { ctx ->
                                     MaterialAlertDialogBuilder(ctx)
-                                        .setTitle("Invalid Reminder")
+                                        .setTitle(getString(R.string.dialog_invalid_reminder_title))
                                         .setMessage(it.errorMessage)
-                                        .setPositiveButton("OK") { _, _ ->
+                                        .setPositiveButton(getString(R.string.dialog_invalid_reminder_OK)) { _, _ ->
                                             viewModel.errorMessageShown()
                                         }
                                         .setOnDismissListener {

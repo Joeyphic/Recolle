@@ -21,4 +21,12 @@
     <string name="remind_notification_channel_title">Reminder Notifications</string>
     <string name="remind_notification_channel_description">Handles notifications for reminders.</string>
     <string name="checked_description">Reminder will be cleared two hours after the event time.</string>
+    <string name="notification_remind_event_today">Event occurring right now.</string>
+    <string name="notification_remind_event_this_month">Event occurring at %1$s</string>
+    <string name="notification_remind_event_this_year">Event occurring on %1$s at %2$s</string>
+    <string name="notification_remind_event_other_years">Event occurring on %1$s at %2$s</string>
+    <string name="home_tab_tasks">Tasks</string>
+    <string name="home_tab_reminders">Reminders</string>
+    <string name="dialog_invalid_reminder_title">Invalid Reminder</string>
+    <string name="dialog_invalid_reminder_OK">OK</string>
 </resources>

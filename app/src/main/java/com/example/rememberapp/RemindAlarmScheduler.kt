@@ -59,23 +59,33 @@ class RemindAlarmScheduler(private val context: Context): AlarmScheduler<Reminde
         )
     }
 
-    // TODO: Add to string resources.
     private fun createAlarmMessage(eventDateTime: LocalDateTime, remindDateTime: LocalDateTime) : String {
-        val timeFormat: DateTimeFormatter = DateTimeFormatter.ofPattern("hh:mm a")
-        val dateTimeFormatWithoutYear: DateTimeFormatter = DateTimeFormatter.ofPattern("MMM d 'at' hh:mm a")
-        val dateTimeFormat: DateTimeFormatter = DateTimeFormatter.ofPattern("MMM d, yyyy 'at' hh:mm a")
+        val timeFormat = DateTimeFormatter.ofPattern("hh:mm a")
+        val dateFormatWithoutYear = DateTimeFormatter.ofPattern("MMM d")
+        val dateFormat = DateTimeFormatter.ofPattern("MMM d, yyyy")
 
         return if(eventDateTime == remindDateTime) {
-            "Event occurring right now."
+            context.getString(R.string.notification_remind_event_today)
         }
         else if(eventDateTime.toLocalDate() == remindDateTime.toLocalDate()) {
-            "Event occurring at ${eventDateTime.format(timeFormat)}."
+             context.getString(
+                 R.string.notification_remind_event_this_month,
+                 eventDateTime.format(timeFormat)
+             )
         }
         else if(eventDateTime.year == remindDateTime.year) {
-            "Event occurring on ${eventDateTime.format(dateTimeFormatWithoutYear)}."
+            context.getString(
+                R.string.notification_remind_event_this_year,
+                eventDateTime.format(dateFormatWithoutYear),
+                eventDateTime.format(timeFormat)
+            )
         }
         else {
-            "Event occurring on ${eventDateTime.format(dateTimeFormat)}."
+            context.getString(
+                R.string.notification_remind_event_other_years,
+                eventDateTime.format(dateFormat),
+                eventDateTime.format(timeFormat)
+            )
         }
     }
 }

@@ -210,7 +210,6 @@ class TaskListAdapter(private val onTaskClicked: (Task) -> Unit) :
 
             adapter.notifyItemMoved(posFrom, posTo)
 
-            Log.i("TaskListAdapter", "list2: " + adapter.currentList)
             return true
         }
 
