@@ -9,7 +9,7 @@ android {
     compileSdk 33
 
     defaultConfig {
-        applicationId "com.example.rememberapp"
+        applicationId "com.example.recolle"
         minSdk 26
         targetSdk 33
         versionCode 1

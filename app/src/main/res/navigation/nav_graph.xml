@@ -6,7 +6,7 @@
 
     <fragment
         android:id="@+id/homeFragment"
-        android:name="com.example.rememberapp.HomeFragment"
+        android:name="com.example.recolle.HomeFragment"
         android:label="Your Tasks">
         <action
             android:id="@+id/action_homeFragment_to_taskAddFragment"
@@ -39,7 +39,7 @@
     </fragment>
     <fragment
         android:id="@+id/taskAddFragment"
-        android:name="com.example.rememberapp.TaskAddFragment"
+        android:name="com.example.recolle.TaskAddFragment"
         android:label="Add Task">
         <action
             android:id="@+id/action_taskAddFragment_to_homeFragment"
@@ -49,7 +49,7 @@
     </fragment>
     <fragment
         android:id="@+id/taskDetailFragment"
-        android:name="com.example.rememberapp.TaskDetailFragment"
+        android:name="com.example.recolle.TaskDetailFragment"
         android:label="Task Details">
         <argument
             android:name="task_id"
@@ -70,7 +70,7 @@
     </fragment>
     <fragment
         android:id="@+id/taskEditFragment"
-        android:name="com.example.rememberapp.TaskEditFragment"
+        android:name="com.example.recolle.TaskEditFragment"
         android:label="Edit Task">
         <argument
             android:name="task_id"
@@ -84,7 +84,7 @@
     </fragment>
     <fragment
         android:id="@+id/remindAddFragment"
-        android:name="com.example.rememberapp.RemindAddFragment"
+        android:name="com.example.recolle.RemindAddFragment"
         android:label="Add Reminder" >
         <action
             android:id="@+id/action_remindAddFragment_to_homeFragment"
@@ -92,7 +92,7 @@
     </fragment>
     <fragment
         android:id="@+id/remindDetailFragment"
-        android:name="com.example.rememberapp.RemindDetailFragment"
+        android:name="com.example.recolle.RemindDetailFragment"
         android:label="Reminder Details" >
         <argument
             android:name="reminder_id"
@@ -112,7 +112,7 @@
     </fragment>
     <fragment
         android:id="@+id/remindEditFragment"
-        android:name="com.example.rememberapp.RemindEditFragment"
+        android:name="com.example.recolle.RemindEditFragment"
         android:label="Edit Reminder" >
         <argument
             android:name="reminder_id"
