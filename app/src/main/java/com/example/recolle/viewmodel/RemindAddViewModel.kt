@@ -41,7 +41,7 @@ class RemindAddViewModel(private val remindDao: RemindDao) : ViewModel() {
     val remindTime: StateFlow<LocalTime?> = _remindTime
 
     val dateFormat: DateTimeFormatter = DateTimeFormatter.ofPattern("MMMM d, yyyy")
-    val timeFormat: DateTimeFormatter = DateTimeFormatter.ofPattern("hh:mm a")
+    val timeFormat: DateTimeFormatter = DateTimeFormatter.ofPattern("h:mm a")
 
     suspend fun insertReminder(reminder: Reminder): Long {
         return remindDao.insert(reminder)

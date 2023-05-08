@@ -73,9 +73,9 @@ class RemindListAdapter(private val onReminderClicked: (RemindListElement) -> Un
 
         fun bind(ctx: Context, reminder: Reminder) {
 
-            val timeFormat: DateTimeFormatter = DateTimeFormatter.ofPattern("hh:mm a")
-            val dateTimeFormatWithoutYear: DateTimeFormatter = DateTimeFormatter.ofPattern("hh:mm a, MMM d")
-            val dateTimeFormat: DateTimeFormatter = DateTimeFormatter.ofPattern("hh:mm a, MMM d, yyyy")
+            val timeFormat: DateTimeFormatter = DateTimeFormatter.ofPattern("h:mm a")
+            val dateTimeFormatWithoutYear: DateTimeFormatter = DateTimeFormatter.ofPattern("h:mm a, MMM d")
+            val dateTimeFormat: DateTimeFormatter = DateTimeFormatter.ofPattern("h:mm a, MMM d, yyyy")
 
             val eventDateTime = reminder.eventTime
             val remindDateTime = reminder.remindTime

@@ -49,7 +49,7 @@ class RemindEditViewModel(private val remindDao: RemindDao) : ViewModel() {
     val remindTime: StateFlow<LocalTime?> = _remindTime
 
     val dateFormat: DateTimeFormatter = DateTimeFormatter.ofPattern("MMMM d, yyyy")
-    val timeFormat: DateTimeFormatter = DateTimeFormatter.ofPattern("hh:mm a")
+    val timeFormat: DateTimeFormatter = DateTimeFormatter.ofPattern("h:mm a")
 
     fun retrieveAndBindReminder(id: Int) {
         viewModelScope.launch(Dispatchers.IO) {

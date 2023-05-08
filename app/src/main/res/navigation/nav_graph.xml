@@ -7,7 +7,7 @@
     <fragment
         android:id="@+id/homeFragment"
         android:name="com.example.recolle.HomeFragment"
-        android:label="Your Tasks">
+        android:label="Recolle">
         <action
             android:id="@+id/action_homeFragment_to_taskAddFragment"
             app:destination="@id/taskAddFragment"
