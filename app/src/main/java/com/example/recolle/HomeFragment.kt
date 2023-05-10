@@ -4,7 +4,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.navArgs
 import androidx.viewpager2.widget.ViewPager2
 import com.example.recolle.databinding.HomeFragmentBinding
 import com.google.android.material.tabs.TabLayout
@@ -17,6 +19,8 @@ class HomeFragment : Fragment() {
 
     private var _binding: HomeFragmentBinding? = null
     private val binding get() = _binding!!
+
+    private val navigationArgs: HomeFragmentArgs by navArgs()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -40,6 +44,10 @@ class HomeFragment : Fragment() {
         viewPager.offscreenPageLimit = 1
 
         viewPager.adapter = PagerAdapter(this)
+
+        val startingPageNumber = navigationArgs.pageNum
+        viewPager.setCurrentItem(startingPageNumber, false)
+
         TabLayoutMediator(tabLayout, viewPager) { tab, index ->
             tab.text = when(index) {
                 0 -> getString(R.string.home_tab_tasks)
@@ -47,5 +55,6 @@ class HomeFragment : Fragment() {
                 else -> throw IllegalStateException("Invalid Index")
             }
         }.attach()
+
     }
 }

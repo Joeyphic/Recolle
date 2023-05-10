@@ -5,7 +5,6 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.util.Log
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
@@ -16,7 +15,6 @@ class RemindAlarmReceiver : BroadcastReceiver() {
         val title = intent?.getStringExtra("EXTRA_TITLE") ?: return
         val message = intent.getStringExtra("EXTRA_MESSAGE")
         val reminderId = intent.getIntExtra("EXTRA_ID", -1)
-        Log.i("RemindAlarms", "An alarm just triggered: $message")
 
         context?.let {
             val builder = NotificationCompat.Builder(context, "RemindNotificationChannel")

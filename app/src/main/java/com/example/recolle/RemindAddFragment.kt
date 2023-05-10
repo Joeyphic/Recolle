@@ -121,7 +121,7 @@ class RemindAddFragment : Fragment() {
                 newReminder = newReminder.copy(id = reminderId.toInt())
                 alarmScheduler.schedule(newReminder)
             }
-            val action = RemindAddFragmentDirections.actionRemindAddFragmentToHomeFragment()
+            val action = RemindAddFragmentDirections.actionRemindAddFragmentToHomeFragment(1)
             findNavController().navigate(action)
         }
     }

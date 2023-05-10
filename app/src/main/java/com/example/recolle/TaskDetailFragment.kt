@@ -297,7 +297,7 @@ class TaskDetailFragment : Fragment() {
 
         imageViewDrawable.registerAnimationCallback(object : Animatable2.AnimationCallback() {
             override fun onAnimationEnd(drawable: Drawable?) {
-                val action = TaskDetailFragmentDirections.actionTaskDetailFragmentToHomeFragment()
+                val action = TaskDetailFragmentDirections.actionTaskDetailFragmentToHomeFragment(0)
                 findNavController().navigate(action)
             }
         })

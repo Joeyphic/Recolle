@@ -54,7 +54,7 @@ class RemindEditFragment : Fragment() {
         }
         // Otherwise, exit prematurely.
         else {
-            val action = RemindEditFragmentDirections.actionRemindEditFragmentToHomeFragment()
+            val action = RemindEditFragmentDirections.actionRemindEditFragmentToHomeFragment(1)
             findNavController().navigate(action)
         }
 
@@ -63,7 +63,9 @@ class RemindEditFragment : Fragment() {
 
                 launch {
                     viewModel.reminderName.collect {
+                        binding.layoutReminderName.isHintAnimationEnabled = false
                         binding.reminderName.setText(it ?: "")
+                        binding.layoutReminderName.isHintAnimationEnabled = true
                     }
                 }
 
@@ -128,6 +130,13 @@ class RemindEditFragment : Fragment() {
         binding.remindDate.setOnClickListener { viewModel.initializeRemindDatePicker() }
         binding.remindTime.setOnClickListener { viewModel.initializeRemindTimePicker() }
 
+        // Will stop hint animations from occurring upon entering the fragment, and never
+        // need to be re-enabled since these EditTexts will never be empty.
+        binding.layoutEventDate.isHintAnimationEnabled = false
+        binding.layoutEventTime.isHintAnimationEnabled = false
+        binding.layoutRemindDate.isHintAnimationEnabled = false
+        binding.layoutRemindTime.isHintAnimationEnabled = false
+
         binding.autoButton.setOnClickListener {
             viewModel.autoSetRemindVariables()
         }
@@ -139,7 +148,7 @@ class RemindEditFragment : Fragment() {
             viewModel.updateReminder(newReminder)
             alarmScheduler.schedule(newReminder)
 
-            val action = RemindEditFragmentDirections.actionRemindEditFragmentToHomeFragment()
+            val action = RemindEditFragmentDirections.actionRemindEditFragmentToHomeFragment(1)
             findNavController().navigate(action)
         }
     }

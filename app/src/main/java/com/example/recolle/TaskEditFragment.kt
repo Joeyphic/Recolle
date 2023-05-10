@@ -67,7 +67,7 @@ class TaskEditFragment : Fragment() {
         }
         // Otherwise, exit prematurely.
         else {
-            val action = TaskEditFragmentDirections.actionTaskEditFragmentToHomeFragment()
+            val action = TaskEditFragmentDirections.actionTaskEditFragmentToHomeFragment(0)
             findNavController().navigate(action)
         }
 
@@ -103,7 +103,7 @@ class TaskEditFragment : Fragment() {
             withContext(Dispatchers.Main) {
                 if(currentTask == null) {
                     val action = TaskEditFragmentDirections
-                        .actionTaskEditFragmentToHomeFragment()
+                        .actionTaskEditFragmentToHomeFragment(0)
                     findNavController().navigate(action)
                 }
                 else {
@@ -118,6 +118,7 @@ class TaskEditFragment : Fragment() {
                     binding.apply {
                         layoutTaskName.isHintAnimationEnabled = false
                         taskName.setText(viewModel.task.taskName, TextView.BufferType.SPANNABLE)
+                        layoutTaskName.isHintAnimationEnabled = true
 
                         when (viewModel.task.taskPriority) {
                             PriorityLevel.LOW -> radioGroupTaskPriority.check(radioPriorityLow.id)
@@ -180,7 +181,7 @@ class TaskEditFragment : Fragment() {
             )
 
             val action = TaskEditFragmentDirections
-                .actionTaskEditFragmentToHomeFragment()
+                .actionTaskEditFragmentToHomeFragment(0)
             findNavController().navigate(action)
         }
     }
