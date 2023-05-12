@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Recolle</string>
     <string name="content_desc_task_fab">Add a new task</string>
+    <string name="priority">Priority</string>
     <string name="task_priority_high">High</string>
     <string name="task_priority_medium">Medium</string>
     <string name="task_priority_low">Low</string>
