@@ -9,7 +9,7 @@ android {
     compileSdk 33
 
     defaultConfig {
-        applicationId "com.example.recolle"
+        applicationId "com.joeyphic.recolle"
         minSdk 26
         targetSdk 33
         versionCode 1
@@ -36,7 +36,7 @@ android {
     kotlinOptions {
         jvmTarget = '17'
     }
-    namespace 'com.example.recolle'
+    namespace 'com.joeyphic.recolle'
 }
 
 dependencies {

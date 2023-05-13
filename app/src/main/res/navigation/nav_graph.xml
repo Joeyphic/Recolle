@@ -6,7 +6,7 @@
 
     <fragment
         android:id="@+id/homeFragment"
-        android:name="com.example.recolle.HomeFragment"
+        android:name="com.joeyphic.recolle.HomeFragment"
         android:label="Recolle">
         <argument
             android:name="page_num"
@@ -43,7 +43,7 @@
     </fragment>
     <fragment
         android:id="@+id/taskAddFragment"
-        android:name="com.example.recolle.TaskAddFragment"
+        android:name="com.joeyphic.recolle.TaskAddFragment"
         android:label="Add Task">
         <action
             android:id="@+id/action_taskAddFragment_to_homeFragment"
@@ -53,7 +53,7 @@
     </fragment>
     <fragment
         android:id="@+id/taskDetailFragment"
-        android:name="com.example.recolle.TaskDetailFragment"
+        android:name="com.joeyphic.recolle.TaskDetailFragment"
         android:label="Task Details">
         <argument
             android:name="task_id"
@@ -74,7 +74,7 @@
     </fragment>
     <fragment
         android:id="@+id/taskEditFragment"
-        android:name="com.example.recolle.TaskEditFragment"
+        android:name="com.joeyphic.recolle.TaskEditFragment"
         android:label="Edit Task">
         <argument
             android:name="task_id"
@@ -88,7 +88,7 @@
     </fragment>
     <fragment
         android:id="@+id/remindAddFragment"
-        android:name="com.example.recolle.RemindAddFragment"
+        android:name="com.joeyphic.recolle.RemindAddFragment"
         android:label="Add Reminder" >
         <action
             android:id="@+id/action_remindAddFragment_to_homeFragment"
@@ -96,7 +96,7 @@
     </fragment>
     <fragment
         android:id="@+id/remindDetailFragment"
-        android:name="com.example.recolle.RemindDetailFragment"
+        android:name="com.joeyphic.recolle.RemindDetailFragment"
         android:label="Reminder Details" >
         <argument
             android:name="reminder_id"
@@ -111,7 +111,7 @@
     </fragment>
     <fragment
         android:id="@+id/remindEditFragment"
-        android:name="com.example.recolle.RemindEditFragment"
+        android:name="com.joeyphic.recolle.RemindEditFragment"
         android:label="Edit Reminder" >
         <argument
             android:name="reminder_id"
