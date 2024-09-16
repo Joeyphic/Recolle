@@ -20,4 +20,7 @@
     <color name="primaryDarkColor">#FF5F4339</color>
     <color name="primaryTextColor">#FFFFFFFF</color>
 
+    <!-- Dark Theme -->
+    <color name="darkThemePrimaryLightColor">#FFB08F84</color>
+
 </resources>
