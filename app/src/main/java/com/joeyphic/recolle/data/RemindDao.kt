@@ -18,10 +18,10 @@ interface RemindDao {
     @Query("SELECT * FROM reminder WHERE id=:id")
     fun getReminderById(id: Int): Reminder?
 
-    @Query("UPDATE reminder SET checked=true WHERE id=:id")
+    @Query("UPDATE reminder SET checked=1 WHERE id=:id")
     fun checkReminderById(id: Int)
 
-    @Query("DELETE FROM reminder WHERE checked=true AND event_time <= :seconds")
+    @Query("DELETE FROM reminder WHERE checked=1 AND event_time <= :seconds")
     fun clearCheckedRemindersBeforeTime(seconds: Long)
 
     @Query("SELECT * FROM reminder ORDER BY event_time ASC")
