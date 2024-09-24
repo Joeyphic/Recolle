@@ -35,7 +35,7 @@
             android:id="@+id/task_name"
             style="@style/Widget.Remember.TextView"
             android:layout_width="wrap_content"
-            android:layout_marginStart="@dimen/margin"
+            android:layout_marginHorizontal="@dimen/margin"
             android:textColor="@color/primaryTextColor"
             tools:text="Schedule the meeting" />
 
