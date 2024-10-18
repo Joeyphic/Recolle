@@ -30,7 +30,8 @@
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/task_name"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:maxLength="200" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <TextView
@@ -76,6 +77,26 @@
             app:buttonTint="@color/priorityLow" />
     </RadioGroup>
 
+    <TextView
+        android:id="@+id/label_subtask_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
+        android:text="@string/subtasks"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/radio_group_task_priority" />
+
+    <CheckBox
+        android:id="@+id/checkbox_subtask"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/checkbox_contains_subtasks"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/label_subtask_title"/>
+
     <Button
         android:id="@+id/button_save"
         android:layout_width="match_parent"
@@ -84,6 +105,6 @@
         android:layout_marginTop="@dimen/margin"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/radio_group_task_priority"
+        app:layout_constraintTop_toBottomOf="@+id/checkbox_subtask"
         />
 </androidx.constraintlayout.widget.ConstraintLayout>

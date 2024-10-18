@@ -65,6 +65,21 @@ class TaskAddFragment : Fragment() {
                 imm?.hideSoftInputFromWindow(view.windowToken, 0)
             }
         }
+
+        binding.checkboxSubtask.setOnCheckedChangeListener { _, isChecked ->
+            if(isChecked) {
+                binding.buttonSave.text = getString(R.string.next)
+                binding.buttonSave.setOnClickListener {
+                    addNewItem()
+                }
+            }
+            else {
+                binding.buttonSave.text = getString(R.string.save)
+                binding.buttonSave.setOnClickListener {
+                    addNewItem()
+                }
+            }
+        }
     }
 
     /*
