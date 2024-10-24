@@ -13,7 +13,8 @@ import com.joeyphic.recolle.data.Task
 import com.joeyphic.recolle.databinding.SubtaskListItemBinding
 import com.joeyphic.recolle.databinding.TaskListItemBinding
 
-class SubtaskListAdapter : ListAdapter<Subtask, SubtaskListAdapter.SubtaskViewHolder>(DiffCallback) {
+    class SubtaskListAdapter(private val onSubtaskClicked: (Subtask) -> Unit) :
+    ListAdapter<Subtask, SubtaskListAdapter.SubtaskViewHolder>(DiffCallback) {
 
     /*
     ----------------------------------------------------
