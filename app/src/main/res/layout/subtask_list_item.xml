@@ -5,7 +5,7 @@
     android:id="@+id/relative_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="?attr/selectableItemBackground">
+    android:background="@color/subtaskListItemBackgroundColor">
 
     <TextView
         android:id="@+id/subtask_name"

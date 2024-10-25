@@ -1,6 +1,7 @@
 package com.joeyphic.recolle
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.joeyphic.recolle.databinding.SubtaskListAddItemBinding
 import com.joeyphic.recolle.viewmodel.SubtaskAddViewModel
 import com.joeyphic.recolle.viewmodel.SubtaskAddViewModelFactory
@@ -16,12 +18,16 @@ import kotlinx.coroutines.launch
 class SubtaskAddFragment : Fragment() {
     private val viewModel: SubtaskAddViewModel by viewModels {
         SubtaskAddViewModelFactory(
-            (activity?.application as RecolleApplication).database.subtaskDao()
+            (activity?.application as RecolleApplication).database.subtaskDao(),
+            (activity?.application as RecolleApplication).database.taskDao()
         )
     }
 
     private var _binding: SubtaskListAddItemBinding? = null
     private val binding get() = _binding!!
+
+    private val navigationArgs: SubtaskAddFragmentArgs by navArgs()
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -42,6 +48,8 @@ class SubtaskAddFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        viewModel.initializeMainTask(navigationArgs.taskName, navigationArgs.taskPriority)
+
         val adapter = SubtaskListAdapter {
             // TODO: Set what to do when Subtask is clicked.
         }
@@ -50,8 +58,13 @@ class SubtaskAddFragment : Fragment() {
 
         lifecycleScope.launch {
             viewModel.currentSubtaskList.collect { subtasks ->
+                Log.i("recolletesting", "Collected.")
                 adapter.submitList(subtasks)
             }
+        }
+
+        binding.buttonAddSubtask.setOnClickListener {
+            viewModel.insertSubtaskToTemporaryList(binding.subtaskName.text.toString())
         }
 
         binding.buttonSave.setOnClickListener {
@@ -82,9 +95,9 @@ class SubtaskAddFragment : Fragment() {
     private fun addNewItem() {
 
         if(isEntryValid()) {
-            viewModel.insertSubtaskToTemporaryList(binding.subtaskName.text.toString())
+            viewModel.insert()
 
-            val action = TaskAddFragmentDirections.actionTaskAddFragmentToHomeFragment(0)
+            val action = SubtaskAddFragmentDirections.actionSubtaskAddFragmentToHomeFragment(0)
             findNavController().navigate(action)
         }
     }

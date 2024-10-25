@@ -1,6 +1,8 @@
 package com.joeyphic.recolle
 
+import android.annotation.SuppressLint
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
@@ -35,7 +37,8 @@ import com.joeyphic.recolle.databinding.TaskListItemBinding
     }
 
     override fun onBindViewHolder(holder: SubtaskViewHolder, position: Int) {
-        TODO("Not yet implemented")
+        val currentSubtask = getItem(position)
+        holder.bind(holder.itemView.context, currentSubtask)
     }
 
     /*
@@ -57,6 +60,7 @@ import com.joeyphic.recolle.databinding.TaskListItemBinding
         fun bind(ctx: Context, subtask: Subtask) {
             binding.apply {
                 subtaskName.text = subtask.subtaskName
+                Log.i("recolletesting", "bound. " + subtaskName.text.toString())
             }
         }
     }

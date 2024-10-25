@@ -70,7 +70,7 @@ class TaskAddFragment : Fragment() {
             if(isChecked) {
                 binding.buttonSave.text = getString(R.string.next)
                 binding.buttonSave.setOnClickListener {
-                    addNewItem()
+                    addSubtasks()
                 }
             }
             else {
@@ -107,6 +107,21 @@ class TaskAddFragment : Fragment() {
             binding.radioPriorityMedium.id -> PriorityLevel.MEDIUM
             binding.radioPriorityLow.id -> PriorityLevel.LOW
             else -> null
+        }
+    }
+
+    private fun addSubtasks() {
+
+        if(isEntryValid()) {
+
+            val taskName = binding.taskName.text.toString()
+            // Should always be non-null since entry is validated, but the check is done anyways
+            val currentPriority = getPriorityFromRadioId() ?: return
+
+            val action = TaskAddFragmentDirections.actionTaskAddFragmentToSubtaskAddFragment(
+                taskName, currentPriority
+            )
+            findNavController().navigate(action)
         }
     }
 

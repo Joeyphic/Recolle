@@ -16,7 +16,7 @@ interface TaskDao {
     suspend fun shiftTaskPositions(shiftAmount: Int, firstIndex: Int, lastIndex: Int)
 
     @Transaction
-    suspend fun insertTask(task: Task) {
+    suspend fun insertTask(task: Task) : Long {
         task.taskListPosition = when (task.taskPriority) {
             PriorityLevel.HIGH -> 0
             PriorityLevel.MEDIUM -> taskCountByPriority(PriorityLevel.HIGH)
@@ -24,7 +24,7 @@ interface TaskDao {
                 taskCountByPriority(PriorityLevel.HIGH, PriorityLevel.MEDIUM)
         }
         shiftTaskPositions(+1, task.taskListPosition, Int.MAX_VALUE)
-        insert(task)
+        return insert(task)
     }
 
     @Transaction
@@ -78,7 +78,7 @@ interface TaskDao {
 
     // Only call from insertTask()
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insert(task: Task)
+    suspend fun insert(task: Task) : Long
 
     // Only call from updateTask()
     @Update
