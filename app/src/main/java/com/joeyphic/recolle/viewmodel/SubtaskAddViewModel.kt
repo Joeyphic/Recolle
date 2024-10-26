@@ -41,7 +41,6 @@ class SubtaskAddViewModel(private val subtaskDao: SubtaskDao, private val taskDa
                 )
             }
         }
-        Log.i("recolletesting", "Made it here.")
     }
 
     fun initializeMainTask(taskName: String, taskPriority: PriorityLevel) {
@@ -61,7 +60,6 @@ class SubtaskAddViewModel(private val subtaskDao: SubtaskDao, private val taskDa
     */
     private fun insertSubtaskToTemporaryList(subtask: Subtask) {
         _currentSubtaskList.value = _currentSubtaskList.value.plus(subtask)
-        Log.i("recolletesting", _currentSubtaskList.value.toString())
     }
 
     fun insertSubtaskToTemporaryList(subtaskName: String) {
@@ -96,8 +94,8 @@ class SubtaskAddViewModel(private val subtaskDao: SubtaskDao, private val taskDa
         return subtaskName.isNotBlank()
     }
 
-    fun isEntryValid(subtaskName: String) : Boolean {
-        return subtaskName.isNotBlank() && _currentSubtaskList.value.isNotEmpty()
+    fun isEntryValid() : Boolean {
+        return _currentSubtaskList.value.isNotEmpty()
     }
 
     fun removeSubtaskFromTemporaryList(subtask: Subtask) {

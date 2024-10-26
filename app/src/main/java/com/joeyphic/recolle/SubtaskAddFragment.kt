@@ -67,7 +67,6 @@ class SubtaskAddFragment : Fragment() {
 
         lifecycleScope.launch {
             viewModel.currentSubtaskList.collect { subtasks ->
-                Log.i("recolletesting", "Collected.")
                 adapter.submitList(subtasks)
             }
         }
@@ -122,13 +121,7 @@ class SubtaskAddFragment : Fragment() {
         return viewModel.isSubtaskEntryValid(binding.subtaskName.text.toString())
     }
 
-    /*
-    ----------------------------------------------------
-    Returns:      Boolean
-    Description:  -Sends to viewModel to determine validity of the text inside the text field.
-    ----------------------------------------------------
-    */
     private fun isEntryValid(): Boolean {
-        return viewModel.isEntryValid(binding.subtaskName.text.toString())
+        return viewModel.isEntryValid()
     }
 }

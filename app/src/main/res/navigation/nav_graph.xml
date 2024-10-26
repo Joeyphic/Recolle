@@ -128,7 +128,7 @@
     <fragment
         android:id="@+id/subtaskAddFragment"
         android:name="com.joeyphic.recolle.SubtaskAddFragment"
-        android:label="SubtaskAddFragment" >
+        android:label="Add Subtasks" >
         <action
             android:id="@+id/action_subtaskAddFragment_to_homeFragment"
             app:destination="@id/homeFragment"

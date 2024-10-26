@@ -26,6 +26,8 @@ class RemindAlarmScheduler(private val context: Context): AlarmScheduler<Reminde
             putExtra("EXTRA_ID", reminder.id)
         }
 
+        //TODO: Rework Exact Alarms with outline given in Android Studio's SDK Upgrade Assistant.
+        //      Specifically in the Android 12L -> 13 section.
         alarmManager.setExactAndAllowWhileIdle(
             AlarmManager.RTC_WAKEUP,
             reminder.remindTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli(),
