@@ -64,12 +64,6 @@ class SubtaskAddViewModel(private val subtaskDao: SubtaskDao, private val taskDa
         Log.i("recolletesting", _currentSubtaskList.value.toString())
     }
 
-    /*
-    ----------------------------------------------------
-    Parameters:   taskName (String), taskPriority (PriorityLevel)
-    Description:  -...
-    ----------------------------------------------------
-    */
     fun insertSubtaskToTemporaryList(subtaskName: String) {
         val newSubtask = getNewTaskEntry(subtaskName)
         insertSubtaskToTemporaryList(newSubtask)
@@ -82,7 +76,7 @@ class SubtaskAddViewModel(private val subtaskDao: SubtaskDao, private val taskDa
     Description:  -Is a helper function that uses a String and PriorityLevel
                   to create a Task, and returns it.
                   -taskListPosition is set to -1 as a temporary measure.
-                  During any insertions of this Task (ie. when insertTask() is
+                  During any insertions of this Task (eg. when insertTask() is
                   called), then this value will be corrected.
     ----------------------------------------------------
     */
@@ -98,15 +92,16 @@ class SubtaskAddViewModel(private val subtaskDao: SubtaskDao, private val taskDa
         )
     }
 
-    /*
-    ----------------------------------------------------
-    Parameters:   taskName (String), taskPriority (PriorityLevel)
-    Returns:      Boolean
-    Description:  -Ensures the taskName contains at least one character.
-    ----------------------------------------------------
-    */
+    fun isSubtaskEntryValid(subtaskName: String) : Boolean {
+        return subtaskName.isNotBlank()
+    }
+
     fun isEntryValid(subtaskName: String) : Boolean {
         return subtaskName.isNotBlank() && _currentSubtaskList.value.isNotEmpty()
+    }
+
+    fun removeSubtaskFromTemporaryList(subtask: Subtask) {
+        _currentSubtaskList.value = _currentSubtaskList.value.minus(subtask)
     }
 }
 

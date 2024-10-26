@@ -16,6 +16,7 @@
         android:padding="16dp"
         android:maxLines="1"
         android:textAppearance="?attr/textAppearanceSubtitle1"
+        android:textColor="@color/black"
         tools:text="Subtask: Finish the planning stage" />
 
     <com.google.android.material.divider.MaterialDivider

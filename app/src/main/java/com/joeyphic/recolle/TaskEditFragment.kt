@@ -80,6 +80,11 @@ class TaskEditFragment : Fragment() {
                 imm?.hideSoftInputFromWindow(view.windowToken, 0)
             }
         }
+
+        // TODO: Add ability to edit Tasks from TaskEditFragment
+        // Until then..
+        binding.labelSubtaskTitle.visibility = View.INVISIBLE
+        binding.checkboxSubtask.visibility = View.INVISIBLE
     }
 
     /*

@@ -9,12 +9,14 @@ import android.view.*
 import androidx.core.content.ContextCompat
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.google.android.material.animation.AnimationUtils
 import com.joeyphic.recolle.R
 import com.joeyphic.recolle.TaskDetailFragmentArgs
 import com.joeyphic.recolle.TaskDetailFragmentDirections
@@ -25,6 +27,7 @@ import com.joeyphic.recolle.viewmodel.TaskDetailViewModel
 import com.joeyphic.recolle.viewmodel.TaskDetailViewModelFactory
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -32,7 +35,8 @@ class TaskDetailFragment : Fragment() {
 
     private val viewModel: TaskDetailViewModel by viewModels {
         TaskDetailViewModelFactory(
-            (activity?.application as RecolleApplication).database.taskDao()
+            (activity?.application as RecolleApplication).database.taskDao(),
+            (activity?.application as RecolleApplication).database.subtaskDao()
         )
     }
 
@@ -73,16 +77,18 @@ class TaskDetailFragment : Fragment() {
                   -If retrieveTask(taskId) is null, then we can assume a task was previously
                    assigned to viewModel.task, and use that for binding. This can happen when we
                    are in completeState, meaning the Task has been deleted from the database.
+                  -Determines if the Task contains Subtasks, and makes the related Views visible.
     ----------------------------------------------------
     */
     private fun bind(taskId: Int) {
 
         lifecycleScope.launch(Dispatchers.IO) {
             val currentTask = viewModel.retrieveTask(taskId) ?: viewModel.task
+            val currentSubtasks = viewModel.retrieveAllSubtasksFlow(currentTask.id).stateIn(lifecycleScope)
 
             withContext(Dispatchers.Main) {
                 viewModel.task = currentTask
-
+                viewModel.allSubtasks = currentSubtasks
                 binding.apply {
                     taskName.text = viewModel.task.taskName
 
@@ -92,6 +98,34 @@ class TaskDetailFragment : Fragment() {
 
                     // Add Color depending on Task priority
                     taskDetailBanner.setColorFilter(getColorByPriority(viewModel.task.taskPriority))
+
+                    if(currentSubtasks.value.isNotEmpty()) {
+
+                        /* Animates views related to Subtasks, or else it appears too sharp when
+                           they appear on the screen. They are animated to 100% opacity, and any
+                           animation listeners set on the view are cleared. */
+                        labelSubtaskTitle?.alpha = 0F
+                        recyclerViewSubtask?.alpha = 0F
+                        labelSubtaskTitle?.visibility = View.VISIBLE
+                        recyclerViewSubtask?.visibility = View.VISIBLE
+
+                        labelSubtaskTitle?.animate()
+                            ?.alpha(1f)
+                            ?.setDuration(350)
+                            ?.setListener(null)
+
+                        recyclerViewSubtask?.animate()
+                            ?.alpha(1f)
+                            ?.setDuration(350)
+                            ?.setListener(null)
+
+                        // The current adapter should be a SubtaskListAdapter, so a type cast is
+                        // performed. It's made null-safe just in case.
+                        viewModel.allSubtasks.collect { subtasks ->
+                            val adapter = binding.recyclerViewSubtask?.adapter as? SubtaskListAdapter
+                            adapter?.submitList(subtasks)
+                        }
+                    }
                 }
             }
         }
@@ -100,7 +134,9 @@ class TaskDetailFragment : Fragment() {
     /*
     ----------------------------------------------------
     Parameters:   view (View), savedInstanceState (Bundle?)
-    Description:  -The navigation argument represents a Task's id. If one exists, then we
+    Description:  -Firstly, The adapter for the recyclerViewSubtask is initialized for use in
+                   the bind() function called soon after.
+                  -The navigation argument represents a Task's id. If one exists, then we
                    retrieve the corresponding Task and display its details to the user.
                   -A TouchListener is set for the completeTask imageView. When held for some
                    time, then completeTask() is called.
@@ -116,8 +152,16 @@ class TaskDetailFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // Initialize Subtask Adapter for use in the bind() function.
+        val adapter = SubtaskListAdapter {
+            viewModel.subtaskCheckChange(it)
+        }
+
+        binding.recyclerViewSubtask?.adapter = adapter
+
         // Use navigation argument to bind correct Task to views
         val id = navigationArgs.taskId
+
         bind(id)
 
         // Complete Task Button

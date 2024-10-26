@@ -32,6 +32,12 @@ interface SubtaskDao {
     @Query("SELECT * FROM subtask WHERE main_id=:mainId ORDER BY id ASC")
     fun getAllSubtasksByMainId(mainId: Int): List<Subtask>
 
-    @Query("SELECT * FROM subtask WHERE main_id=:mainId ORDER BY id ASC")
+    @Query("DELETE FROM subtask WHERE main_id=:mainId")
+    fun deleteAllSubtasksByMainId(mainId: Int)
+
+    @Query("SELECT * FROM subtask WHERE main_id=:mainId ORDER BY checked ASC, id ASC")
     fun getAllSubtasksFlow(mainId: Int): Flow<List<Subtask>>
+
+    @Query("SELECT * FROM subtask WHERE main_id=:mainId ORDER BY checked ASC, id ASC")
+    fun getAllSubtasksByMainIdFlow(mainId: Int): Flow<List<Subtask>>
 }

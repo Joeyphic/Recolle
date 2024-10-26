@@ -36,8 +36,23 @@ import com.joeyphic.recolle.databinding.TaskListItemBinding
         )
     }
 
+    /*
+    ----------------------------------------------------
+    Parameters:   holder (SubtaskViewHolder), position (int)
+    Description:  -Binds the data to the SubtaskViewHolder at the specified
+                   position.
+                  -A click listener is set here. Each fragment that uses
+                   the SubtaskListAdapter can customize what action will be
+                   taken on click.
+                  -When clicked in TaskDetailFragment, it will modify Subtask.checked to the
+                   opposite value.
+    ----------------------------------------------------
+    */
     override fun onBindViewHolder(holder: SubtaskViewHolder, position: Int) {
         val currentSubtask = getItem(position)
+        holder.itemView.setOnClickListener {
+            onSubtaskClicked(currentSubtask)
+        }
         holder.bind(holder.itemView.context, currentSubtask)
     }
 
@@ -53,14 +68,20 @@ import com.joeyphic.recolle.databinding.TaskListItemBinding
 
         /*
         ----------------------------------------------------
-        Parameters:   ctx (Context), task (Task)
-        Description:  -Binds the task details to the ViewHolder.
+        Parameters:   ctx (Context), subtask (Subtask)
+        Description:  -Binds the Subtask details to the ViewHolder.
         ----------------------------------------------------
         */
         fun bind(ctx: Context, subtask: Subtask) {
             binding.apply {
                 subtaskName.text = subtask.subtaskName
                 Log.i("recolletesting", "bound. " + subtaskName.text.toString())
+                if(subtask.checked) {
+                    relativeLayout.setBackgroundColor(ctx.getColor(R.color.subtaskListItemCheckedBackgroundColor))
+                }
+                else {
+                    relativeLayout.setBackgroundColor(ctx.getColor(R.color.subtaskListItemBackgroundColor))
+                }
             }
         }
     }
@@ -68,7 +89,7 @@ import com.joeyphic.recolle.databinding.TaskListItemBinding
     /*
     ----------------------------------------------------
     Description:  -DiffUtil.ItemCallback, used to identify changes in
-                   Tasks from the TaskList.
+                   Subtasks from the SubtaskList.
     ----------------------------------------------------
     */
     companion object {

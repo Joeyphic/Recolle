@@ -10,6 +10,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.joeyphic.recolle.databinding.SubtaskListAddItemBinding
 import com.joeyphic.recolle.viewmodel.SubtaskAddViewModel
 import com.joeyphic.recolle.viewmodel.SubtaskAddViewModelFactory
@@ -51,7 +52,15 @@ class SubtaskAddFragment : Fragment() {
         viewModel.initializeMainTask(navigationArgs.taskName, navigationArgs.taskPriority)
 
         val adapter = SubtaskListAdapter {
-            // TODO: Set what to do when Subtask is clicked.
+            MaterialAlertDialogBuilder(this.requireContext())
+                .setMessage("Remove subtask from being added?")
+                .setNegativeButton("Cancel") { dialog, which ->
+                    // Do nothing
+                }
+                .setPositiveButton("OK") { dialog, which ->
+                    viewModel.removeSubtaskFromTemporaryList(it)
+                }
+                .show()
         }
 
         binding.recyclerViewSubtask.adapter = adapter
@@ -64,7 +73,7 @@ class SubtaskAddFragment : Fragment() {
         }
 
         binding.buttonAddSubtask.setOnClickListener {
-            viewModel.insertSubtaskToTemporaryList(binding.subtaskName.text.toString())
+            createSubtask()
         }
 
         binding.buttonSave.setOnClickListener {
@@ -80,9 +89,10 @@ class SubtaskAddFragment : Fragment() {
     ----------------------------------------------------
     */
     private fun createSubtask() {
-        if(isEntryValid()) {
+        if(isSubtaskEntryValid()) {
             viewModel.insertSubtaskToTemporaryList(binding.subtaskName.text.toString())
         }
+        binding.subtaskName.setText("")
     }
 
     /*
@@ -100,6 +110,16 @@ class SubtaskAddFragment : Fragment() {
             val action = SubtaskAddFragmentDirections.actionSubtaskAddFragmentToHomeFragment(0)
             findNavController().navigate(action)
         }
+    }
+
+    /*
+    ----------------------------------------------------
+    Returns:      Boolean
+    Description:  -Sends to viewModel to determine validity of the text inside the text field.
+    ----------------------------------------------------
+    */
+    private fun isSubtaskEntryValid(): Boolean {
+        return viewModel.isSubtaskEntryValid(binding.subtaskName.text.toString())
     }
 
     /*
