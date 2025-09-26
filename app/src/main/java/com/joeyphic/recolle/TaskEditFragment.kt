@@ -12,8 +12,6 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import com.joeyphic.recolle.TaskDetailFragmentArgs
-import com.joeyphic.recolle.TaskEditFragmentDirections
 import com.joeyphic.recolle.data.PriorityLevel
 import com.joeyphic.recolle.databinding.TaskListAddItemBinding
 import com.joeyphic.recolle.viewmodel.TaskEditViewModel
@@ -26,7 +24,8 @@ class TaskEditFragment : Fragment() {
 
     private val viewModel: TaskEditViewModel by viewModels {
         TaskEditViewModelFactory(
-            (activity?.application as RecolleApplication).database.taskDao()
+            (activity?.application as RecolleApplication).database.taskDao(),
+            (activity?.application as RecolleApplication).database.subtaskDao()
         )
     }
 
@@ -61,8 +60,10 @@ class TaskEditFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val id = navigationArgs.taskId
+        // Cannot change if a Task has Subtasks from the edit menu. It must be applied beforehand.
+        binding.checkboxSubtask.isEnabled = false
 
+        val id = navigationArgs.taskId
         // If ID exists, bind Task to fragment.
         if(id > 0) {
             bind(id)
@@ -81,10 +82,6 @@ class TaskEditFragment : Fragment() {
             }
         }
 
-        // TODO: Add ability to edit Tasks from TaskEditFragment
-        // Until then..
-        binding.labelSubtaskTitle.visibility = View.INVISIBLE
-        binding.checkboxSubtask.visibility = View.INVISIBLE
     }
 
     /*
@@ -104,8 +101,9 @@ class TaskEditFragment : Fragment() {
     private fun bind(taskId: Int) {
 
         lifecycleScope.launch(Dispatchers.IO) {
-            // Retrieve Task using taskId
+            // Retrieve Task and associated Subtasks using taskId
             val currentTask = viewModel.retrieveTask(taskId)
+            val currentSubtasks = viewModel.retrieveSubtasks(taskId)
 
             withContext(Dispatchers.Main) {
                 if(currentTask == null) {
@@ -115,7 +113,6 @@ class TaskEditFragment : Fragment() {
                 else {
                     // Initialize viewModel.task
                     viewModel.task = currentTask
-                    binding.buttonSave.setOnClickListener { updateTask() }
 
                     // Return early if Views already populated.
                     if(isEntryValid()) return@withContext
@@ -132,6 +129,20 @@ class TaskEditFragment : Fragment() {
                             PriorityLevel.HIGH -> radioGroupTaskPriority.check(radioPriorityHigh.id)
                         }
                         radioGroupTaskPriority.jumpDrawablesToCurrentState()
+
+                        if(currentSubtasks.isNotEmpty()) {
+                            binding.checkboxSubtask.isChecked = true
+                            binding.buttonSave.text = getString(R.string.next)
+                            binding.buttonSave.setOnClickListener {
+                                moveToSubtasks()
+                            }
+                        }
+                        else {
+                            binding.buttonSave.text = getString(R.string.save)
+                            binding.buttonSave.setOnClickListener {
+                                updateTask()
+                            }
+                        }
                     }
                 }
             }
@@ -187,6 +198,31 @@ class TaskEditFragment : Fragment() {
             )
 
             val action = TaskEditFragmentDirections.actionTaskEditFragmentToHomeFragment(0)
+            findNavController().navigate(action)
+        }
+    }
+
+    private fun moveToSubtasks() {
+
+        if(isEntryValid()) {
+            val taskId = viewModel.task.id
+
+            val taskName = binding.taskName.text.toString()
+            // Should always be non-null since entry is validated, but the check is done anyways
+            val currentPriority = getPriorityFromRadioId() ?: return
+            val isPriorityChanged = viewModel.task.taskPriority != currentPriority
+
+            // We can use PriorityLevel in NavArgs, but we'll have to make PriorityLevel its
+            // own enum file.
+            val priorityArgument = when(currentPriority) {
+                PriorityLevel.HIGH -> 0
+                PriorityLevel.MEDIUM -> 1
+                PriorityLevel.LOW -> 2
+            }
+
+            val action = TaskEditFragmentDirections.actionTaskEditFragmentToSubtaskEditFragment(
+                taskId, taskName, priorityArgument, isPriorityChanged
+            )
             findNavController().navigate(action)
         }
     }

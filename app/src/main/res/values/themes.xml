@@ -12,6 +12,8 @@
         <!-- Status & Navigation bar color. -->
         <item name="android:statusBarColor">@color/primaryDarkColor</item>
         <item name="android:navigationBarColor">@color/primaryLightColor</item>
+        <!-- For TimePicker time selector container -->
+        <item name="colorPrimaryContainer">#AAECC7BB</item>
         <!-- Customize your theme here. -->
         <item name="android:colorBackground">@color/primaryLightColor</item>
         <item name="colorOutline">@color/primaryColor</item>
@@ -24,6 +26,7 @@
         <!-- Text Color -->
         <item name="colorSurface">@color/primaryColor</item>
         <item name="colorOnSurface">@color/primaryTextColor</item>
+        <item name="colorSurfaceContainer">@color/primaryColor</item>
 
         <!-- Up button & Navigation Drawer color -->
         <item name="colorControlNormal">@color/primaryLightColor</item>

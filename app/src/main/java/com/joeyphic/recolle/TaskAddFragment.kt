@@ -113,13 +113,19 @@ class TaskAddFragment : Fragment() {
     private fun addSubtasks() {
 
         if(isEntryValid()) {
-
             val taskName = binding.taskName.text.toString()
             // Should always be non-null since entry is validated, but the check is done anyways
             val currentPriority = getPriorityFromRadioId() ?: return
 
+            // TODO: We can use PriorityLevel in NavArgs, but we'll have to make PriorityLevel its
+            //       own enum file. Perhaps call it taskPriorityLevel.
+            val priorityArgument = when(currentPriority) {
+                PriorityLevel.HIGH -> 0
+                PriorityLevel.MEDIUM -> 1
+                PriorityLevel.LOW -> 2
+            }
             val action = TaskAddFragmentDirections.actionTaskAddFragmentToSubtaskAddFragment(
-                taskName, currentPriority
+                taskName, priorityArgument
             )
             findNavController().navigate(action)
         }

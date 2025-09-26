@@ -13,13 +13,17 @@ import androidx.navigation.fragment.navArgs
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.joeyphic.recolle.data.PriorityLevel
 import com.joeyphic.recolle.databinding.SubtaskListAddItemBinding
-import com.joeyphic.recolle.viewmodel.SubtaskAddViewModel
-import com.joeyphic.recolle.viewmodel.SubtaskAddViewModelFactory
+import com.joeyphic.recolle.viewmodel.SubtaskEditViewModel
+import com.joeyphic.recolle.viewmodel.SubtaskEditViewModelFactory
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import kotlin.getValue
 
-class SubtaskAddFragment : Fragment() {
-    private val viewModel: SubtaskAddViewModel by viewModels {
-        SubtaskAddViewModelFactory(
+// TODO: Some bug fixing, tasks disappearing, rename fragment.
+class SubtaskEditFragment : Fragment() {
+    private val viewModel: SubtaskEditViewModel by viewModels {
+        SubtaskEditViewModelFactory(
             (activity?.application as RecolleApplication).database.subtaskDao(),
             (activity?.application as RecolleApplication).database.taskDao()
         )
@@ -28,7 +32,7 @@ class SubtaskAddFragment : Fragment() {
     private var _binding: SubtaskListAddItemBinding? = null
     private val binding get() = _binding!!
 
-    private val navigationArgs: SubtaskAddFragmentArgs by navArgs()
+    private val navigationArgs: SubtaskEditFragmentArgs by navArgs()
 
 
     override fun onCreateView(
@@ -57,7 +61,7 @@ class SubtaskAddFragment : Fragment() {
             else -> {PriorityLevel.LOW}
         }
 
-        viewModel.initializeMainTask(navigationArgs.taskName, priorityArgument)
+        viewModel.initializeMainTask(navigationArgs.taskId, navigationArgs.taskName, priorityArgument)
 
         val adapter = SubtaskListAdapter {
             MaterialAlertDialogBuilder(this.requireContext())
@@ -86,8 +90,22 @@ class SubtaskAddFragment : Fragment() {
         binding.buttonSave.setOnClickListener {
             addNewItem()
         }
+
+        bind(navigationArgs.taskId)
     }
 
+    private fun bind(taskId: Int) {
+
+        // TODO: Fill out this function, also prepare it for SubtaskAddFragment
+        lifecycleScope.launch(Dispatchers.IO) {
+            // Retrieve associated Subtasks using taskId
+            val currentSubtasks = viewModel.retrieveSubtasks(taskId)
+
+            withContext(Dispatchers.Main) {
+                viewModel.initializeSubtasks(currentSubtasks)
+            }
+        }
+    }
     /*
     ----------------------------------------------------
     Description:  -If isEntryValid() returns true, then the Subtask is suitable to be added to the
@@ -112,9 +130,9 @@ class SubtaskAddFragment : Fragment() {
     private fun addNewItem() {
 
         if(isEntryValid()) {
-            viewModel.insert()
+            viewModel.update()
 
-            val action = SubtaskAddFragmentDirections.actionSubtaskAddFragmentToHomeFragment(0)
+            val action = SubtaskEditFragmentDirections.actionSubtaskEditFragmentToHomeFragment(0)
             findNavController().navigate(action)
         }
     }

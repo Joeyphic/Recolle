@@ -2,12 +2,14 @@ package com.joeyphic.recolle.viewmodel
 
 import androidx.lifecycle.*
 import com.joeyphic.recolle.data.PriorityLevel
+import com.joeyphic.recolle.data.Subtask
+import com.joeyphic.recolle.data.SubtaskDao
 import com.joeyphic.recolle.data.Task
 import com.joeyphic.recolle.data.TaskDao
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class TaskEditViewModel(private val taskDao: TaskDao) : ViewModel() {
+class TaskEditViewModel(private val taskDao: TaskDao, private val subtaskDao: SubtaskDao) : ViewModel() {
 
     // Holds the task to be edited in this fragment.
     lateinit var task: Task
@@ -40,6 +42,18 @@ class TaskEditViewModel(private val taskDao: TaskDao) : ViewModel() {
         viewModelScope.launch(Dispatchers.IO) {
             taskDao.updateTask(task, isPriorityChanged)
         }
+    }
+
+    /*
+    ----------------------------------------------------
+    Parameters:   id (Int)
+    Returns:      List<Subtask>
+    Description:  -Returns a List of Subtasks associated with the
+                  given Task ID.
+    ----------------------------------------------------
+    */
+    fun retrieveSubtasks(mainId: Int): List<Subtask> {
+        return subtaskDao.getAllSubtasksByMainId(mainId)
     }
 
     /*
@@ -86,20 +100,20 @@ class TaskEditViewModel(private val taskDao: TaskDao) : ViewModel() {
     ----------------------------------------------------
     */
     fun isEntryValid(taskName: String, taskPriority: PriorityLevel) : Boolean {
-        if(taskName.isBlank() || taskPriority !in PriorityLevel.values()) {
+        if(taskName.isBlank() || taskPriority !in PriorityLevel.entries.toTypedArray()) {
             return false
         }
         return true
     }
 }
 
-class TaskEditViewModelFactory(private val taskDao: TaskDao) : ViewModelProvider.Factory {
+class TaskEditViewModelFactory(private val taskDao: TaskDao, private val subtaskDao: SubtaskDao) : ViewModelProvider.Factory {
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
 
         if(modelClass.isAssignableFrom(TaskEditViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
-            return TaskEditViewModel(taskDao) as T
+            return TaskEditViewModel(taskDao, subtaskDao) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }
