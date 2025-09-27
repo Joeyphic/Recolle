@@ -152,7 +152,7 @@
     <fragment
         android:id="@+id/subtaskEditFragment"
         android:name="com.joeyphic.recolle.SubtaskEditFragment"
-        android:label="fragment_subtask_edit"
+        android:label="Edit Subtasks"
         tools:layout="@layout/subtask_edit_fragment">
         <argument
             android:name="task_id"

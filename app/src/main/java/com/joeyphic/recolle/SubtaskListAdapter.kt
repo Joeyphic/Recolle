@@ -90,12 +90,18 @@ import com.joeyphic.recolle.databinding.TaskListItemBinding
     ----------------------------------------------------
     Description:  -DiffUtil.ItemCallback, used to identify changes in
                    Subtasks from the SubtaskList.
+                  -We are using .subtaskName to determine the same items, as this ensures the list
+                   behaves correctly when using placeholder IDs in SubtaskEditFragment. Since the
+                   subtask name is never edited, irregular behavior is limited.
+                  -The only issue is minor: if a subtask is given an identical name and the list
+                   items are next to each other, there is a slight visual bug as it appears
+                   inserted into the second-to-last value of the unchecked items.
     ----------------------------------------------------
     */
     companion object {
         private val DiffCallback = object : DiffUtil.ItemCallback<Subtask>() {
             override fun areItemsTheSame(oldItem: Subtask, newItem: Subtask): Boolean {
-                return oldItem.id == newItem.id
+                return oldItem.subtaskName == newItem.subtaskName
             }
 
             override fun areContentsTheSame(oldItem: Subtask, newItem: Subtask): Boolean {

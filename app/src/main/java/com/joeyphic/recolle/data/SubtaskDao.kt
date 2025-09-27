@@ -5,6 +5,7 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Transaction
 import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
 
@@ -29,7 +30,7 @@ interface SubtaskDao {
     @Query("UPDATE subtask SET checked=0 WHERE id=:id")
     fun uncheckReminderById(id: Int)
 
-    @Query("SELECT * FROM subtask WHERE main_id=:mainId ORDER BY id ASC")
+    @Query("SELECT * FROM subtask WHERE main_id=:mainId ORDER BY checked ASC, id ASC")
     fun getAllSubtasksByMainId(mainId: Int): List<Subtask>
 
     @Query("DELETE FROM subtask WHERE main_id=:mainId")
@@ -40,4 +41,13 @@ interface SubtaskDao {
 
     @Query("SELECT * FROM subtask WHERE main_id=:mainId ORDER BY checked ASC, id ASC")
     fun getAllSubtasksByMainIdFlow(mainId: Int): Flow<List<Subtask>>
+
+    @Transaction
+    suspend fun refreshSubtasksForTask(mainId: Int, subtasks: List<Subtask>) {
+        deleteAllSubtasksByMainId(mainId)
+
+        subtasks.forEach {
+            insert(it)
+        }
+    }
 }

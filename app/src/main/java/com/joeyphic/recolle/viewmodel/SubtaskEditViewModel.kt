@@ -33,20 +33,8 @@ class SubtaskEditViewModel(private val subtaskDao: SubtaskDao, private val taskD
 
     fun update() {
         viewModelScope.launch(Dispatchers.IO) {
-
             updateTask(mainTask, isMainTaskPriorityChanged)
-
-            subtaskDao.deleteAllSubtasksByMainId(mainTask.id)
-
-            _currentSubtaskList.value.forEach {
-                subtaskDao.insert(
-                    Subtask(
-                        subtaskName = it.subtaskName,
-                        checked = it.checked,
-                        mainTaskId = mainTask.id
-                    )
-                )
-            }
+            subtaskDao.refreshSubtasksForTask(mainTask.id, _currentSubtaskList.value)
         }
     }
 
@@ -73,6 +61,7 @@ class SubtaskEditViewModel(private val subtaskDao: SubtaskDao, private val taskD
     */
     private fun insertSubtaskToTemporaryList(subtask: Subtask) {
         _currentSubtaskList.value = _currentSubtaskList.value.plus(subtask)
+        _currentSubtaskList.value = _currentSubtaskList.value.sortedBy { subtask -> subtask.checked }
     }
 
     fun insertSubtaskToTemporaryList(subtaskName: String) {
@@ -92,14 +81,10 @@ class SubtaskEditViewModel(private val subtaskDao: SubtaskDao, private val taskD
     ----------------------------------------------------
     */
     private fun getNewTaskEntry(subtaskName: String): Subtask {
-
-        val subtaskTempId = -1
-
         return Subtask(
-            id = subtaskTempId,
             subtaskName = subtaskName,
             checked = false,
-            mainTaskId = -1
+            mainTaskId = mainTask.id
         )
     }
 
