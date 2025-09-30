@@ -20,7 +20,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlin.getValue
 
-// TODO: Some bug fixing, tasks disappearing, rename fragment.
 class SubtaskEditFragment : Fragment() {
     private val viewModel: SubtaskEditViewModel by viewModels {
         SubtaskEditViewModelFactory(
@@ -48,7 +47,12 @@ class SubtaskEditFragment : Fragment() {
     /*
     ----------------------------------------------------
     Parameters:   view (View), savedInstanceState (Bundle?)
-    Description:  TODO: Finish desc
+    Description:  -Uses the navigation arguments to initialize the Task and prepare it for addition
+                   into the database once the Subtasks have been chosen. Then, prepares the
+                   SubtaskListAdapter and associated buttons.
+                  -The Task is still stored in this Fragment because the Task in the database may no
+                   longer hold the most updated information about the Task. If the user backs out
+                   of editing the Task, the information in the database should stay unchanged.
     ----------------------------------------------------
     */
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -61,7 +65,7 @@ class SubtaskEditFragment : Fragment() {
             else -> {PriorityLevel.LOW}
         }
 
-        viewModel.initializeMainTask(navigationArgs.taskId, navigationArgs.taskName, priorityArgument)
+        viewModel.initializeMainTask(navigationArgs.taskId, navigationArgs.taskName, priorityArgument, navigationArgs.taskListPosition)
 
         val adapter = SubtaskListAdapter {
             MaterialAlertDialogBuilder(this.requireContext())
@@ -94,9 +98,15 @@ class SubtaskEditFragment : Fragment() {
         bind(navigationArgs.taskId)
     }
 
+    /*
+    ----------------------------------------------------
+    Parameters:   taskId (Int)
+    Description:  -Retrieves the Subtasks from the database and submits them to a function that
+                   will transfer the information to a class variable.
+    ----------------------------------------------------
+    */
     private fun bind(taskId: Int) {
 
-        // TODO: Fill out this function, also prepare it for SubtaskAddFragment
         lifecycleScope.launch(Dispatchers.IO) {
             // Retrieve associated Subtasks using taskId
             val currentSubtasks = viewModel.retrieveSubtasks(taskId)

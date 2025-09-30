@@ -211,6 +211,7 @@ class TaskEditFragment : Fragment() {
             // Should always be non-null since entry is validated, but the check is done anyways
             val currentPriority = getPriorityFromRadioId() ?: return
             val isPriorityChanged = viewModel.task.taskPriority != currentPriority
+            val taskListPosition = viewModel.task.taskListPosition
 
             // We can use PriorityLevel in NavArgs, but we'll have to make PriorityLevel its
             // own enum file.
@@ -221,7 +222,7 @@ class TaskEditFragment : Fragment() {
             }
 
             val action = TaskEditFragmentDirections.actionTaskEditFragmentToSubtaskEditFragment(
-                taskId, taskName, priorityArgument, isPriorityChanged
+                taskId, taskName, priorityArgument, taskListPosition, isPriorityChanged
             )
             findNavController().navigate(action)
         }

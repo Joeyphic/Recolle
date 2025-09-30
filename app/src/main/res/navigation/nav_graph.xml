@@ -152,8 +152,7 @@
     <fragment
         android:id="@+id/subtaskEditFragment"
         android:name="com.joeyphic.recolle.SubtaskEditFragment"
-        android:label="Edit Subtasks"
-        tools:layout="@layout/subtask_edit_fragment">
+        android:label="Edit Subtasks">
         <argument
             android:name="task_id"
             app:argType="integer" />
@@ -162,6 +161,9 @@
             app:argType="string" />
         <argument
             android:name="task_priority"
+            app:argType="integer" />
+        <argument
+            android:name="task_list_position"
             app:argType="integer" />
         <argument
             android:name="is_priority_changed"

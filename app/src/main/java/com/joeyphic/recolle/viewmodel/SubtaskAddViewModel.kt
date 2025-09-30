@@ -1,6 +1,5 @@
 package com.joeyphic.recolle.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -14,18 +13,23 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-// TODO: Modify all documentation to Subtasks instead of Tasks
 class SubtaskAddViewModel(private val subtaskDao: SubtaskDao, private val taskDao: TaskDao) :
     ViewModel() {
 
     // Holds the Task that is related to the subtasks created in this fragment.
     private lateinit var mainTask: Task
 
-    // This fragment uses a list with Subtask items that have temporary mainTaskId values,
+    // This fragment uses a list with Subtask items that have temporary id and mainTaskId values,
     // since the Task has not yet been inserted into the database.
     private var _currentSubtaskList = MutableStateFlow(listOf<Subtask>())
     var currentSubtaskList: StateFlow<List<Subtask>> = _currentSubtaskList
 
+    /*
+    ----------------------------------------------------
+    Description:  -This function uses the class variables to gather and submit the Task and
+                   Subtask values to the database for addition.
+    ----------------------------------------------------
+    */
     fun insert() {
         viewModelScope.launch(Dispatchers.IO) {
             // toInt() because that's the type in Task.kt
@@ -43,14 +47,24 @@ class SubtaskAddViewModel(private val subtaskDao: SubtaskDao, private val taskDa
         }
     }
 
+    /*
+    ----------------------------------------------------
+    Parameters:   taskId (Int), taskName (String), taskPriority (PriorityLevel)
+    Description:  -Is a helper function that uses given information to create a Task within this
+                   fragment.
+                  -These parameters represent the Task that is chosen by the user to be added.
+                  -taskListPosition is set to -1 as a temporary measure, During any insertions of
+                  this Task (eg. when insertTask() is called), then this value will be corrected.
+    ----------------------------------------------------
+    */
     fun initializeMainTask(taskName: String, taskPriority: PriorityLevel) {
-
         mainTask = Task(
             taskName = taskName,
             taskPriority = taskPriority,
             taskListPosition = -1
         )
     }
+
     /*
     ----------------------------------------------------
     Parameters:   task (Task)
@@ -63,27 +77,21 @@ class SubtaskAddViewModel(private val subtaskDao: SubtaskDao, private val taskDa
     }
 
     fun insertSubtaskToTemporaryList(subtaskName: String) {
-        val newSubtask = getNewTaskEntry(subtaskName)
+        val newSubtask = getNewSubtaskEntry(subtaskName)
         insertSubtaskToTemporaryList(newSubtask)
     }
 
     /*
     ----------------------------------------------------
-    Parameters:   taskName (String), taskPriority (PriorityLevel)
-    Returns:      Task
-    Description:  -Is a helper function that uses a String and PriorityLevel
-                  to create a Task, and returns it.
-                  -taskListPosition is set to -1 as a temporary measure.
-                  During any insertions of this Task (eg. when insertTask() is
-                  called), then this value will be corrected.
+    Parameters:   subtaskName (String)
+    Returns:      Subtask
+    Description:  -Is a helper function that uses a String to create a Subtask, and returns it.
+                  -The Subtask ID is excluded because it will be auto-generated when inserted into
+                   the database.
     ----------------------------------------------------
     */
-    private fun getNewTaskEntry(subtaskName: String): Subtask {
-
-        val subtaskTempId = (_currentSubtaskList.value.lastOrNull()?.id ?: 0) + 1
-
+    private fun getNewSubtaskEntry(subtaskName: String): Subtask {
         return Subtask(
-            id = subtaskTempId,
             subtaskName = subtaskName,
             checked = false,
             mainTaskId = -1

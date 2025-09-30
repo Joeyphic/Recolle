@@ -3,7 +3,6 @@ package com.joeyphic.recolle.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import androidx.navigation.NavArgs
 import com.joeyphic.recolle.data.PriorityLevel
 import com.joeyphic.recolle.data.Subtask
 import com.joeyphic.recolle.data.SubtaskDao
@@ -26,11 +25,16 @@ class SubtaskEditViewModel(private val subtaskDao: SubtaskDao, private val taskD
 
     lateinit var subtask: Subtask
 
-    // This fragment uses a list with Subtask items that have temporary mainTaskId values,
-    // since the Task has not yet been inserted into the database.
+    // This fragment uses a list with Subtask items that have temporary id values.
     private var _currentSubtaskList = MutableStateFlow(listOf<Subtask>())
     var currentSubtaskList: StateFlow<List<Subtask>> = _currentSubtaskList
 
+    /*
+    ----------------------------------------------------
+    Description:  -This function uses the class variables to gather and submit the Task and
+                   Subtask values to the database for editing.
+    ----------------------------------------------------
+    */
     fun update() {
         viewModelScope.launch(Dispatchers.IO) {
             updateTask(mainTask, isMainTaskPriorityChanged)
@@ -38,16 +42,31 @@ class SubtaskEditViewModel(private val subtaskDao: SubtaskDao, private val taskD
         }
     }
 
-    fun initializeMainTask(taskId: Int, taskName: String, taskPriority: PriorityLevel) {
-
+    /*
+    ----------------------------------------------------
+    Parameters:   taskId (Int), taskName (String), taskPriority (PriorityLevel), taskListPosition (Int)
+    Description:  -Is a helper function that uses given information to create a Task within this
+                   fragment.
+                  -These parameters represent the Task that is chosen by the user to be modified.
+    ----------------------------------------------------
+    */
+    fun initializeMainTask(taskId: Int, taskName: String, taskPriority: PriorityLevel, taskListPosition: Int) {
         mainTask = Task(
             id = taskId,
             taskName = taskName,
             taskPriority = taskPriority,
-            taskListPosition = -1
+            taskListPosition = taskListPosition
         )
     }
 
+    /*
+    ----------------------------------------------------
+    Parameters:   taskId (Int), taskName (String), taskListPosition (Int), taskPriority (PriorityLevel)
+    Description:  -Is a helper function that uses given information to create a List of Subtasks
+                   within this fragment.
+                  -This parameter represent the Subtasks that are chosen by the user to be modified.
+    ----------------------------------------------------
+    */
     fun initializeSubtasks(subtaskList: List<Subtask>) {
         _currentSubtaskList.value = subtaskList
     }
@@ -65,22 +84,20 @@ class SubtaskEditViewModel(private val subtaskDao: SubtaskDao, private val taskD
     }
 
     fun insertSubtaskToTemporaryList(subtaskName: String) {
-        val newSubtask = getNewTaskEntry(subtaskName)
+        val newSubtask = getNewSubtaskEntry(subtaskName)
         insertSubtaskToTemporaryList(newSubtask)
     }
 
     /*
     ----------------------------------------------------
-    Parameters:   taskName (String), taskPriority (PriorityLevel)
-    Returns:      Task
-    Description:  -Is a helper function that uses a String and PriorityLevel
-                  to create a Task, and returns it.
-                  -taskListPosition is set to -1 as a temporary measure.
-                  During any insertions of this Task (eg. when insertTask() is
-                  called), then this value will be corrected.
+    Parameters:   subtaskName (String)
+    Returns:      Subtask
+    Description:  -Is a helper function that uses a String to create a Subtask, and returns it.
+                  -We know the ID of the Task to be modified, since it will be initialized by this
+                   point. As a result, we can attach it to the Subtasks.
     ----------------------------------------------------
     */
-    private fun getNewTaskEntry(subtaskName: String): Subtask {
+    private fun getNewSubtaskEntry(subtaskName: String): Subtask {
         return Subtask(
             subtaskName = subtaskName,
             checked = false,

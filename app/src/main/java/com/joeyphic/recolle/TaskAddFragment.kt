@@ -117,8 +117,6 @@ class TaskAddFragment : Fragment() {
             // Should always be non-null since entry is validated, but the check is done anyways
             val currentPriority = getPriorityFromRadioId() ?: return
 
-            // TODO: We can use PriorityLevel in NavArgs, but we'll have to make PriorityLevel its
-            //       own enum file. Perhaps call it taskPriorityLevel.
             val priorityArgument = when(currentPriority) {
                 PriorityLevel.HIGH -> 0
                 PriorityLevel.MEDIUM -> 1

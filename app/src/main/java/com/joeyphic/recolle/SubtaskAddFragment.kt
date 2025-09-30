@@ -44,7 +44,12 @@ class SubtaskAddFragment : Fragment() {
     /*
     ----------------------------------------------------
     Parameters:   view (View), savedInstanceState (Bundle?)
-    Description:  TODO: Finish desc
+    Description:  -Uses the navigation arguments to initialize the Task and prepare it for addition
+                   into the database once the Subtasks have been chosen. Then, prepares the
+                   SubtaskListAdapter and associated buttons.
+                  -The Task is still stored in this Fragment because database changes should be
+                   applied after all information has been chosen. This allows users to back out of
+                   creating a Task altogether even if they've reached this fragment.
     ----------------------------------------------------
     */
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
