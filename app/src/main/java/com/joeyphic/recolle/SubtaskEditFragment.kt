@@ -65,7 +65,7 @@ class SubtaskEditFragment : Fragment() {
             else -> {PriorityLevel.LOW}
         }
 
-        viewModel.initializeMainTask(navigationArgs.taskId, navigationArgs.taskName, priorityArgument, navigationArgs.taskListPosition)
+        viewModel.initializeMainTask(navigationArgs.taskId, navigationArgs.taskName, priorityArgument, navigationArgs.taskListPosition, navigationArgs.isPriorityChanged)
 
         val adapter = SubtaskListAdapter {
             MaterialAlertDialogBuilder(this.requireContext())

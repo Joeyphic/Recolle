@@ -46,17 +46,18 @@ class SubtaskEditViewModel(private val subtaskDao: SubtaskDao, private val taskD
     ----------------------------------------------------
     Parameters:   taskId (Int), taskName (String), taskPriority (PriorityLevel), taskListPosition (Int)
     Description:  -Is a helper function that uses given information to create a Task within this
-                   fragment.
+                   fragment. Also sets the flag representing if the main's Task priority is changed.
                   -These parameters represent the Task that is chosen by the user to be modified.
     ----------------------------------------------------
     */
-    fun initializeMainTask(taskId: Int, taskName: String, taskPriority: PriorityLevel, taskListPosition: Int) {
+    fun initializeMainTask(taskId: Int, taskName: String, taskPriority: PriorityLevel, taskListPosition: Int, isPriorityChanged: Boolean) {
         mainTask = Task(
             id = taskId,
             taskName = taskName,
             taskPriority = taskPriority,
             taskListPosition = taskListPosition
         )
+        isMainTaskPriorityChanged = isPriorityChanged
     }
 
     /*
