@@ -19,7 +19,8 @@ class TaskListFragment : Fragment() {
 
     private val viewModel: TaskListViewModel by activityViewModels {
         TaskListViewModelFactory(
-            (activity?.application as RecolleApplication).database.taskDao()
+            (activity?.application as RecolleApplication).database.taskDao(),
+            (activity?.application as RecolleApplication).applicationScope
         )
     }
 

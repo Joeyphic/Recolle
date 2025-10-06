@@ -4,10 +4,12 @@ import androidx.lifecycle.*
 import com.joeyphic.recolle.data.PriorityLevel
 import com.joeyphic.recolle.data.Task
 import com.joeyphic.recolle.data.TaskDao
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class TaskAddViewModel(private val taskDao: TaskDao) : ViewModel() {
+class TaskAddViewModel(private val taskDao: TaskDao,
+    private val applicationScope: CoroutineScope) : ViewModel() {
 
     /*
     ----------------------------------------------------
@@ -17,7 +19,7 @@ class TaskAddViewModel(private val taskDao: TaskDao) : ViewModel() {
     ----------------------------------------------------
     */
     private fun insertTask(task: Task) {
-        viewModelScope.launch(Dispatchers.IO) {
+        applicationScope.launch(Dispatchers.IO) {
             taskDao.insertTask(task)
         }
     }
@@ -64,20 +66,21 @@ class TaskAddViewModel(private val taskDao: TaskDao) : ViewModel() {
     ----------------------------------------------------
     */
     fun isEntryValid(taskName: String, taskPriority: PriorityLevel) : Boolean {
-        if(taskName.isBlank() || taskPriority !in PriorityLevel.values()) {
+        if(taskName.isBlank() || taskPriority !in PriorityLevel.entries.toTypedArray()) {
             return false
         }
         return true
     }
 }
 
-class TaskAddViewModelFactory(private val taskDao: TaskDao) : ViewModelProvider.Factory {
+class TaskAddViewModelFactory(private val taskDao: TaskDao,
+                              private val applicationScope: CoroutineScope) : ViewModelProvider.Factory {
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
 
         if(modelClass.isAssignableFrom(TaskAddViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
-            return TaskAddViewModel(taskDao) as T
+            return TaskAddViewModel(taskDao, applicationScope) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

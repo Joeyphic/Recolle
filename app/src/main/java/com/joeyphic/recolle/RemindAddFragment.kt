@@ -116,6 +116,11 @@ class RemindAddFragment : Fragment() {
             var newReminder = viewModel.createNewReminderOrNull(binding.reminderName.text.toString())
                 ?: return@setOnClickListener
 
+            /* We're using alarmScheduler in the Fragment because we can access the necessary
+             * context to create the alarmScheduler, as performed earlier.
+             *
+             * A better practice is to use dependency injection (Hilt) to provide it in the
+             * ViewModel's parameters. However, this project does not use it. */
             CoroutineScope(Dispatchers.IO).launch {
                 val reminderId = viewModel.insertReminder(newReminder)
                 newReminder = newReminder.copy(id = reminderId.toInt())

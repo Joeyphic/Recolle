@@ -31,7 +31,8 @@ class RemindDetailFragment : Fragment() {
 
     private val viewModel: RemindDetailViewModel by viewModels {
         RemindDetailViewModelFactory(
-            (activity?.application as RecolleApplication).database.remindDao()
+            (activity?.application as RecolleApplication).database.remindDao(),
+            (activity?.application as RecolleApplication).applicationScope
         )
     }
 

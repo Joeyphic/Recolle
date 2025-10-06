@@ -2,18 +2,20 @@ package com.joeyphic.recolle.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewModelScope
 import com.joeyphic.recolle.data.PriorityLevel
 import com.joeyphic.recolle.data.Subtask
 import com.joeyphic.recolle.data.SubtaskDao
 import com.joeyphic.recolle.data.Task
 import com.joeyphic.recolle.data.TaskDao
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-class SubtaskAddViewModel(private val subtaskDao: SubtaskDao, private val taskDao: TaskDao) :
+class SubtaskAddViewModel(private val subtaskDao: SubtaskDao,
+                          private val taskDao: TaskDao,
+                          private val applicationScope: CoroutineScope) :
     ViewModel() {
 
     // Holds the Task that is related to the subtasks created in this fragment.
@@ -31,7 +33,7 @@ class SubtaskAddViewModel(private val subtaskDao: SubtaskDao, private val taskDa
     ----------------------------------------------------
     */
     fun insert() {
-        viewModelScope.launch(Dispatchers.IO) {
+        applicationScope.launch(Dispatchers.IO) {
             // toInt() because that's the type in Task.kt
             val taskId = taskDao.insertTask(mainTask).toInt()
 
@@ -111,14 +113,16 @@ class SubtaskAddViewModel(private val subtaskDao: SubtaskDao, private val taskDa
     }
 }
 
-class SubtaskAddViewModelFactory(private val subtaskDao: SubtaskDao, private val taskDao: TaskDao) :
+class SubtaskAddViewModelFactory(private val subtaskDao: SubtaskDao,
+                                 private val taskDao: TaskDao,
+                                 private val applicationScope: CoroutineScope) :
     ViewModelProvider.Factory {
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
 
         if(modelClass.isAssignableFrom(SubtaskAddViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
-            return SubtaskAddViewModel(subtaskDao, taskDao) as T
+            return SubtaskAddViewModel(subtaskDao, taskDao, applicationScope) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

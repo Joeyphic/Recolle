@@ -5,13 +5,17 @@ import com.joeyphic.recolle.data.Subtask
 import com.joeyphic.recolle.data.SubtaskDao
 import com.joeyphic.recolle.data.Task
 import com.joeyphic.recolle.data.TaskDao
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-class TaskDetailViewModel(private val taskDao: TaskDao, private val subtaskDao: SubtaskDao) :
+class TaskDetailViewModel(private val taskDao: TaskDao,
+                          private val subtaskDao: SubtaskDao,
+                          private val applicationScope: CoroutineScope
+) :
     ViewModel() {
 
     lateinit var task: Task
@@ -42,7 +46,7 @@ class TaskDetailViewModel(private val taskDao: TaskDao, private val subtaskDao: 
     ----------------------------------------------------
     */
     fun deleteTask(task: Task) {
-        viewModelScope.launch(Dispatchers.IO) {
+        applicationScope.launch(Dispatchers.IO) {
             taskDao.deleteTask(task)
             subtaskDao.deleteAllSubtasksByMainId(task.id)
         }
@@ -61,7 +65,7 @@ class TaskDetailViewModel(private val taskDao: TaskDao, private val subtaskDao: 
     }
 
     fun subtaskCheckChange(subtask: Subtask) {
-        viewModelScope.launch(Dispatchers.IO) {
+        applicationScope.launch(Dispatchers.IO) {
             if (subtask.checked) {
                 subtaskDao.uncheckReminderById(subtask.id)
             } else {
@@ -71,14 +75,16 @@ class TaskDetailViewModel(private val taskDao: TaskDao, private val subtaskDao: 
     }
 }
 
-class TaskDetailViewModelFactory(private val taskDao: TaskDao, private val subtaskDao: SubtaskDao) :
+class TaskDetailViewModelFactory(private val taskDao: TaskDao,
+                                 private val subtaskDao: SubtaskDao,
+                                 private val applicationScope: CoroutineScope) :
     ViewModelProvider.Factory {
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
 
         if(modelClass.isAssignableFrom(TaskDetailViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
-            return TaskDetailViewModel(taskDao, subtaskDao) as T
+            return TaskDetailViewModel(taskDao, subtaskDao, applicationScope) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

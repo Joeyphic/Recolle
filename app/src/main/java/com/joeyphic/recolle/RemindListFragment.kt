@@ -17,7 +17,8 @@ class RemindListFragment : Fragment() {
 
     private val viewModel: RemindListViewModel by activityViewModels {
         RemindListViewModelFactory(
-            (activity?.application as RecolleApplication).database.remindDao()
+            (activity?.application as RecolleApplication).database.remindDao(),
+            (activity?.application as RecolleApplication).applicationScope
         )
     }
 

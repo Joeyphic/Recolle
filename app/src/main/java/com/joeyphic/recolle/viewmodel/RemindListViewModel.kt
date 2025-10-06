@@ -4,12 +4,15 @@ import androidx.lifecycle.*
 import com.joeyphic.recolle.RemindListElement
 import com.joeyphic.recolle.data.RemindDao
 import com.joeyphic.recolle.data.Reminder
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.time.*
 import java.time.format.DateTimeFormatter
 
-class RemindListViewModel(private val remindDao: RemindDao) : ViewModel() {
+class RemindListViewModel(private val remindDao: RemindDao,
+                          private val applicationScope: CoroutineScope
+) : ViewModel() {
 
     val allReminders: LiveData<List<Reminder>> = remindDao.getAllRemindersFlow().asLiveData()
 
@@ -39,7 +42,7 @@ class RemindListViewModel(private val remindDao: RemindDao) : ViewModel() {
     }
 
     fun clearOutdatedCheckedReminders() {
-        viewModelScope.launch(Dispatchers.IO) {
+        applicationScope.launch(Dispatchers.IO) {
             val deviceTimeOffset = ZoneId.systemDefault().rules.getOffset(Instant.now())
             remindDao.clearCheckedRemindersBeforeTime(
                 LocalDateTime.now().plusHours(2).toEpochSecond(ZoneOffset.UTC)
@@ -48,13 +51,14 @@ class RemindListViewModel(private val remindDao: RemindDao) : ViewModel() {
     }
 }
 
-class RemindListViewModelFactory(private val remindDao: RemindDao) : ViewModelProvider.Factory {
+class RemindListViewModelFactory(private val remindDao: RemindDao,
+                                 private val applicationScope: CoroutineScope) : ViewModelProvider.Factory {
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
 
         if(modelClass.isAssignableFrom(RemindListViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
-            return RemindListViewModel(remindDao) as T
+            return RemindListViewModel(remindDao, applicationScope) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

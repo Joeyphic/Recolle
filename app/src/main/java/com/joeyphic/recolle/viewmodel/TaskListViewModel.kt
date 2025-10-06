@@ -3,9 +3,12 @@ package com.joeyphic.recolle.viewmodel
 import androidx.lifecycle.*
 import com.joeyphic.recolle.data.Task
 import com.joeyphic.recolle.data.TaskDao
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
-class TaskListViewModel(private val taskDao: TaskDao) : ViewModel() {
+class TaskListViewModel(private val taskDao: TaskDao,
+                        private val applicationScope: CoroutineScope
+) : ViewModel() {
 
     // Contains every task in the database, sorted by their taskPosition value in ascending order.
     val allTasks: LiveData<List<Task>> = taskDao.getAllTasks().asLiveData()
@@ -23,19 +26,20 @@ class TaskListViewModel(private val taskDao: TaskDao) : ViewModel() {
     ----------------------------------------------------
     */
     fun moveTaskPosition(taskId: Int, toPosition: Int) {
-        viewModelScope.launch {
+        applicationScope.launch {
             taskDao.moveTask(taskId, toPosition)
         }
     }
 }
 
-class TaskListViewModelFactory(private val taskDao: TaskDao) : ViewModelProvider.Factory {
+class TaskListViewModelFactory(private val taskDao: TaskDao,
+                               private val applicationScope: CoroutineScope) : ViewModelProvider.Factory {
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
 
         if(modelClass.isAssignableFrom(TaskListViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
-            return TaskListViewModel(taskDao) as T
+            return TaskListViewModel(taskDao, applicationScope) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

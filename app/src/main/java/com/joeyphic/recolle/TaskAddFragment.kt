@@ -20,7 +20,8 @@ class TaskAddFragment : Fragment() {
 
     private val viewModel: TaskAddViewModel by viewModels {
         TaskAddViewModelFactory(
-            (activity?.application as RecolleApplication).database.taskDao()
+            (activity?.application as RecolleApplication).database.taskDao(),
+            (activity?.application as RecolleApplication).applicationScope
         )
     }
 

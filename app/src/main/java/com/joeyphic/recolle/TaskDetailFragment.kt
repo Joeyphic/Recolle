@@ -36,7 +36,8 @@ class TaskDetailFragment : Fragment() {
     private val viewModel: TaskDetailViewModel by viewModels {
         TaskDetailViewModelFactory(
             (activity?.application as RecolleApplication).database.taskDao(),
-            (activity?.application as RecolleApplication).database.subtaskDao()
+            (activity?.application as RecolleApplication).database.subtaskDao(),
+            (activity?.application as RecolleApplication).applicationScope
         )
     }
 

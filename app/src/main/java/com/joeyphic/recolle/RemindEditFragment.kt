@@ -25,7 +25,8 @@ class RemindEditFragment : Fragment() {
 
     private val viewModel: RemindEditViewModel by viewModels {
         RemindEditViewModelFactory(
-            (activity?.application as RecolleApplication).database.remindDao()
+            (activity?.application as RecolleApplication).database.remindDao(),
+            (activity?.application as RecolleApplication).applicationScope
         )
     }
 
@@ -147,6 +148,11 @@ class RemindEditFragment : Fragment() {
             val newReminder = viewModel.createUpdatedReminderOrNull(binding.reminderName.text.toString())
                 ?: return@setOnClickListener
 
+            /* We're using alarmScheduler in the Fragment because we can access the necessary
+             * context to create the alarmScheduler, as performed earlier.
+             *
+             * A better practice is to use dependency injection (Hilt) to provide it in the
+             * ViewModel's parameters. However, this project does not use it. */
             viewModel.updateReminder(newReminder)
             alarmScheduler.schedule(newReminder)
 

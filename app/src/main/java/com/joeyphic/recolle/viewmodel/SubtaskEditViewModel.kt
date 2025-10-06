@@ -2,19 +2,19 @@ package com.joeyphic.recolle.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.viewModelScope
 import com.joeyphic.recolle.data.PriorityLevel
 import com.joeyphic.recolle.data.Subtask
 import com.joeyphic.recolle.data.SubtaskDao
 import com.joeyphic.recolle.data.Task
 import com.joeyphic.recolle.data.TaskDao
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 // TODO: Modify all documentation to Subtasks instead of Tasks
-class SubtaskEditViewModel(private val subtaskDao: SubtaskDao, private val taskDao: TaskDao) :
+class SubtaskEditViewModel(private val subtaskDao: SubtaskDao, private val taskDao: TaskDao, private val applicationScope: CoroutineScope) :
     ViewModel() {
 
     // Holds the Task that is related to the subtasks created in this fragment.
@@ -36,7 +36,7 @@ class SubtaskEditViewModel(private val subtaskDao: SubtaskDao, private val taskD
     ----------------------------------------------------
     */
     fun update() {
-        viewModelScope.launch(Dispatchers.IO) {
+        applicationScope.launch(Dispatchers.IO) {
             updateTask(mainTask, isMainTaskPriorityChanged)
             subtaskDao.refreshSubtasksForTask(mainTask.id, _currentSubtaskList.value)
         }
@@ -176,20 +176,22 @@ class SubtaskEditViewModel(private val subtaskDao: SubtaskDao, private val taskD
     ----------------------------------------------------
     */
     private fun updateTask(task: Task, isPriorityChanged: Boolean) {
-        viewModelScope.launch(Dispatchers.IO) {
+        applicationScope.launch(Dispatchers.IO) {
             taskDao.updateTask(task, isPriorityChanged)
         }
     }
 }
 
-class SubtaskEditViewModelFactory(private val subtaskDao: SubtaskDao, private val taskDao: TaskDao) :
+class SubtaskEditViewModelFactory(private val subtaskDao: SubtaskDao,
+                                  private val taskDao: TaskDao,
+                                  private val applicationScope: CoroutineScope) :
     ViewModelProvider.Factory {
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
 
         if(modelClass.isAssignableFrom(SubtaskEditViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
-            return SubtaskEditViewModel(subtaskDao, taskDao) as T
+            return SubtaskEditViewModel(subtaskDao, taskDao, applicationScope) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

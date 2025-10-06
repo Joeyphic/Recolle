@@ -25,7 +25,8 @@ class TaskEditFragment : Fragment() {
     private val viewModel: TaskEditViewModel by viewModels {
         TaskEditViewModelFactory(
             (activity?.application as RecolleApplication).database.taskDao(),
-            (activity?.application as RecolleApplication).database.subtaskDao()
+            (activity?.application as RecolleApplication).database.subtaskDao(),
+            (activity?.application as RecolleApplication).applicationScope
         )
     }
 

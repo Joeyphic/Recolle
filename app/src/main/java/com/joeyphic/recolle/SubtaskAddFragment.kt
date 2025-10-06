@@ -15,13 +15,15 @@ import com.joeyphic.recolle.data.PriorityLevel
 import com.joeyphic.recolle.databinding.SubtaskListAddItemBinding
 import com.joeyphic.recolle.viewmodel.SubtaskAddViewModel
 import com.joeyphic.recolle.viewmodel.SubtaskAddViewModelFactory
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 class SubtaskAddFragment : Fragment() {
     private val viewModel: SubtaskAddViewModel by viewModels {
         SubtaskAddViewModelFactory(
             (activity?.application as RecolleApplication).database.subtaskDao(),
-            (activity?.application as RecolleApplication).database.taskDao()
+            (activity?.application as RecolleApplication).database.taskDao(),
+            (activity?.application as RecolleApplication).applicationScope
         )
     }
 

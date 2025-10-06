@@ -11,6 +11,7 @@ import com.google.android.material.datepicker.DateValidatorPointForward
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -19,7 +20,8 @@ import kotlinx.coroutines.launch
 import java.time.*
 import java.time.format.DateTimeFormatter
 
-class RemindEditViewModel(private val remindDao: RemindDao) : ViewModel() {
+class RemindEditViewModel(private val remindDao: RemindDao,
+                          private val applicationScope: CoroutineScope) : ViewModel() {
 
     data class RemindEditUiState(
         var isAutoEnabled: Boolean = false,
@@ -52,7 +54,7 @@ class RemindEditViewModel(private val remindDao: RemindDao) : ViewModel() {
     val timeFormat: DateTimeFormatter = DateTimeFormatter.ofPattern("h:mm a")
 
     fun retrieveAndBindReminder(id: Int) {
-        viewModelScope.launch(Dispatchers.IO) {
+        applicationScope.launch(Dispatchers.IO) {
             val currentReminder = remindDao.getReminderById(id) ?: return@launch
 
             reminderId = currentReminder.id
@@ -65,7 +67,7 @@ class RemindEditViewModel(private val remindDao: RemindDao) : ViewModel() {
     }
 
     fun updateReminder(reminder: Reminder) {
-        viewModelScope.launch(Dispatchers.IO) {
+        applicationScope.launch(Dispatchers.IO) {
             remindDao.update(reminder)
         }
     }
@@ -238,13 +240,15 @@ class RemindEditViewModel(private val remindDao: RemindDao) : ViewModel() {
     }
 }
 
-class RemindEditViewModelFactory(private val remindDao: RemindDao) : ViewModelProvider.Factory {
+class RemindEditViewModelFactory(private val remindDao: RemindDao,
+                                 private val applicationScope: CoroutineScope
+) : ViewModelProvider.Factory {
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
 
         if(modelClass.isAssignableFrom(RemindEditViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
-            return RemindEditViewModel(remindDao) as T
+            return RemindEditViewModel(remindDao, applicationScope) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }
