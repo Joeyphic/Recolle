@@ -6,6 +6,7 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.util.Log
 import com.joeyphic.recolle.R
 import com.joeyphic.recolle.data.Reminder
 import java.time.LocalDateTime
@@ -28,8 +29,8 @@ class RemindAlarmScheduler(private val context: Context): AlarmScheduler<Reminde
 
         // Can Rework Exact Alarms with outline given in Android Studio's SDK Upgrade Assistant.
         // Specifically in the Android 12L -> 13 section.
-        // If this is done, re-add <uses-permission android:name="android.permission.USE_EXACT_ALARM" />
-        // and <uses-permission android:name="android.permission.USE_EXACT_ALARM" to manifest.xml
+        // If this is done, re-add <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+        // to manifest.xml.
         alarmManager.setAndAllowWhileIdle(
             AlarmManager.RTC_WAKEUP,
             reminder.remindTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli(),

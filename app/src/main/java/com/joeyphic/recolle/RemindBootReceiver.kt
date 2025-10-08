@@ -9,6 +9,7 @@ import com.joeyphic.recolle.data.RecolleDatabase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.time.ZoneId
 
 class RemindBootReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context?, intent: Intent?) {
@@ -32,8 +33,12 @@ class RemindBootReceiver : BroadcastReceiver() {
                 return@launch
             }
 
+            // Reminders are scheduled only if they're not checked and the remind time is before
+            // the current system time.
+            val currentTimeMillis = System.currentTimeMillis()
             reminders.forEach {
-                if (!it.checked) { scheduler.schedule(it) }
+                val remindTimeMillis = it.remindTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
+                if (!it.checked && currentTimeMillis < remindTimeMillis) { scheduler.schedule(it) }
             }
         }
     }

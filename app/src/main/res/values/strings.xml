@@ -37,4 +37,5 @@
     <string name="add_subtask">Add Subtask</string>
     <string name="subtask_name">Subtask Name</string>
     <string name="add">Add</string>
+    <string name="notification_rationale_refuse">No thanks</string>
 </resources>

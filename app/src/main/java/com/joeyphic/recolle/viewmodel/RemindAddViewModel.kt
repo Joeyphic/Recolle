@@ -22,7 +22,8 @@ class RemindAddViewModel(private val remindDao: RemindDao) : ViewModel() {
         var isAutoEnabled: Boolean = false,
         var isSaveEnabled: Boolean = false,
         var picker: DialogFragment? = null,
-        var errorMessage: String? = null
+        var errorMessage: String? = null,
+        var permissionMessage: String? = null
     )
 
     private val _uiState = MutableStateFlow(RemindAddUiState())
@@ -147,14 +148,27 @@ class RemindAddViewModel(private val remindDao: RemindDao) : ViewModel() {
     }
 
     fun updateUIState() {
-        if(eventDate.value == null || eventTime.value == null) return
-        else _uiState.update { currentUiState ->
-            currentUiState.copy(isAutoEnabled = true)
-        }
+        val isAutoEnabled = eventDate.value != null && eventTime.value != null
+        val isSaveEnabled = isAutoEnabled && remindDate.value != null && remindTime.value != null
 
-        if(remindDate.value == null || remindTime.value == null) return
-        else _uiState.update { currentUiState ->
-            currentUiState.copy(isSaveEnabled = true)
+        _uiState.update { currentUiState ->
+            currentUiState.copy(
+                isAutoEnabled = isAutoEnabled,
+                isSaveEnabled = isSaveEnabled
+            )
+        }
+    }
+
+    fun displayPermissionRationale() {
+        _uiState.update {
+            it.copy(permissionMessage = "To make sure you get reminded on time, please allow " +
+                    "Recolle to send you notifications.")
+        }
+    }
+
+    fun permissionMessageShown() {
+        _uiState.update {
+            it.copy(permissionMessage = null)
         }
     }
 
@@ -185,7 +199,9 @@ class RemindAddViewModel(private val remindDao: RemindDao) : ViewModel() {
     }
 
     fun errorMessageShown() {
-        _uiState.value.errorMessage = null
+        _uiState.update {
+            it.copy(errorMessage = null)
+        }
     }
 
     private fun createDatePicker(selection: Long): MaterialDatePicker<Long> {

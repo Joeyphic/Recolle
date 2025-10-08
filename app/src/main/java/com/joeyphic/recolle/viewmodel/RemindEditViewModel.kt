@@ -173,14 +173,14 @@ class RemindEditViewModel(private val remindDao: RemindDao,
     }
 
     fun updateUIState() {
-        if(eventDate.value == null || eventTime.value == null) return
-        else _uiState.update { currentUiState ->
-            currentUiState.copy(isAutoEnabled = true)
-        }
+        val isAutoEnabled = eventDate.value != null && eventTime.value != null
+        val isSaveEnabled = isAutoEnabled && remindDate.value != null && remindTime.value != null
 
-        if(remindDate.value == null || remindTime.value == null) return
-        else _uiState.update { currentUiState ->
-            currentUiState.copy(isSaveEnabled = true)
+        _uiState.update { currentUiState ->
+            currentUiState.copy(
+                isAutoEnabled = isAutoEnabled,
+                isSaveEnabled = isSaveEnabled
+            )
         }
     }
 
@@ -212,7 +212,9 @@ class RemindEditViewModel(private val remindDao: RemindDao,
     }
 
     fun errorMessageShown() {
-        _uiState.value.errorMessage = null
+        _uiState.update {
+            it.copy(errorMessage = null)
+        }
     }
 
     private fun createDatePicker(selection: Long): MaterialDatePicker<Long> {
